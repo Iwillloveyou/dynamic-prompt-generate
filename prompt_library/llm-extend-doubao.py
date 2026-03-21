@@ -32,10 +32,11 @@ MODEL_NAME = "deepseek-v3-2-251201"  # 深度思考模型
 CLIP_MODEL_NAME = "openai/clip-vit-base-patch32"
 
 # 文件路径
-JSON_PATH = "openadd.json"
-OUTPUT_VECTORS = "concept_vectors.npy"
-OUTPUT_NAMES = "concept_names.json"
-OUTPUT_RESULTS= "concepts_vectors.npz"
+JSON_PATH = "openodd_desc.json"
+RESULT_SAVE_DIR = "./result/"
+OUTPUT_VECTORS = RESULT_SAVE_DIR + "concept_vectors.npy"
+CONCEPT_EXTEND_OUTPUT_NAMES = RESULT_SAVE_DIR + "concept_extend.json"
+CONCEPT_EXTEND_EMBEDDING_OUTPUT_NAMES= RESULT_SAVE_DIR + "concept_extend.embeddings.npz"
 
 # 生成参数
 NUM_DESCRIPTIONS_PER_CONCEPT = 8  # 每个概念生成多少条描述
@@ -101,6 +102,7 @@ def extract_concepts_two_pass(concept_data):
             all_nodes[key] = {
                 "name": key,
                 "parent": None,
+                "desc": value.get("desc"),
                 "category": "OperationalDesignDomain",
                 "has_children": len(value.get("children", [])) > 0
             }
@@ -111,6 +113,7 @@ def extract_concepts_two_pass(concept_data):
                 child_value = concept_data.get(child, {})
                 all_nodes[child] = {
                     "name": child,
+                    "desc": value.get("desc"),
                     "parent": key,  # 先临时设置父节点
                     "category": key,  # 类别就是父节点
                     "has_children": len(child_value.get("children", [])) > 0
@@ -292,9 +295,10 @@ def main():
     print(f"共加载 {len(concepts)} 个概念。")
 
     # 2. 为每个概念生成描述并编码
-    concept_vectors = {}
     failed_concepts = []
     successful_concepts = []
+    # 存放所有embedding
+    successful_embeddings = {}
 
     # 测试模式：只处理第一个概念
     test_mode = True  # 设为 False 时处理全部概念
@@ -304,6 +308,7 @@ def main():
     for idx, item in enumerate(tqdm(concepts_to_process, desc="处理概念")):
         concept = item["name"]
         category = item["category"]
+        desc = item["desc"]
 
         print(f"\n[{idx+1}/{len(concepts)}] 处理概念: {concept} (类别: {category})")
 
@@ -337,10 +342,23 @@ def main():
             # 再次归一化
             concept_vector = concept_vector / np.linalg.norm(concept_vector)
             # concept_vectors[concept] = concept_vector
-            concept_vectors["name"] = concept_vector
-            concept_vectors["name_emb"] = encode_texts(concept)
-            concept_vectors["desc_emb"] = concept_vector
+            concept_vectors = {}
+            concept_vectors["name"] = concept
+            name_emb = encode_texts(concept)
+            concept_vectors["name_emb_key"] = f"name_emb_{idx}"
+            concept_vectors["desc"] = desc
+            desc_emb = encode_texts(desc)
+            concept_vectors["desc_emb_key"] = f"desc_emb_{idx}"
+            concept_vectors["extend_desc"] = descriptions
+            concept_vectors["extend_desc_emb_key"] = [f"extend_emb_{idx}_{i}" for i in range(len(vecs))]
+            concept_vectors["desc_mean_emb_key"] = f"desc_mean_emb_{idx}"
             successful_concepts.append(concept)
+
+            successful_embeddings[f"name_emb_{idx}"] = name_emb
+            successful_embeddings[f"desc_emb_{idx}"] = desc_emb
+            for i, emb in enumerate(vecs):
+                successful_embeddings[f"extend_emb_{idx}_{i}"] = emb
+            successful_embeddings[f"desc_mean_emb_{idx}"] = concept_vector
 
         except Exception as e:
             print(f"概念 {concept} 处理失败: {e}")
@@ -351,11 +369,13 @@ def main():
 
     # 3. 保存结果
     if concept_vectors:
-        # 使用 np.savez 保存字典
-        np.savez(OUTPUT_RESULTS, **concept_vectors)
-        print(f"✅ 概念向量已保存至: {output_path}")
-        print(f"  包含 {len(concept_vectors)} 个概念，向量维度: {next(iter(concept_vectors.values()))["desc_emb"].shape}")
+        with open(CONCEPT_EXTEND_OUTPUT_NAMES, "w", encoding="utf-8") as f:
+            json.dump(successful_concepts, f, ensure_ascii=False, indent=2)
+        print(f"✅ 概念向量已保存至: {CONCEPT_EXTEND_OUTPUT_NAMES}")
+        print(f"  包含 {len(successful_concepts)} 个概念")
 
+        # 保存嵌入向量到npz（压缩格式）
+        np.savez_compressed(CONCEPT_EXTEND_EMBEDDING_OUTPUT_NAMES, **successful_embeddings)
         # concept_names = list(concept_vectors.keys())
         # vectors = np.array([concept_vectors[name] for name in concept_names])
         #
