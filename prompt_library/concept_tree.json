@@ -1,0 +1,570 @@
+{
+  "name": "OperationalDesignDomain",
+  "parent": null,
+  "children": [
+    {
+      "name": "Environment",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "Weather",
+          "parent": "Environment",
+          "children": [
+            {
+              "name": "Clear",
+              "parent": "Weather",
+              "children": []
+            },
+            {
+              "name": "Cloudy",
+              "parent": "Weather",
+              "children": []
+            },
+            {
+              "name": "Rain",
+              "parent": "Weather",
+              "children": []
+            },
+            {
+              "name": "Snow",
+              "parent": "Weather",
+              "children": []
+            },
+            {
+              "name": "Sleet",
+              "parent": "Weather",
+              "children": []
+            },
+            {
+              "name": "Hail",
+              "parent": "Weather",
+              "children": []
+            },
+            {
+              "name": "Storm",
+              "parent": "Weather",
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "Illumination",
+          "parent": "Environment",
+          "children": [
+            {
+              "name": "Daylight",
+              "parent": "Illumination",
+              "children": []
+            },
+            {
+              "name": "Twilight",
+              "parent": "Illumination",
+              "children": []
+            },
+            {
+              "name": "Night",
+              "parent": "Illumination",
+              "children": []
+            },
+            {
+              "name": "ArtificialLight",
+              "parent": "Illumination",
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "Precipitation",
+          "parent": "Environment",
+          "children": [
+            {
+              "name": "NoPrecipitation",
+              "parent": "Precipitation",
+              "children": []
+            },
+            {
+              "name": "Light",
+              "parent": "Precipitation",
+              "children": []
+            },
+            {
+              "name": "Moderate",
+              "parent": "Precipitation",
+              "children": []
+            },
+            {
+              "name": "Heavy",
+              "parent": "Precipitation",
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "Fog",
+          "parent": "Environment",
+          "children": [
+            {
+              "name": "NoFog",
+              "parent": "Fog",
+              "children": []
+            },
+            {
+              "name": "LightFog",
+              "parent": "Fog",
+              "children": []
+            },
+            {
+              "name": "MediumFog",
+              "parent": "Fog",
+              "children": []
+            },
+            {
+              "name": "DenseFog",
+              "parent": "Fog",
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "Temperature",
+          "parent": "Environment",
+          "children": []
+        },
+        {
+          "name": "Wind",
+          "parent": "Environment",
+          "children": []
+        },
+        {
+          "name": "AirQuality",
+          "parent": "Environment",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "Road",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "RoadType",
+          "parent": "Road",
+          "children": [
+            {
+              "name": "Highway",
+              "parent": "RoadType",
+              "children": []
+            },
+            {
+              "name": "UrbanRoad",
+              "parent": "RoadType",
+              "children": []
+            },
+            {
+              "name": "RuralRoad",
+              "parent": "RoadType",
+              "children": []
+            },
+            {
+              "name": "ResidentialRoad",
+              "parent": "RoadType",
+              "children": []
+            },
+            {
+              "name": "ServiceRoad",
+              "parent": "RoadType",
+              "children": []
+            },
+            {
+              "name": "Parking",
+              "parent": "RoadType",
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "RoadGeometry",
+          "parent": "Road",
+          "children": []
+        },
+        {
+          "name": "RoadSurface",
+          "parent": "Road",
+          "children": [
+            {
+              "name": "Dry",
+              "parent": "RoadSurface",
+              "children": []
+            },
+            {
+              "name": "Wet",
+              "parent": "RoadSurface",
+              "children": []
+            },
+            {
+              "name": "Icy",
+              "parent": "RoadSurface",
+              "children": []
+            },
+            {
+              "name": "Snowy",
+              "parent": "RoadSurface",
+              "children": []
+            },
+            {
+              "name": "Muddy",
+              "parent": "RoadSurface",
+              "children": []
+            },
+            {
+              "name": "Potholes",
+              "parent": "RoadSurface",
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "LaneMarkings",
+          "parent": "Road",
+          "children": []
+        },
+        {
+          "name": "RoadConditions",
+          "parent": "Road",
+          "children": []
+        },
+        {
+          "name": "Shoulder",
+          "parent": "Road",
+          "children": []
+        },
+        {
+          "name": "Median",
+          "parent": "Road",
+          "children": []
+        },
+        {
+          "name": "Intersection",
+          "parent": "Road",
+          "children": []
+        },
+        {
+          "name": "Bridge",
+          "parent": "Road",
+          "children": []
+        },
+        {
+          "name": "Tunnel",
+          "parent": "Road",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "Traffic",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "TrafficParticipants",
+          "parent": "Traffic",
+          "children": [
+            {
+              "name": "Vehicle",
+              "parent": "TrafficParticipants",
+              "children": [
+                {
+                  "name": "Car",
+                  "parent": "Vehicle",
+                  "children": []
+                },
+                {
+                  "name": "Truck",
+                  "parent": "Vehicle",
+                  "children": []
+                },
+                {
+                  "name": "Bus",
+                  "parent": "Vehicle",
+                  "children": []
+                },
+                {
+                  "name": "Motorcycle",
+                  "parent": "Vehicle",
+                  "children": []
+                },
+                {
+                  "name": "Bicycle",
+                  "parent": "Vehicle",
+                  "children": []
+                },
+                {
+                  "name": "EmergencyVehicle",
+                  "parent": "Vehicle",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "VulnerableRoadUser",
+              "parent": "TrafficParticipants",
+              "children": [
+                {
+                  "name": "Pedestrian",
+                  "parent": "VulnerableRoadUser",
+                  "children": []
+                },
+                {
+                  "name": "Cyclist",
+                  "parent": "VulnerableRoadUser",
+                  "children": []
+                },
+                {
+                  "name": "Motorcyclist",
+                  "parent": "VulnerableRoadUser",
+                  "children": []
+                },
+                {
+                  "name": "WheelchairUser",
+                  "parent": "VulnerableRoadUser",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "Animal",
+              "parent": "TrafficParticipants",
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "TrafficFlow",
+          "parent": "Traffic",
+          "children": []
+        },
+        {
+          "name": "TrafficDensity",
+          "parent": "Traffic",
+          "children": []
+        },
+        {
+          "name": "TrafficRules",
+          "parent": "Traffic",
+          "children": []
+        },
+        {
+          "name": "TrafficSigns",
+          "parent": "Traffic",
+          "children": []
+        },
+        {
+          "name": "TrafficSignals",
+          "parent": "Traffic",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "DrivingDynamics",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "Speed",
+          "parent": "DrivingDynamics",
+          "children": []
+        },
+        {
+          "name": "Acceleration",
+          "parent": "DrivingDynamics",
+          "children": []
+        },
+        {
+          "name": "Deceleration",
+          "parent": "DrivingDynamics",
+          "children": []
+        },
+        {
+          "name": "LateralMovement",
+          "parent": "DrivingDynamics",
+          "children": []
+        },
+        {
+          "name": "Stopping",
+          "parent": "DrivingDynamics",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "Infrastructure",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "TrafficLight",
+          "parent": "Infrastructure",
+          "children": []
+        },
+        {
+          "name": "TrafficSign",
+          "parent": "Infrastructure",
+          "children": []
+        },
+        {
+          "name": "GuardRail",
+          "parent": "Infrastructure",
+          "children": []
+        },
+        {
+          "name": "Barrier",
+          "parent": "Infrastructure",
+          "children": []
+        },
+        {
+          "name": "Crosswalk",
+          "parent": "Infrastructure",
+          "children": []
+        },
+        {
+          "name": "RailroadCrossing",
+          "parent": "Infrastructure",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "TemporalConditions",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "TimeOfDay",
+          "parent": "TemporalConditions",
+          "children": []
+        },
+        {
+          "name": "Season",
+          "parent": "TemporalConditions",
+          "children": []
+        },
+        {
+          "name": "Holiday",
+          "parent": "TemporalConditions",
+          "children": []
+        },
+        {
+          "name": "SpecialEvent",
+          "parent": "TemporalConditions",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "LegalRegulatoryConditions",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "SpeedLimits",
+          "parent": "LegalRegulatoryConditions",
+          "children": []
+        },
+        {
+          "name": "RightOfWayRules",
+          "parent": "LegalRegulatoryConditions",
+          "children": []
+        },
+        {
+          "name": "OvertakingRules",
+          "parent": "LegalRegulatoryConditions",
+          "children": []
+        },
+        {
+          "name": "ParkingRules",
+          "parent": "LegalRegulatoryConditions",
+          "children": []
+        },
+        {
+          "name": "RegionalLegislation",
+          "parent": "LegalRegulatoryConditions",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "VehicleCapabilities",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "AutonomyLevel",
+          "parent": "VehicleCapabilities",
+          "children": []
+        },
+        {
+          "name": "SensorSuite",
+          "parent": "VehicleCapabilities",
+          "children": []
+        },
+        {
+          "name": "ActuatorPerformance",
+          "parent": "VehicleCapabilities",
+          "children": []
+        },
+        {
+          "name": "Communication",
+          "parent": "VehicleCapabilities",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "Perception",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "VisibilityRange",
+          "parent": "Perception",
+          "children": []
+        },
+        {
+          "name": "ObstacleDetection",
+          "parent": "Perception",
+          "children": []
+        },
+        {
+          "name": "LaneRecognition",
+          "parent": "Perception",
+          "children": []
+        },
+        {
+          "name": "SignRecognition",
+          "parent": "Perception",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "Map",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "MapAccuracy",
+          "parent": "Map",
+          "children": []
+        },
+        {
+          "name": "MapCoverage",
+          "parent": "Map",
+          "children": []
+        },
+        {
+          "name": "MapType",
+          "parent": "Map",
+          "children": []
+        },
+        {
+          "name": "LaneLevelMap",
+          "parent": "Map",
+          "children": []
+        }
+      ]
+    }
+  ]
+}

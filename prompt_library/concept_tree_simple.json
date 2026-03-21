@@ -1,0 +1,1011 @@
+[
+  {
+    "name": "OperationalDesignDomain",
+    "parent": null,
+    "level": 0,
+    "has_children": true,
+    "children_count": 10,
+    "children_names": [
+      "Environment",
+      "Road",
+      "Traffic",
+      "DrivingDynamics",
+      "Infrastructure",
+      "TemporalConditions",
+      "LegalRegulatoryConditions",
+      "VehicleCapabilities",
+      "Perception",
+      "Map"
+    ]
+  },
+  {
+    "name": "Environment",
+    "parent": "OperationalDesignDomain",
+    "level": 1,
+    "has_children": true,
+    "children_count": 7,
+    "children_names": [
+      "Weather",
+      "Illumination",
+      "Precipitation",
+      "Fog",
+      "Temperature",
+      "Wind",
+      "AirQuality"
+    ]
+  },
+  {
+    "name": "Weather",
+    "parent": "Environment",
+    "level": 2,
+    "has_children": true,
+    "children_count": 7,
+    "children_names": [
+      "Clear",
+      "Cloudy",
+      "Rain",
+      "Snow",
+      "Sleet",
+      "Hail",
+      "Storm"
+    ]
+  },
+  {
+    "name": "Clear",
+    "parent": "Weather",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Cloudy",
+    "parent": "Weather",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Rain",
+    "parent": "Weather",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Snow",
+    "parent": "Weather",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Sleet",
+    "parent": "Weather",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Hail",
+    "parent": "Weather",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Storm",
+    "parent": "Weather",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Illumination",
+    "parent": "Environment",
+    "level": 2,
+    "has_children": true,
+    "children_count": 4,
+    "children_names": [
+      "Daylight",
+      "Twilight",
+      "Night",
+      "ArtificialLight"
+    ]
+  },
+  {
+    "name": "Daylight",
+    "parent": "Illumination",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Twilight",
+    "parent": "Illumination",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Night",
+    "parent": "Illumination",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "ArtificialLight",
+    "parent": "Illumination",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Precipitation",
+    "parent": "Environment",
+    "level": 2,
+    "has_children": true,
+    "children_count": 4,
+    "children_names": [
+      "NoPrecipitation",
+      "Light",
+      "Moderate",
+      "Heavy"
+    ]
+  },
+  {
+    "name": "NoPrecipitation",
+    "parent": "Precipitation",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Light",
+    "parent": "Precipitation",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Moderate",
+    "parent": "Precipitation",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Heavy",
+    "parent": "Precipitation",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Fog",
+    "parent": "Environment",
+    "level": 2,
+    "has_children": true,
+    "children_count": 4,
+    "children_names": [
+      "NoFog",
+      "LightFog",
+      "MediumFog",
+      "DenseFog"
+    ]
+  },
+  {
+    "name": "NoFog",
+    "parent": "Fog",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "LightFog",
+    "parent": "Fog",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "MediumFog",
+    "parent": "Fog",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "DenseFog",
+    "parent": "Fog",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Temperature",
+    "parent": "Environment",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Wind",
+    "parent": "Environment",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "AirQuality",
+    "parent": "Environment",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Road",
+    "parent": "OperationalDesignDomain",
+    "level": 1,
+    "has_children": true,
+    "children_count": 10,
+    "children_names": [
+      "RoadType",
+      "RoadGeometry",
+      "RoadSurface",
+      "LaneMarkings",
+      "RoadConditions",
+      "Shoulder",
+      "Median",
+      "Intersection",
+      "Bridge",
+      "Tunnel"
+    ]
+  },
+  {
+    "name": "RoadType",
+    "parent": "Road",
+    "level": 2,
+    "has_children": true,
+    "children_count": 6,
+    "children_names": [
+      "Highway",
+      "UrbanRoad",
+      "RuralRoad",
+      "ResidentialRoad",
+      "ServiceRoad",
+      "Parking"
+    ]
+  },
+  {
+    "name": "Highway",
+    "parent": "RoadType",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "UrbanRoad",
+    "parent": "RoadType",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "RuralRoad",
+    "parent": "RoadType",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "ResidentialRoad",
+    "parent": "RoadType",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "ServiceRoad",
+    "parent": "RoadType",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Parking",
+    "parent": "RoadType",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "RoadGeometry",
+    "parent": "Road",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "RoadSurface",
+    "parent": "Road",
+    "level": 2,
+    "has_children": true,
+    "children_count": 6,
+    "children_names": [
+      "Dry",
+      "Wet",
+      "Icy",
+      "Snowy",
+      "Muddy",
+      "Potholes"
+    ]
+  },
+  {
+    "name": "Dry",
+    "parent": "RoadSurface",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Wet",
+    "parent": "RoadSurface",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Icy",
+    "parent": "RoadSurface",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Snowy",
+    "parent": "RoadSurface",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Muddy",
+    "parent": "RoadSurface",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Potholes",
+    "parent": "RoadSurface",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "LaneMarkings",
+    "parent": "Road",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "RoadConditions",
+    "parent": "Road",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Shoulder",
+    "parent": "Road",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Median",
+    "parent": "Road",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Intersection",
+    "parent": "Road",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Bridge",
+    "parent": "Road",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Tunnel",
+    "parent": "Road",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Traffic",
+    "parent": "OperationalDesignDomain",
+    "level": 1,
+    "has_children": true,
+    "children_count": 6,
+    "children_names": [
+      "TrafficParticipants",
+      "TrafficFlow",
+      "TrafficDensity",
+      "TrafficRules",
+      "TrafficSigns",
+      "TrafficSignals"
+    ]
+  },
+  {
+    "name": "TrafficParticipants",
+    "parent": "Traffic",
+    "level": 2,
+    "has_children": true,
+    "children_count": 3,
+    "children_names": [
+      "Vehicle",
+      "VulnerableRoadUser",
+      "Animal"
+    ]
+  },
+  {
+    "name": "Vehicle",
+    "parent": "TrafficParticipants",
+    "level": 3,
+    "has_children": true,
+    "children_count": 6,
+    "children_names": [
+      "Car",
+      "Truck",
+      "Bus",
+      "Motorcycle",
+      "Bicycle",
+      "EmergencyVehicle"
+    ]
+  },
+  {
+    "name": "Car",
+    "parent": "Vehicle",
+    "level": 4,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Truck",
+    "parent": "Vehicle",
+    "level": 4,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Bus",
+    "parent": "Vehicle",
+    "level": 4,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Motorcycle",
+    "parent": "Vehicle",
+    "level": 4,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Bicycle",
+    "parent": "Vehicle",
+    "level": 4,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "EmergencyVehicle",
+    "parent": "Vehicle",
+    "level": 4,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "VulnerableRoadUser",
+    "parent": "TrafficParticipants",
+    "level": 3,
+    "has_children": true,
+    "children_count": 4,
+    "children_names": [
+      "Pedestrian",
+      "Cyclist",
+      "Motorcyclist",
+      "WheelchairUser"
+    ]
+  },
+  {
+    "name": "Pedestrian",
+    "parent": "VulnerableRoadUser",
+    "level": 4,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Cyclist",
+    "parent": "VulnerableRoadUser",
+    "level": 4,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Motorcyclist",
+    "parent": "VulnerableRoadUser",
+    "level": 4,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "WheelchairUser",
+    "parent": "VulnerableRoadUser",
+    "level": 4,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Animal",
+    "parent": "TrafficParticipants",
+    "level": 3,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "TrafficFlow",
+    "parent": "Traffic",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "TrafficDensity",
+    "parent": "Traffic",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "TrafficRules",
+    "parent": "Traffic",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "TrafficSigns",
+    "parent": "Traffic",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "TrafficSignals",
+    "parent": "Traffic",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "DrivingDynamics",
+    "parent": "OperationalDesignDomain",
+    "level": 1,
+    "has_children": true,
+    "children_count": 5,
+    "children_names": [
+      "Speed",
+      "Acceleration",
+      "Deceleration",
+      "LateralMovement",
+      "Stopping"
+    ]
+  },
+  {
+    "name": "Speed",
+    "parent": "DrivingDynamics",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Acceleration",
+    "parent": "DrivingDynamics",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Deceleration",
+    "parent": "DrivingDynamics",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "LateralMovement",
+    "parent": "DrivingDynamics",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Stopping",
+    "parent": "DrivingDynamics",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Infrastructure",
+    "parent": "OperationalDesignDomain",
+    "level": 1,
+    "has_children": true,
+    "children_count": 6,
+    "children_names": [
+      "TrafficLight",
+      "TrafficSign",
+      "GuardRail",
+      "Barrier",
+      "Crosswalk",
+      "RailroadCrossing"
+    ]
+  },
+  {
+    "name": "TrafficLight",
+    "parent": "Infrastructure",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "TrafficSign",
+    "parent": "Infrastructure",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "GuardRail",
+    "parent": "Infrastructure",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Barrier",
+    "parent": "Infrastructure",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Crosswalk",
+    "parent": "Infrastructure",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "RailroadCrossing",
+    "parent": "Infrastructure",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "TemporalConditions",
+    "parent": "OperationalDesignDomain",
+    "level": 1,
+    "has_children": true,
+    "children_count": 4,
+    "children_names": [
+      "TimeOfDay",
+      "Season",
+      "Holiday",
+      "SpecialEvent"
+    ]
+  },
+  {
+    "name": "TimeOfDay",
+    "parent": "TemporalConditions",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Season",
+    "parent": "TemporalConditions",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Holiday",
+    "parent": "TemporalConditions",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "SpecialEvent",
+    "parent": "TemporalConditions",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "LegalRegulatoryConditions",
+    "parent": "OperationalDesignDomain",
+    "level": 1,
+    "has_children": true,
+    "children_count": 5,
+    "children_names": [
+      "SpeedLimits",
+      "RightOfWayRules",
+      "OvertakingRules",
+      "ParkingRules",
+      "RegionalLegislation"
+    ]
+  },
+  {
+    "name": "SpeedLimits",
+    "parent": "LegalRegulatoryConditions",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "RightOfWayRules",
+    "parent": "LegalRegulatoryConditions",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "OvertakingRules",
+    "parent": "LegalRegulatoryConditions",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "ParkingRules",
+    "parent": "LegalRegulatoryConditions",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "RegionalLegislation",
+    "parent": "LegalRegulatoryConditions",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "VehicleCapabilities",
+    "parent": "OperationalDesignDomain",
+    "level": 1,
+    "has_children": true,
+    "children_count": 4,
+    "children_names": [
+      "AutonomyLevel",
+      "SensorSuite",
+      "ActuatorPerformance",
+      "Communication"
+    ]
+  },
+  {
+    "name": "AutonomyLevel",
+    "parent": "VehicleCapabilities",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "SensorSuite",
+    "parent": "VehicleCapabilities",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "ActuatorPerformance",
+    "parent": "VehicleCapabilities",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Communication",
+    "parent": "VehicleCapabilities",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Perception",
+    "parent": "OperationalDesignDomain",
+    "level": 1,
+    "has_children": true,
+    "children_count": 4,
+    "children_names": [
+      "VisibilityRange",
+      "ObstacleDetection",
+      "LaneRecognition",
+      "SignRecognition"
+    ]
+  },
+  {
+    "name": "VisibilityRange",
+    "parent": "Perception",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "ObstacleDetection",
+    "parent": "Perception",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "LaneRecognition",
+    "parent": "Perception",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "SignRecognition",
+    "parent": "Perception",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "Map",
+    "parent": "OperationalDesignDomain",
+    "level": 1,
+    "has_children": true,
+    "children_count": 4,
+    "children_names": [
+      "MapAccuracy",
+      "MapCoverage",
+      "MapType",
+      "LaneLevelMap"
+    ]
+  },
+  {
+    "name": "MapAccuracy",
+    "parent": "Map",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "MapCoverage",
+    "parent": "Map",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "MapType",
+    "parent": "Map",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  },
+  {
+    "name": "LaneLevelMap",
+    "parent": "Map",
+    "level": 2,
+    "has_children": false,
+    "children_count": 0,
+    "children_names": []
+  }
+]
