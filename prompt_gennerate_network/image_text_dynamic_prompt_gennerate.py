@@ -83,27 +83,25 @@ class PromptGenerator(nn.Module):
         return combined
 
 # -------------------- 数据集构建 --------------------
-def build_train_triplets(track_ann_file, image_root):
+def build_train_triplets(track_ann_file, image_root, allowed_track_ids=None):
     """
-    从 train-tracks.json 构建训练三元组列表
+    从 train-tracks.json allowed_track_ids构建训练三元组列表
     返回: list of dict, 每个包含 ref_img_path, target_img_path, caption
     """
     with open(track_ann_file, 'r') as f:
         tracks = json.load(f)
-    triplets = []  # 每个元素为 (ref_img_path, target_img_path, caption, track_id)
+    triplets = []
     for track_id, info in tracks.items():
+        if allowed_track_ids is not None and track_id not in allowed_track_ids:
+            continue
         frames = info['frames']
         captions = info['nl']
         if len(frames) < 2 or len(captions) == 0:
             continue
         for cap in captions:
             ref_frame, target_frame = random.sample(frames, 2)
-            ref_img_path = os.path.join(image_root,
-                                        ref_frame['scene'], ref_frame['camera'], 'img1',
-                                        f"{ref_frame['frame']:06d}.jpg")
-            target_img_path = os.path.join(image_root,
-                                           target_frame['scene'], target_frame['camera'], 'img1',
-                                           f"{target_frame['frame']:06d}.jpg")
+            ref_img_path = os.path.join(image_root, ref_frame['scene'], ref_frame['camera'], 'img1', f"{ref_frame['frame']:06d}.jpg")
+            target_img_path = os.path.join(image_root, target_frame['scene'], target_frame['camera'], 'img1', f"{target_frame['frame']:06d}.jpg")
             triplets.append({
                 'ref_img': ref_img_path,
                 'target_img': target_img_path,
@@ -112,7 +110,7 @@ def build_train_triplets(track_ann_file, image_root):
             })
     return triplets
 
-def build_validation_data(track_ann_file, image_root, val_ratio=0.2):
+def build_validation_data(track_ann_file, image_root, val_track_ids):
     """
     划分验证集车辆，构建：
         candidate_images: 所有验证车辆的全部图像路径列表
@@ -120,30 +118,18 @@ def build_validation_data(track_ann_file, image_root, val_ratio=0.2):
     """
     with open(track_ann_file, 'r') as f:
         tracks = json.load(f)
-
-    # 按车辆划分
-    track_ids = list(tracks.keys())
-    random.shuffle(track_ids)
-    split_idx = int(len(track_ids) * (1 - val_ratio))
-    train_track_ids = set(track_ids[:split_idx])
-    val_track_ids = set(track_ids[split_idx:])
-
-    # 构建候选集（所有验证车辆的图像）
-    candidate_images = []          # list of image path
-    candidate_track_ids = []       # 对应图像所属车辆 id
-    img_to_idx = {}                # 路径 -> 索引
-
+    candidate_images = []
+    candidate_track_ids = []
+    img_to_idx = {}
     for tid in val_track_ids:
+        if tid not in tracks:
+            continue
         frames = tracks[tid]['frames']
         for frame in frames:
-            img_path = os.path.join(image_root,
-                                    frame['scene'], frame['camera'], 'img1',
-                                    f"{frame['frame']:06d}.jpg")
+            img_path = os.path.join(image_root, frame['scene'], frame['camera'], 'img1', f"{frame['frame']:06d}.jpg")
             candidate_images.append(img_path)
             candidate_track_ids.append(tid)
             img_to_idx[img_path] = len(candidate_images) - 1
-
-    # 构建查询：每个验证车辆生成若干查询（使用其所有描述，随机选一张作为参考，另一张作为目标）
     queries = []
     for tid in val_track_ids:
         frames = tracks[tid]['frames']
@@ -152,21 +138,16 @@ def build_validation_data(track_ann_file, image_root, val_ratio=0.2):
             continue
         for cap in captions:
             ref_frame, target_frame = random.sample(frames, 2)
-            ref_img_path = os.path.join(image_root,
-                                        ref_frame['scene'], ref_frame['camera'], 'img1',
-                                        f"{ref_frame['frame']:06d}.jpg")
-            target_img_path = os.path.join(image_root,
-                                           target_frame['scene'], target_frame['camera'], 'img1',
-                                           f"{target_frame['frame']:06d}.jpg")
+            ref_img_path = os.path.join(image_root, ref_frame['scene'], ref_frame['camera'], 'img1', f"{ref_frame['frame']:06d}.jpg")
+            target_img_path = os.path.join(image_root, target_frame['scene'], target_frame['camera'], 'img1', f"{target_frame['frame']:06d}.jpg")
             if target_img_path not in img_to_idx:
-                continue   # 理论上应在候选集中
+                continue
             queries.append({
                 'ref_img': ref_img_path,
                 'caption': cap,
                 'target_idx': img_to_idx[target_img_path],
                 'track_id': tid
             })
-
     return candidate_images, queries
 
 # -------------------- 数据集类 --------------------
@@ -429,11 +410,20 @@ def retrieve(query_text, query_image_path, candidate_image_paths, clip_model, ge
 # -------------------- 主函数 --------------------
 def main():
     # 1. 构建训练三元组和验证数据
+    # 获取所有车辆 ID
+    with open(config.track_ann_file, 'r') as f:
+        tracks = json.load(f)
+    all_track_ids = list(tracks.keys())
+    random.shuffle(all_track_ids)
+    split_idx = int(len(all_track_ids) * 0.8)   # 80% 训练，20% 验证
+    train_track_ids = set(all_track_ids[:split_idx])
+    val_track_ids = set(all_track_ids[split_idx:])
+    print(f"Total tracks: {len(all_track_ids)}, Train tracks: {len(train_track_ids)}, Val tracks: {len(val_track_ids)}")
     print("Building training triplets...")
-    train_triplets = build_train_triplets(config.track_ann_file, config.image_root)
+    train_triplets = build_train_triplets(config.track_ann_file, config.image_root, allowed_track_ids=train_track_ids)
     print(f"Number of training triplets: {len(train_triplets)}")
     print("Building validation data...")
-    candidate_images, val_queries = build_validation_data(config.track_ann_file, config.image_root, val_ratio=0.2)
+    candidate_images, val_queries = build_validation_data(config.track_ann_file, config.image_root, val_track_ids)
     print(f"Validation candidates: {len(candidate_images)}, queries: {len(val_queries)}")
     # 2. 创建 Dataset 和 DataLoader
     train_dataset = TripletDataset(train_triplets, preprocess)
@@ -461,6 +451,7 @@ def main():
         if epoch % 5 == 0:
             recalls, mrr = evaluate_batched(clip_model, generator, val_dataset, config.device, config.temperature)
             print(f"Validation Results: R@1={recalls[1]:.2f}, R@5={recalls[5]:.2f}, R@10={recalls[10]:.2f}, MRR={mrr:.2f}")
+            # mrr是什么指标，如果要计算map，该怎么修改
             if mrr > best_mrr:
                 best_mrr = mrr
                 torch.save(generator.state_dict(), os.path.join(config.save_dir, 'best_generator.pth'))
