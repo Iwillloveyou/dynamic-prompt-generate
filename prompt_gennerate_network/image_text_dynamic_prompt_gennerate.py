@@ -10,6 +10,7 @@ import clip
 from PIL import Image
 import numpy as np
 from tqdm import tqdm
+from torch.utils.data import Sampler
 
 # -------------------- 配置 --------------------
 class Config:
@@ -88,18 +89,14 @@ def build_train_triplets(track_ann_file, image_root):
     返回: list of dict, 每个包含 ref_img_path, target_img_path, caption
     """
     with open(track_ann_file, 'r') as f:
-        tracks = json.load(f)   # dict: track_id -> {"nl": [...], "frames": [...]}
-
-    triplets = []
+        tracks = json.load(f)
+    triplets = []  # 每个元素为 (ref_img_path, target_img_path, caption, track_id)
     for track_id, info in tracks.items():
-        frames = info['frames']          # list of {"scene":..., "camera":..., "frame":...}
-        captions = info['nl']            # list of strings
+        frames = info['frames']
+        captions = info['nl']
         if len(frames) < 2 or len(captions) == 0:
             continue
-
-        # 为每条描述生成多个三元组（随机采样不同帧对）
         for cap in captions:
-            # 随机选择两张不同的图像
             ref_frame, target_frame = random.sample(frames, 2)
             ref_img_path = os.path.join(image_root,
                                         ref_frame['scene'], ref_frame['camera'], 'img1',
@@ -110,7 +107,8 @@ def build_train_triplets(track_ann_file, image_root):
             triplets.append({
                 'ref_img': ref_img_path,
                 'target_img': target_img_path,
-                'caption': cap
+                'caption': cap,
+                'track_id': track_id
             })
     return triplets
 
@@ -187,38 +185,84 @@ class TripletDataset(Dataset):
         ref_img = self.preprocess(ref_img)
         target_img = self.preprocess(target_img)
         text = clip.tokenize(item['caption'], truncate=True).squeeze(0)
-        return ref_img, target_img, text
+        return ref_img, target_img, text, item['track_id']   # 增加 track_id
 
 class ValidationDataset(Dataset):
     """验证集：存储所有候选图像和所有查询"""
-    def __init__(self, candidate_images, queries, preprocess):
+    def __init__(self, candidate_images, queries, preprocess, cache_path=None):
         self.candidate_images = candidate_images
         self.queries = queries
         self.preprocess = preprocess
+        self.cache_path = cache_path
+        self.candidate_feats = None   # 存储候选特征，延迟加载
 
-    def __len__(self):
-        return len(self.queries)
+    def load_or_extract_candidate_features(self, clip_model, device):
+        """加载缓存或提取候选特征，并保持在内存中"""
+        if self.candidate_feats is not None:
+            return self.candidate_feats
 
-    #todo:每一次都要计算，如何避免
-    def get_candidate_features(self, clip_model, device):
-        """预提取所有候选图像的特征，避免重复计算"""
-        features = []
-        for img_path in tqdm(self.candidate_images, desc="Extracting candidate features"):
+        # 如果有缓存文件，直接加载
+        if self.cache_path is not None and os.path.exists(self.cache_path):
+            print(f"Loading cached candidate features from {self.cache_path}")
+            self.candidate_feats = torch.load(self.cache_path)
+            return self.candidate_feats
+
+        # 否则提取特征
+        print("Extracting candidate features...")
+        feats = []
+        for img_path in tqdm(self.candidate_images, desc="Encoding candidates"):
             img = Image.open(img_path).convert('RGB')
             img_tensor = self.preprocess(img).unsqueeze(0).to(device)
             with torch.no_grad():
                 feat = clip_model.encode_image(img_tensor)
                 feat = F.normalize(feat, dim=-1).cpu()
-            features.append(feat.squeeze(0))
-        return torch.stack(features)   # [num_candidates, D]
+            feats.append(feat.squeeze(0))
+        self.candidate_feats = torch.stack(feats)   # [C, D]
+
+        # 保存到缓存
+        if self.cache_path is not None:
+            torch.save(self.candidate_feats, self.cache_path)
+            print(f"Cached candidate features to {self.cache_path}")
+        return self.candidate_feats
 
     def __getitem__(self, idx):
+        # 与之前相同，不涉及特征提取
         query = self.queries[idx]
         ref_img = Image.open(query['ref_img']).convert('RGB')
         ref_img = self.preprocess(ref_img)
         text = clip.tokenize(query['caption'], truncate=True).squeeze(0)
-        # 返回查询和真实目标索引
         return ref_img, text, query['target_idx'], query['track_id']
+
+class TrackMutualSampler(Sampler):
+    def __init__(self, triplets, batch_size, shuffle=True):
+        # 按 track_id 分组
+        self.track_to_indices = defaultdict(list)
+        for idx, t in enumerate(triplets):
+            self.track_to_indices[t['track_id']].append(idx)
+        self.track_ids = list(self.track_to_indices.keys())
+        self.batch_size = batch_size
+        self.shuffle = shuffle
+
+    def __iter__(self):
+        # 每个 epoch 随机打乱 track 顺序
+        track_ids = self.track_ids.copy()
+        if self.shuffle:
+            random.shuffle(track_ids)
+        batch = []
+        for tid in track_ids:
+            # 从当前 track 的所有三元组中随机选择一个
+            idx = random.choice(self.track_to_indices[tid])
+            batch.append(idx)
+            if len(batch) == self.batch_size:
+                yield batch
+                batch = []
+        # 丢弃最后不足 batch_size 的部分（或可补全，但丢弃更简单）
+        if len(batch) > 0:
+            # 可选：补充一些样本或直接丢弃
+            pass
+
+    def __len__(self):
+        return len(self.track_ids) // self.batch_size
 
 # -------------------- 训练函数 --------------------
 def train_epoch(clip_model, generator, dataloader, optimizer, device, temperature):
@@ -296,6 +340,66 @@ def evaluate(clip_model, generator, val_dataset, device, temperature, k_list=[1,
     mrr = mrr / num_queries * 100
     return recalls, mrr
 
+#批次计算验证 效率更高
+@torch.no_grad()
+def evaluate_batched(clip_model, generator, val_dataset, device, temperature, batch_size=64, k_list=[1,5,10]):
+    clip_model.eval()
+    generator.eval()
+
+    candidate_feats = val_dataset.load_or_extract_candidate_features(clip_model, device).to(device)  # [C, D]
+    queries = val_dataset.queries
+    num_queries = len(queries)
+
+    recalls = {k: 0 for k in k_list}
+    mrr = 0.0
+
+    # 分批处理查询
+    for start in tqdm(range(0, num_queries, batch_size), desc="Evaluating batches"):
+        end = min(start + batch_size, num_queries)
+        batch_queries = queries[start:end]
+        batch_size_actual = end - start
+
+        # 准备 batch 数据
+        ref_imgs = []
+        texts = []
+        target_idxs = []
+        for q in batch_queries:
+            ref_img = Image.open(q['ref_img']).convert('RGB')
+            ref_img = val_dataset.preprocess(ref_img)
+            ref_imgs.append(ref_img)
+            texts.append(clip.tokenize(q['caption'], truncate=True).squeeze(0))
+            target_idxs.append(q['target_idx'])
+
+        ref_imgs = torch.stack(ref_imgs).to(device)
+        texts = torch.stack(texts).to(device)
+
+        # 提取特征
+        ref_feat = F.normalize(clip_model.encode_image(ref_imgs), dim=-1)
+        text_feat = F.normalize(clip_model.encode_text(texts), dim=-1)
+        query_feat = generator(text_feat, ref_feat)   # [B, D]
+
+        # 相似度矩阵 [B, C]
+        sim = query_feat @ candidate_feats.T / temperature
+
+        # 对每个查询，找到目标索引的排名
+        for i in range(batch_size_actual):
+            target_idx = target_idxs[i]
+            # 当前查询的相似度向量
+            sim_i = sim[i]
+            # 降序排序得到排名
+            sorted_indices = sim_i.argsort(descending=True)
+            rank = (sorted_indices == target_idx).nonzero(as_tuple=True)[0].item()
+            # 更新指标
+            for k in k_list:
+                if rank < k:
+                    recalls[k] += 1
+            mrr += 1.0 / (rank + 1)
+
+    for k in k_list:
+        recalls[k] = recalls[k] / num_queries * 100
+    mrr = mrr / num_queries * 100
+    return recalls, mrr
+
 # -------------------- 推理示例 -------------------- candidate_image_paths是整个数据集的图像吗
 def retrieve(query_text, query_image_path, candidate_image_paths, clip_model, generator, preprocess, device, temperature=0.07, top_k=5):
     """
@@ -331,14 +435,15 @@ def main():
     print("Building validation data...")
     candidate_images, val_queries = build_validation_data(config.track_ann_file, config.image_root, val_ratio=0.2)
     print(f"Validation candidates: {len(candidate_images)}, queries: {len(val_queries)}")
-
     # 2. 创建 Dataset 和 DataLoader
     train_dataset = TripletDataset(train_triplets, preprocess)
     # 注意：训练时使用普通的随机采样即可，对比学习会利用 batch 内的负样本
-    train_loader = DataLoader(train_dataset, batch_size=config.batch_size, shuffle=True,
-                              num_workers=config.num_workers, pin_memory=True)
-
-    val_dataset = ValidationDataset(candidate_images, val_queries, preprocess)
+    train_sampler = TrackMutualSampler(train_triplets, config.batch_size, shuffle=True)
+    train_loader = DataLoader(train_dataset, batch_size=config.batch_size,
+                          sampler=train_sampler, num_workers=config.num_workers,
+                          pin_memory=True, drop_last=True)
+    val_dataset = ValidationDataset(candidate_images, val_queries, preprocess,
+                                    cache_path=os.path.join(config.save_dir, 'candidate_feats.pt'))
     # 验证时不使用 DataLoader 的 batch，因为需要逐一查询并检索整个候选集，我们直接在 evaluate 中遍历
 
     # 3. 模型和优化器
@@ -354,7 +459,7 @@ def main():
 
         # 每 5 个 epoch 验证一次
         if epoch % 5 == 0:
-            recalls, mrr = evaluate(clip_model, generator, val_dataset, config.device, config.temperature)
+            recalls, mrr = evaluate_batched(clip_model, generator, val_dataset, config.device, config.temperature)
             print(f"Validation Results: R@1={recalls[1]:.2f}, R@5={recalls[5]:.2f}, R@10={recalls[10]:.2f}, MRR={mrr:.2f}")
             if mrr > best_mrr:
                 best_mrr = mrr
