@@ -128,7 +128,7 @@ def get_attributes_for_concept(concept: str, category: str) -> List[str]:
     从 JSON 配置文件中加载数据。
     """
     # 默认属性（保底使用）
-    default_attrs = ["强度", "场景类型", "时间段", "影响程度", "空间分布", "时间演化"]
+    default_attrs = ["Intensity", "Scenario Type", "Time Period", "Impact Level", "Spatial Distribution", "Temporal Evolution"]
 
     # 1. 优先使用 special_rules 中的精细化属性
     if concept in SPECIAL_RULES:
@@ -197,24 +197,22 @@ def build_prompt(concept: str, category: str, attributes: List[str]) -> str:
     构建发送给豆包模型的提示词，要求生成多样化的自动驾驶场景描述。
     """
     attr_str = "、".join(attributes)
-    prompt = f"""你是一位资深的自动驾驶场景工程师，负责为自动驾驶数据集生成高质量的图文对训练数据。
+    prompt = f"""You are a senior autonomous driving scenario engineer responsible for generating high-quality image-text paired training data for autonomous driving datasets.
 
-    【核心概念】：{concept}
-    【概念类别】：{category}
-    【关键属性】：请考虑以下属性维度的变化：{attr_str}
-    
-    【任务要求】
-    请基于上述核心概念，生成{NUM_DESCRIPTIONS_PER_CONCEPT}条关于自动驾驶场景的自然语言描述。这些描述将用于训练图文检索模型，要求如下：
-    1. 多样性：覆盖不同的属性状态（如强度变化、不同时间段、不同道路类型、不同交通密度等）。
-    2. 真实性：描述必须是真实的驾驶场景视角（第一人称或车载摄像头视角），像是车载摄像头会捕捉到的画面。
-    3. 专业性：使用专业但自然的驾驶描述语言。
-    4. 输出格式：请以JSON列表格式输出，不要有其他解释性文字。每个描述是一个字符串。
-    
-    【生成示例】（针对“RedLight”概念）
-    - "车辆在城市道路路口等待红灯，前方有数辆轿车和一辆公交车，交通信号灯为红色。"
-    - "夜间行驶至十字路口，红灯亮起，车辆逐渐减速停止，左侧车道有一辆SUV也在等待。"
-    
-    请开始生成针对“{concept}”的描述：
+    【Core Concept】: {concept}
+    【Concept Category】: {category}
+    【Key Attributes】: Please consider variations across the following attribute dimensions: {attr_str}
+    【Task Requirements】
+    Based on the above core concept, generate {NUM_DESCRIPTIONS_PER_CONCEPT} natural language descriptions for autonomous driving scenarios. These descriptions will be used to train image-text retrieval models, with the following requirements:
+    1. Diversity: Cover various attribute states (such as intensity variations, different time periods, diverse road types, varying traffic density, etc.).
+    2. Authenticity: All descriptions must reflect real driving scenario perspectives (first-person view or vehicle-mounted camera view), consistent with footage captured by vehicle-mounted cameras.
+    3. Professionalism: Adopt professional yet natural language for driving scenario description.
+    4. Output Format: Output results in a JSON list format without any additional explanatory text. Each description shall be a single string element.
+    【Generation Example】(for the concept of "RedLight")
+    - "Vehicles wait for the red light at an urban road intersection, with several sedans and one bus ahead, and the traffic light displays red."
+    - "When approaching a crossroad at night, the red light turns on, the vehicle gradually decelerates to a stop, and an SUV in the left lane is also waiting."
+    Please start generating descriptions for the concept of "{concept}":
+
     """
     return prompt
 
@@ -233,7 +231,7 @@ def call_llm(prompt: str) -> List[str]:
         response = client.chat.completions.create(
             model=MODEL_NAME,
             messages=[
-                {"role": "system", "content": "你是一个专业的自动驾驶场景描述生成器，严格按格式输出JSON列表。"},
+                {"role": "system", "content": "You are a professional autonomous driving scenario description generator, outputting results strictly in JSON list format."},
                 {"role": "user", "content": prompt}
             ],
             temperature=TEMPERATURE,
@@ -261,7 +259,7 @@ def call_llm(prompt: str) -> List[str]:
             # 如果返回的不是合法 JSON，尝试按行分割
             lines = [line.strip("- ").strip() for line in content.split("\n") if line.strip() and not line.startswith("```")]
             # 过滤掉可能的解释性文字
-            descriptions = [line for line in lines if len(line) > 10 and not line.startswith("请") and not line.startswith("以下")]
+            descriptions = [line for line in lines if len(line) > 10 and not line.startswith("please") and not line.startswith("flow")]
             return descriptions
     except Exception as e:
         print(f"豆包API调用失败: {e}")
