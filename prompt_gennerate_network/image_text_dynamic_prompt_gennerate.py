@@ -99,18 +99,19 @@ def build_train_triplets(track_ann_file, image_root, allowed_track_ids=None):
         if len(frames) < 2 or len(captions) == 0:
             continue
         for cap in captions:
-            ref_frame, target_frame = random.sample(frames, 2)
-            ref_img_path = os.path.join(image_root, ref_frame['scene'], ref_frame['camera'], 'img1', f"{ref_frame['frame']:06d}.jpg")
-            target_img_path = os.path.join(image_root, target_frame['scene'], target_frame['camera'], 'img1', f"{target_frame['frame']:06d}.jpg")
+            ref_img_path, target_img_path = random.sample(frames, 2)
+            # 构建绝对路径
+            ref_full = os.path.join(image_root, ref_img_path.lstrip('./'))
+            target_full = os.path.join(image_root, target_img_path.lstrip('./'))
             triplets.append({
-                'ref_img': ref_img_path,
-                'target_img': target_img_path,
+                'ref_img': ref_full,
+                'target_img': target_full,
                 'caption': cap,
                 'track_id': track_id
             })
     return triplets
 
-def build_validation_data(track_ann_file, image_root, val_track_ids):
+def build_validation_data(track_ann_file, image_root, val_track_ids, num_targets=2):
     """
     划分验证集车辆，构建：
         candidate_images: 所有验证车辆的全部图像路径列表
@@ -126,7 +127,7 @@ def build_validation_data(track_ann_file, image_root, val_track_ids):
             continue
         frames = tracks[tid]['frames']
         for frame in frames:
-            img_path = os.path.join(image_root, frame['scene'], frame['camera'], 'img1', f"{frame['frame']:06d}.jpg")
+            img_path = os.path.join(image_root, frame)
             candidate_images.append(img_path)
             candidate_track_ids.append(tid)
             img_to_idx[img_path] = len(candidate_images) - 1
@@ -136,16 +137,31 @@ def build_validation_data(track_ann_file, image_root, val_track_ids):
         captions = tracks[tid]['nl']
         if len(frames) < 2 or len(captions) == 0:
             continue
+        # 为避免每次验证结果波动过大，固定采样策略：对每条描述，随机选择参考图像，再随机选择多个目标
         for cap in captions:
-            ref_frame, target_frame = random.sample(frames, 2)
-            ref_img_path = os.path.join(image_root, ref_frame['scene'], ref_frame['camera'], 'img1', f"{ref_frame['frame']:06d}.jpg")
-            target_img_path = os.path.join(image_root, target_frame['scene'], target_frame['camera'], 'img1', f"{target_frame['frame']:06d}.jpg")
-            if target_img_path not in img_to_idx:
+            # 随机选择参考图像（从所有图像中选一张）
+            ref_frame = random.choice(frames)
+            # 剩余图像作为候选目标池
+            other_frames = [f for f in frames if f != ref_frame]
+            if len(other_frames) == 0:
+                continue
+            # 确定要采样的目标数量
+            n_targets = min(num_targets, len(other_frames))
+            target_frames = random.sample(other_frames, n_targets) if n_targets > 0 else []
+            if not target_frames:
+                continue
+            ref_full = os.path.join(image_root, ref_frame.lstrip('./'))
+            target_idxs = []
+            for target_img in target_frames:
+                target_full = os.path.join(image_root, target_img.lstrip('./'))
+                if target_full in img_to_idx:
+                    target_idxs.append(img_to_idx[target_full])
+            if not target_idxs:
                 continue
             queries.append({
-                'ref_img': ref_img_path,
+                'ref_img': ref_full,
                 'caption': cap,
-                'target_idx': img_to_idx[target_img_path],
+                'target_idxs': target_idxs,   # 存储多个索引
                 'track_id': tid
             })
     return candidate_images, queries
@@ -332,54 +348,71 @@ def evaluate_batched(clip_model, generator, val_dataset, device, temperature, ba
     num_queries = len(queries)
 
     recalls = {k: 0 for k in k_list}
-    mrr = 0.0
+    ap_sum = 0.0   # 累积所有查询的 AP
 
-    # 分批处理查询
     for start in tqdm(range(0, num_queries, batch_size), desc="Evaluating batches"):
         end = min(start + batch_size, num_queries)
         batch_queries = queries[start:end]
         batch_size_actual = end - start
 
-        # 准备 batch 数据
         ref_imgs = []
         texts = []
-        target_idxs = []
+        target_idxss = []   # 每个查询的正样本索引列表 (list of list)
         for q in batch_queries:
             ref_img = Image.open(q['ref_img']).convert('RGB')
             ref_img = val_dataset.preprocess(ref_img)
             ref_imgs.append(ref_img)
-            texts.append(clip.tokenize(q['caption'], truncate=True).squeeze(0))
-            target_idxs.append(q['target_idx'])
+            texts.append(clip.tokenize(q['caption'], truncation=True).squeeze(0))
+            target_idxss.append(q['target_idxs'])   # 存储列表
 
         ref_imgs = torch.stack(ref_imgs).to(device)
         texts = torch.stack(texts).to(device)
 
-        # 提取特征
         ref_feat = F.normalize(clip_model.encode_image(ref_imgs), dim=-1)
         text_feat = F.normalize(clip_model.encode_text(texts), dim=-1)
         query_feat = generator(text_feat, ref_feat)   # [B, D]
 
-        # 相似度矩阵 [B, C]
-        sim = query_feat @ candidate_feats.T / temperature
+        sim = query_feat @ candidate_feats.T / temperature   # [B, C]
 
-        # 对每个查询，找到目标索引的排名
         for i in range(batch_size_actual):
-            target_idx = target_idxs[i]
-            # 当前查询的相似度向量
-            sim_i = sim[i]
-            # 降序排序得到排名
+            sim_i = sim[i]                      # [C]
             sorted_indices = sim_i.argsort(descending=True)
-            rank = (sorted_indices == target_idx).nonzero(as_tuple=True)[0].item()
-            # 更新指标
-            for k in k_list:
-                if rank < k:
-                    recalls[k] += 1
-            mrr += 1.0 / (rank + 1)
+            pos_idxs = target_idxss[i]          # 该查询的所有正样本索引列表
+            P = len(pos_idxs)  # 正样本总数
 
+            # ---- 计算 AP ----
+            # 构建相关标识数组
+            is_relevant = torch.zeros(len(candidate_feats), dtype=torch.bool, device=device)
+            for idx in pos_idxs:
+                is_relevant[idx] = True
+            sorted_relevant = is_relevant[sorted_indices]   # [C]
+            hits = 0
+            ap = 0.0
+            for rank, rel in enumerate(sorted_relevant):
+                if rel:
+                    hits += 1
+                    precision_at_k = hits / (rank + 1)
+                    ap += precision_at_k
+            if P > 0:
+                ap /= P
+            ap_sum += ap
+
+            # ---- 计算 Recall@K（只要有一个正样本命中前K）----
+            # 找到第一个正样本的排名位置
+            first_rank = None
+            for rank_idx, idx in enumerate(sorted_indices.cpu().tolist()):
+                if idx in pos_idxs:
+                    first_rank = rank_idx
+                    break
+            if first_rank is not None:
+                for k in k_list:
+                    if first_rank < k:
+                        recalls[k] += 1
+    # 平均指标
     for k in k_list:
         recalls[k] = recalls[k] / num_queries * 100
-    mrr = mrr / num_queries * 100
-    return recalls, mrr
+    mAP = ap_sum / num_queries * 100
+    return recalls, mAP
 
 # -------------------- 推理示例 -------------------- candidate_image_paths是整个数据集的图像吗
 def retrieve(query_text, query_image_path, candidate_image_paths, clip_model, generator, preprocess, device, temperature=0.07, top_k=5):
@@ -423,7 +456,7 @@ def main():
     train_triplets = build_train_triplets(config.track_ann_file, config.image_root, allowed_track_ids=train_track_ids)
     print(f"Number of training triplets: {len(train_triplets)}")
     print("Building validation data...")
-    candidate_images, val_queries = build_validation_data(config.track_ann_file, config.image_root, val_track_ids)
+    candidate_images, val_queries = build_validation_data(config.track_ann_file, config.image_root, val_track_ids, 3)
     print(f"Validation candidates: {len(candidate_images)}, queries: {len(val_queries)}")
     # 2. 创建 Dataset 和 DataLoader
     train_dataset = TripletDataset(train_triplets, preprocess)
@@ -441,7 +474,7 @@ def main():
     optimizer = torch.optim.Adam(generator.parameters(), lr=config.lr)
 
     # 4. 训练循环
-    best_mrr = 0.0
+    best_map = 0.0
     for epoch in range(1, config.epochs + 1):
         print(f"\nEpoch {epoch}/{config.epochs}")
         train_loss = train_epoch(clip_model, generator, train_loader, optimizer, config.device, config.temperature)
@@ -449,11 +482,11 @@ def main():
 
         # 每 5 个 epoch 验证一次
         if epoch % 5 == 0:
-            recalls, mrr = evaluate_batched(clip_model, generator, val_dataset, config.device, config.temperature)
-            print(f"Validation Results: R@1={recalls[1]:.2f}, R@5={recalls[5]:.2f}, R@10={recalls[10]:.2f}, MRR={mrr:.2f}")
+            recalls, mAP = evaluate_batched(clip_model, generator, val_dataset, config.device, config.temperature)
+            print(f"Validation Results: R@1={recalls[1]:.2f}, R@5={recalls[5]:.2f}, R@10={recalls[10]:.2f}, MRR={mAP:.2f}")
             # mrr是什么指标，如果要计算map，该怎么修改
-            if mrr > best_mrr:
-                best_mrr = mrr
+            if mAP > best_map:
+                best_map = mAP
                 torch.save(generator.state_dict(), os.path.join(config.save_dir, 'best_generator.pth'))
                 print("Best model saved.")
 
