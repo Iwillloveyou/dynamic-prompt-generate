@@ -293,6 +293,7 @@ def main():
     print(f"共加载 {len(concepts)} 个概念。")
 
     # 2. 为每个概念生成描述并编码
+    concept_vectors = []
     failed_concepts = []
     successful_concepts = []
     # 存放所有embedding
@@ -339,17 +340,16 @@ def main():
             concept_vector = vecs.mean(axis=0)
             # 再次归一化
             concept_vector = concept_vector / np.linalg.norm(concept_vector)
-            # concept_vectors[concept] = concept_vector
-            concept_vectors = {}
-            concept_vectors["name"] = concept
+            concept_vector_data = {}
+            concept_vector_data["name"] = concept
             name_emb = encode_texts(concept)
-            concept_vectors["name_emb_key"] = f"name_emb_{idx}"
-            concept_vectors["desc"] = desc
+            concept_vector_data["name_emb_key"] = f"name_emb_{idx}"
+            concept_vector_data["desc"] = desc
             desc_emb = encode_texts(desc)
-            concept_vectors["desc_emb_key"] = f"desc_emb_{idx}"
-            concept_vectors["extend_desc"] = descriptions
-            concept_vectors["extend_desc_emb_key"] = [f"extend_emb_{idx}_{i}" for i in range(len(vecs))]
-            concept_vectors["desc_mean_emb_key"] = f"desc_mean_emb_{idx}"
+            concept_vector_data["desc_emb_key"] = f"desc_emb_{idx}"
+            concept_vector_data["extend_desc"] = descriptions
+            concept_vector_data["extend_desc_emb_key"] = [f"extend_emb_{idx}_{i}" for i in range(len(vecs))]
+            concept_vector_data["desc_mean_emb_key"] = f"desc_mean_emb_{idx}"
             successful_concepts.append(concept)
 
             successful_embeddings[f"name_emb_{idx}"] = name_emb
@@ -357,6 +357,7 @@ def main():
             for i, emb in enumerate(vecs):
                 successful_embeddings[f"extend_emb_{idx}_{i}"] = emb
             successful_embeddings[f"desc_mean_emb_{idx}"] = concept_vector
+            concept_vectors.append(concept_vector_data)
 
         except Exception as e:
             print(f"概念 {concept} 处理失败: {e}")
