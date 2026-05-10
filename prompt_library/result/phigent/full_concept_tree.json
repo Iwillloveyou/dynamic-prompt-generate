@@ -1,0 +1,1409 @@
+{
+  "name": "OperationalDesignDomain",
+  "parent": null,
+  "children": [
+    {
+      "name": "funodd",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "highway",
+          "parent": "funodd",
+          "children": []
+        },
+        {
+          "name": "urban",
+          "parent": "funodd",
+          "children": []
+        },
+        {
+          "name": "country-road",
+          "parent": "funodd",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "MainVehicleBehavior",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "Pull-Away",
+          "parent": "MainVehicleBehavior",
+          "children": []
+        },
+        {
+          "name": "Go-Straight",
+          "parent": "MainVehicleBehavior",
+          "children": []
+        },
+        {
+          "name": "Turn-Left",
+          "parent": "MainVehicleBehavior",
+          "children": []
+        },
+        {
+          "name": "Turn-Right",
+          "parent": "MainVehicleBehavior",
+          "children": []
+        },
+        {
+          "name": "U-Turn",
+          "parent": "MainVehicleBehavior",
+          "children": []
+        },
+        {
+          "name": "Follow",
+          "parent": "MainVehicleBehavior",
+          "children": []
+        },
+        {
+          "name": "Brake",
+          "parent": "MainVehicleBehavior",
+          "children": []
+        },
+        {
+          "name": "Remain-Stationary",
+          "parent": "MainVehicleBehavior",
+          "children": []
+        },
+        {
+          "name": "Change-Lanes",
+          "parent": "MainVehicleBehavior",
+          "children": []
+        },
+        {
+          "name": "Wait-to-Change-Lanes",
+          "parent": "MainVehicleBehavior",
+          "children": []
+        },
+        {
+          "name": "cut-back",
+          "parent": "MainVehicleBehavior",
+          "children": []
+        },
+        {
+          "name": "bypass",
+          "parent": "MainVehicleBehavior",
+          "children": []
+        },
+        {
+          "name": "Borrow-an-Adjacent-Lane",
+          "parent": "MainVehicleBehavior",
+          "children": []
+        },
+        {
+          "name": "Reverse",
+          "parent": "MainVehicleBehavior",
+          "children": []
+        },
+        {
+          "name": "Enter-the-Main-Road",
+          "parent": "MainVehicleBehavior",
+          "children": []
+        },
+        {
+          "name": "Enter-the-Service-Road",
+          "parent": "MainVehicleBehavior",
+          "children": []
+        },
+        {
+          "name": "Enter-the-Ramp",
+          "parent": "MainVehicleBehavior",
+          "children": []
+        },
+        {
+          "name": "Exit-the-Ramp",
+          "parent": "MainVehicleBehavior",
+          "children": []
+        },
+        {
+          "name": "Enter-the-Roundabout",
+          "parent": "MainVehicleBehavior",
+          "children": []
+        },
+        {
+          "name": "Exit-the-Roundabout",
+          "parent": "MainVehicleBehavior",
+          "children": []
+        },
+        {
+          "name": "enter-the-parking-lot",
+          "parent": "MainVehicleBehavior",
+          "children": []
+        },
+        {
+          "name": "exit-the-parking-lot",
+          "parent": "MainVehicleBehavior",
+          "children": []
+        },
+        {
+          "name": "merge-into",
+          "parent": "MainVehicleBehavior",
+          "children": []
+        },
+        {
+          "name": "parking",
+          "parent": "MainVehicleBehavior",
+          "children": [
+            {
+              "name": "qacwbr",
+              "parent": "parking",
+              "children": []
+            },
+            {
+              "name": "ParkingOut",
+              "parent": "parking",
+              "children": []
+            },
+            {
+              "name": "Enter-parking-space",
+              "parent": "parking",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "position-of-the-obstacle",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "opposite-the-intersection",
+          "parent": "position-of-the-obstacle",
+          "children": []
+        },
+        {
+          "name": "left-of-the-intersection",
+          "parent": "position-of-the-obstacle",
+          "children": []
+        },
+        {
+          "name": "right-of-the-intersection",
+          "parent": "position-of-the-obstacle",
+          "children": []
+        },
+        {
+          "name": "crosswalk",
+          "parent": "position-of-the-obstacle",
+          "children": []
+        },
+        {
+          "name": "ahead",
+          "parent": "position-of-the-obstacle",
+          "children": []
+        },
+        {
+          "name": "side",
+          "parent": "position-of-the-obstacle",
+          "children": []
+        },
+        {
+          "name": "front-side",
+          "parent": "position-of-the-obstacle",
+          "children": []
+        },
+        {
+          "name": "back-side",
+          "parent": "position-of-the-obstacle",
+          "children": []
+        },
+        {
+          "name": "opposite-lane",
+          "parent": "position-of-the-obstacle",
+          "children": []
+        },
+        {
+          "name": "bus-stop",
+          "parent": "position-of-the-obstacle",
+          "children": []
+        },
+        {
+          "name": "no-message",
+          "parent": "position-of-the-obstacle",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "obstacle-type",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "motor-vehicle",
+          "parent": "obstacle-type",
+          "children": [
+            {
+              "name": "motorcycle",
+              "parent": "motor-vehicle",
+              "children": []
+            },
+            {
+              "name": "car",
+              "parent": "motor-vehicle",
+              "children": []
+            },
+            {
+              "name": "van",
+              "parent": "motor-vehicle",
+              "children": []
+            },
+            {
+              "name": "police-car",
+              "parent": "motor-vehicle",
+              "children": []
+            },
+            {
+              "name": "school-bus",
+              "parent": "motor-vehicle",
+              "children": []
+            },
+            {
+              "name": "ambulance",
+              "parent": "motor-vehicle",
+              "children": []
+            },
+            {
+              "name": "fire-truck",
+              "parent": "motor-vehicle",
+              "children": []
+            },
+            {
+              "name": "bus",
+              "parent": "motor-vehicle",
+              "children": []
+            },
+            {
+              "name": "coach",
+              "parent": "motor-vehicle",
+              "children": []
+            },
+            {
+              "name": "truck",
+              "parent": "motor-vehicle",
+              "children": []
+            },
+            {
+              "name": "flatbed-ruck",
+              "parent": "motor-vehicle",
+              "children": []
+            },
+            {
+              "name": "car-carrier",
+              "parent": "motor-vehicle",
+              "children": []
+            },
+            {
+              "name": "water-truck",
+              "parent": "motor-vehicle",
+              "children": []
+            },
+            {
+              "name": "engineering-vehicle",
+              "parent": "motor-vehicle",
+              "children": []
+            },
+            {
+              "name": "street-sweeper",
+              "parent": "motor-vehicle",
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "tricycle",
+          "parent": "obstacle-type",
+          "children": [
+            {
+              "name": "manned-tricycle",
+              "parent": "tricycle",
+              "children": []
+            },
+            {
+              "name": "unmanned-tricycle",
+              "parent": "tricycle",
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "non-motorized-vehicle",
+          "parent": "obstacle-type",
+          "children": [
+            {
+              "name": "cyclist",
+              "parent": "non-motorized-vehicle",
+              "children": []
+            },
+            {
+              "name": "electric-bike",
+              "parent": "non-motorized-vehicle",
+              "children": []
+            },
+            {
+              "name": "unmanned-two-wheeled-vehicle",
+              "parent": "non-motorized-vehicle",
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "pedestrian",
+          "parent": "obstacle-type",
+          "children": [
+            {
+              "name": "adult",
+              "parent": "pedestrian",
+              "children": []
+            },
+            {
+              "name": "child",
+              "parent": "pedestrian",
+              "children": []
+            },
+            {
+              "name": "police-officer",
+              "parent": "pedestrian",
+              "children": []
+            },
+            {
+              "name": "cycling-law-enforcer",
+              "parent": "pedestrian",
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "general-obstacle",
+          "parent": "obstacle-type",
+          "children": [
+            {
+              "name": "traffic-cone",
+              "parent": "general-obstacle",
+              "children": []
+            },
+            {
+              "name": "water-filled-barrier",
+              "parent": "general-obstacle",
+              "children": []
+            },
+            {
+              "name": "crash-bucket",
+              "parent": "general-obstacle",
+              "children": []
+            },
+            {
+              "name": "A-frame-no-entry-sign",
+              "parent": "general-obstacle",
+              "children": []
+            },
+            {
+              "name": "bollard",
+              "parent": "general-obstacle",
+              "children": []
+            },
+            {
+              "name": "tripod",
+              "parent": "general-obstacle",
+              "children": []
+            },
+            {
+              "name": "construction-sign",
+              "parent": "general-obstacle",
+              "children": []
+            },
+            {
+              "name": "column",
+              "parent": "general-obstacle",
+              "children": []
+            },
+            {
+              "name": "stopper",
+              "parent": "general-obstacle",
+              "children": []
+            },
+            {
+              "name": "parking-lock",
+              "parent": "general-obstacle",
+              "children": []
+            },
+            {
+              "name": "gate-and-railing",
+              "parent": "general-obstacle",
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "road-surface-obstacle",
+          "parent": "obstacle-type",
+          "children": [
+            {
+              "name": "speed-bump",
+              "parent": "road-surface-obstacle",
+              "children": []
+            },
+            {
+              "name": "manhole-cover",
+              "parent": "road-surface-obstacle",
+              "children": []
+            },
+            {
+              "name": "rumble-strip",
+              "parent": "road-surface-obstacle",
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "other",
+          "parent": "obstacle-type",
+          "children": [
+            {
+              "name": "shopping-cart",
+              "parent": "other",
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "none7",
+          "parent": "obstacle-type",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "road-topology",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "straight-road",
+          "parent": "road-topology",
+          "children": []
+        },
+        {
+          "name": "curved-road",
+          "parent": "road-topology",
+          "children": []
+        },
+        {
+          "name": "ramp",
+          "parent": "road-topology",
+          "children": []
+        },
+        {
+          "name": "tunnel",
+          "parent": "road-topology",
+          "children": []
+        },
+        {
+          "name": "overpass",
+          "parent": "road-topology",
+          "children": []
+        },
+        {
+          "name": "roundabout",
+          "parent": "road-topology",
+          "children": []
+        },
+        {
+          "name": "main-road-and-auxiliary-road",
+          "parent": "road-topology",
+          "children": []
+        },
+        {
+          "name": "slope-road",
+          "parent": "road-topology",
+          "children": []
+        },
+        {
+          "name": "symmetric-intersection",
+          "parent": "road-topology",
+          "children": []
+        },
+        {
+          "name": "asymmetric-intersection",
+          "parent": "road-topology",
+          "children": []
+        },
+        {
+          "name": "toll-station",
+          "parent": "road-topology",
+          "children": []
+        },
+        {
+          "name": "surface-parking-ot",
+          "parent": "road-topology",
+          "children": []
+        },
+        {
+          "name": "basement-parking",
+          "parent": "road-topology",
+          "children": []
+        },
+        {
+          "name": "park-exit",
+          "parent": "road-topology",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "sign",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "speed-limit-sign",
+          "parent": "sign",
+          "children": []
+        },
+        {
+          "name": "prohibition-sign",
+          "parent": "sign",
+          "children": []
+        },
+        {
+          "name": "warning-sign",
+          "parent": "sign",
+          "children": []
+        },
+        {
+          "name": "ground-arrow",
+          "parent": "sign",
+          "children": []
+        },
+        {
+          "name": "none",
+          "parent": "sign",
+          "children": []
+        },
+        {
+          "name": "end-speed-limit-sigh",
+          "parent": "sign",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "stop-zebra-crossing",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "stop-zebra-crossing1",
+          "parent": "stop-zebra-crossing",
+          "children": []
+        },
+        {
+          "name": "stop-only-line",
+          "parent": "stop-zebra-crossing",
+          "children": []
+        },
+        {
+          "name": "zebra-crossing-only",
+          "parent": "stop-zebra-crossing",
+          "children": []
+        },
+        {
+          "name": "none1",
+          "parent": "stop-zebra-crossing",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "traffic-light-type",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "circular-light",
+          "parent": "traffic-light-type",
+          "children": []
+        },
+        {
+          "name": "arrow-signal-light",
+          "parent": "traffic-light-type",
+          "children": []
+        },
+        {
+          "name": "round-signal-light-with-timer",
+          "parent": "traffic-light-type",
+          "children": []
+        },
+        {
+          "name": "arrow-signal-light-with-timer",
+          "parent": "traffic-light-type",
+          "children": []
+        },
+        {
+          "name": "none2",
+          "parent": "traffic-light-type",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "parking-space-material",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "paint",
+          "parent": "parking-space-material",
+          "children": []
+        },
+        {
+          "name": "cement",
+          "parent": "parking-space-material",
+          "children": []
+        },
+        {
+          "name": "brick",
+          "parent": "parking-space-material",
+          "children": []
+        },
+        {
+          "name": "asphalt",
+          "parent": "parking-space-material",
+          "children": []
+        },
+        {
+          "name": "epoxy-flooring",
+          "parent": "parking-space-material",
+          "children": []
+        },
+        {
+          "name": "none8",
+          "parent": "parking-space-material",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "traffic-light",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "red-light",
+          "parent": "traffic-light",
+          "children": []
+        },
+        {
+          "name": "green-light",
+          "parent": "traffic-light",
+          "children": []
+        },
+        {
+          "name": "yellow-light",
+          "parent": "traffic-light",
+          "children": []
+        },
+        {
+          "name": "red-light-turning-green",
+          "parent": "traffic-light",
+          "children": []
+        },
+        {
+          "name": "green-light-turning-red",
+          "parent": "traffic-light",
+          "children": []
+        },
+        {
+          "name": "flashing-yellow-light",
+          "parent": "traffic-light",
+          "children": []
+        },
+        {
+          "name": "non-lit-light",
+          "parent": "traffic-light",
+          "children": []
+        },
+        {
+          "name": "none6",
+          "parent": "traffic-light",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "time-period",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "evening",
+          "parent": "time-period",
+          "children": []
+        },
+        {
+          "name": "daytime",
+          "parent": "time-period",
+          "children": []
+        },
+        {
+          "name": "nighttime",
+          "parent": "time-period",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "weather",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "sunny",
+          "parent": "weather",
+          "children": []
+        },
+        {
+          "name": "snowy",
+          "parent": "weather",
+          "children": []
+        },
+        {
+          "name": "rainy",
+          "parent": "weather",
+          "children": []
+        },
+        {
+          "name": "foggy",
+          "parent": "weather",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "light-source",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "backlit",
+          "parent": "light-source",
+          "children": []
+        },
+        {
+          "name": "normal-light",
+          "parent": "light-source",
+          "children": []
+        },
+        {
+          "name": "car-headlight",
+          "parent": "light-source",
+          "children": []
+        },
+        {
+          "name": "bicycle-headlight",
+          "parent": "light-source",
+          "children": []
+        },
+        {
+          "name": "bicycle-taillight",
+          "parent": "light-source",
+          "children": []
+        },
+        {
+          "name": "left-indicator-light",
+          "parent": "light-source",
+          "children": []
+        },
+        {
+          "name": "right-indicator-light",
+          "parent": "light-source",
+          "children": []
+        },
+        {
+          "name": "emergency-flashers",
+          "parent": "light-source",
+          "children": []
+        },
+        {
+          "name": "car-brake-light",
+          "parent": "light-source",
+          "children": []
+        },
+        {
+          "name": "streetlight",
+          "parent": "light-source",
+          "children": []
+        },
+        {
+          "name": "without-streetlights",
+          "parent": "light-source",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "blurred-camera",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "unblurred",
+          "parent": "blurred-camera",
+          "children": []
+        },
+        {
+          "name": "fog-blur",
+          "parent": "blurred-camera",
+          "children": []
+        },
+        {
+          "name": "glare-blur",
+          "parent": "blurred-camera",
+          "children": []
+        },
+        {
+          "name": "other-blur",
+          "parent": "blurred-camera",
+          "children": []
+        },
+        {
+          "name": "camera-blocked",
+          "parent": "blurred-camera",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "parking-line-types",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "solid-line",
+          "parent": "parking-line-types",
+          "children": []
+        },
+        {
+          "name": "ashed-line",
+          "parent": "parking-line-types",
+          "children": []
+        },
+        {
+          "name": "open-straight-line",
+          "parent": "parking-line-types",
+          "children": []
+        },
+        {
+          "name": "T-shaped-line",
+          "parent": "parking-line-types",
+          "children": []
+        },
+        {
+          "name": "L-shaped-line",
+          "parent": "parking-line-types",
+          "children": []
+        },
+        {
+          "name": "U-shaped-line",
+          "parent": "parking-line-types",
+          "children": []
+        },
+        {
+          "name": "parallelogram",
+          "parent": "parking-line-types",
+          "children": []
+        },
+        {
+          "name": "none9",
+          "parent": "parking-line-types",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "supplementary-information",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "dynamic-occlusion",
+          "parent": "supplementary-information",
+          "children": []
+        },
+        {
+          "name": "static-occlusion",
+          "parent": "supplementary-information",
+          "children": []
+        },
+        {
+          "name": "traffic-light-occlusion",
+          "parent": "supplementary-information",
+          "children": []
+        },
+        {
+          "name": "accident",
+          "parent": "supplementary-information",
+          "children": []
+        },
+        {
+          "name": "construction",
+          "parent": "supplementary-information",
+          "children": []
+        },
+        {
+          "name": "illegal-parking",
+          "parent": "supplementary-information",
+          "children": []
+        },
+        {
+          "name": "congestion",
+          "parent": "supplementary-information",
+          "children": []
+        },
+        {
+          "name": "right-side-parking-space",
+          "parent": "supplementary-information",
+          "children": []
+        },
+        {
+          "name": "left-side-parking-space",
+          "parent": "supplementary-information",
+          "children": []
+        },
+        {
+          "name": "dual-intersection-traffic-lights",
+          "parent": "supplementary-information",
+          "children": []
+        },
+        {
+          "name": "no-information",
+          "parent": "supplementary-information",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "curb-parking-space-boundary-types",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "natural-boundary",
+          "parent": "curb-parking-space-boundary-types",
+          "children": []
+        },
+        {
+          "name": "curbstone",
+          "parent": "curb-parking-space-boundary-types",
+          "children": []
+        },
+        {
+          "name": "fence",
+          "parent": "curb-parking-space-boundary-types",
+          "children": []
+        },
+        {
+          "name": "wall",
+          "parent": "curb-parking-space-boundary-types",
+          "children": []
+        },
+        {
+          "name": "guardrail",
+          "parent": "curb-parking-space-boundary-types",
+          "children": []
+        },
+        {
+          "name": "traffic-cone-line",
+          "parent": "curb-parking-space-boundary-types",
+          "children": []
+        },
+        {
+          "name": "water-barrier-line",
+          "parent": "curb-parking-space-boundary-types",
+          "children": []
+        },
+        {
+          "name": "single-boundary-parking-space",
+          "parent": "curb-parking-space-boundary-types",
+          "children": []
+        },
+        {
+          "name": "double-boundary-parking-space",
+          "parent": "curb-parking-space-boundary-types",
+          "children": []
+        },
+        {
+          "name": "none3",
+          "parent": "curb-parking-space-boundary-types",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "Lane-marking-types",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "Solid-dashed-variations",
+          "parent": "Lane-marking-types",
+          "children": []
+        },
+        {
+          "name": "Fishbone-Markings",
+          "parent": "Lane-marking-types",
+          "children": []
+        },
+        {
+          "name": "Wide-Broken-Lines",
+          "parent": "Lane-marking-types",
+          "children": []
+        },
+        {
+          "name": "Wide-Solid-Lines",
+          "parent": "Lane-marking-types",
+          "children": []
+        },
+        {
+          "name": "Channelizing-Lines",
+          "parent": "Lane-marking-types",
+          "children": []
+        },
+        {
+          "name": "Leading-Lines",
+          "parent": "Lane-marking-types",
+          "children": []
+        },
+        {
+          "name": "Damaged-Lane-Markings",
+          "parent": "Lane-marking-types",
+          "children": []
+        },
+        {
+          "name": "New-Old-Lane-Markings",
+          "parent": "Lane-marking-types",
+          "children": []
+        },
+        {
+          "name": "Double-Solid-Lines",
+          "parent": "Lane-marking-types",
+          "children": []
+        },
+        {
+          "name": "Double-Broken-Lines",
+          "parent": "Lane-marking-types",
+          "children": []
+        },
+        {
+          "name": "One-Solid-One-Broken-Double-Lines",
+          "parent": "Lane-marking-types",
+          "children": []
+        },
+        {
+          "name": "Single-side-Double-Solid-Lines",
+          "parent": "Lane-marking-types",
+          "children": []
+        },
+        {
+          "name": "Single-side-Double-Broken-Lines",
+          "parent": "Lane-marking-types",
+          "children": []
+        },
+        {
+          "name": "Single-side-Solid-Broken-Double-Lines",
+          "parent": "Lane-marking-types",
+          "children": []
+        },
+        {
+          "name": "Single-side-solid-dashed-double-lines",
+          "parent": "Lane-marking-types",
+          "children": []
+        },
+        {
+          "name": "No-Lane-Markings",
+          "parent": "Lane-marking-types",
+          "children": []
+        },
+        {
+          "name": "Perpendicular-Parking-Space-Lines",
+          "parent": "Lane-marking-types",
+          "children": []
+        },
+        {
+          "name": "Parallel-Parking-Space-Lines",
+          "parent": "Lane-marking-types",
+          "children": []
+        },
+        {
+          "name": "Angled-Parking-Space-Lines",
+          "parent": "Lane-marking-types",
+          "children": []
+        },
+        {
+          "name": "No-Parking-Space-Markings",
+          "parent": "Lane-marking-types",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "Obstacle-behavior",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "Start-off",
+          "parent": "Obstacle-behavior",
+          "children": []
+        },
+        {
+          "name": "Straight-driving",
+          "parent": "Obstacle-behavior",
+          "children": []
+        },
+        {
+          "name": "Left-turn",
+          "parent": "Obstacle-behavior",
+          "children": []
+        },
+        {
+          "name": "Right-turn",
+          "parent": "Obstacle-behavior",
+          "children": []
+        },
+        {
+          "name": "Three-point-turn",
+          "parent": "Obstacle-behavior",
+          "children": []
+        },
+        {
+          "name": "Stop",
+          "parent": "Obstacle-behavior",
+          "children": []
+        },
+        {
+          "name": "Stationary",
+          "parent": "Obstacle-behavior",
+          "children": []
+        },
+        {
+          "name": "Following",
+          "parent": "Obstacle-behavior",
+          "children": []
+        },
+        {
+          "name": "Reverse-driving",
+          "parent": "Obstacle-behavior",
+          "children": []
+        },
+        {
+          "name": "Backing-up",
+          "parent": "Obstacle-behavior",
+          "children": []
+        },
+        {
+          "name": "Queuing",
+          "parent": "Obstacle-behavior",
+          "children": []
+        },
+        {
+          "name": "Side-by-side-driving",
+          "parent": "Obstacle-behavior",
+          "children": []
+        },
+        {
+          "name": "Crossing-lane-lines",
+          "parent": "Obstacle-behavior",
+          "children": []
+        },
+        {
+          "name": "Cutting-in",
+          "parent": "Obstacle-behavior",
+          "children": []
+        },
+        {
+          "name": "Cutting-out",
+          "parent": "Obstacle-behavior",
+          "children": []
+        },
+        {
+          "name": "Lateral-approach",
+          "parent": "Obstacle-behavior",
+          "children": []
+        },
+        {
+          "name": "Merging-into-the-main-road",
+          "parent": "Obstacle-behavior",
+          "children": []
+        },
+        {
+          "name": "Turning-into-the-service-road",
+          "parent": "Obstacle-behavior",
+          "children": []
+        },
+        {
+          "name": "Joining-the-roundabout",
+          "parent": "Obstacle-behavior",
+          "children": []
+        },
+        {
+          "name": "Exiting-the-roundabout",
+          "parent": "Obstacle-behavior",
+          "children": []
+        },
+        {
+          "name": "Entering-the-ramp",
+          "parent": "Obstacle-behavior",
+          "children": []
+        },
+        {
+          "name": "Exiting-the-ramp",
+          "parent": "Obstacle-behavior",
+          "children": []
+        },
+        {
+          "name": "Door-opening",
+          "parent": "Obstacle-behavior",
+          "children": []
+        },
+        {
+          "name": "none4",
+          "parent": "Obstacle-behavior",
+          "children": []
+        },
+        {
+          "name": "lane-change",
+          "parent": "Obstacle-behavior",
+          "children": []
+        },
+        {
+          "name": "Weaving-through-traffic",
+          "parent": "Obstacle-behavior",
+          "children": []
+        },
+        {
+          "name": "U-turn-1",
+          "parent": "Obstacle-behavior",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "Road-topology-details",
+      "parent": "OperationalDesignDomain",
+      "children": [
+        {
+          "name": "Lane-increase",
+          "parent": "Road-topology-details",
+          "children": []
+        },
+        {
+          "name": "Lane-decrease",
+          "parent": "Road-topology-details",
+          "children": []
+        },
+        {
+          "name": "Continuous-curves",
+          "parent": "Road-topology-details",
+          "children": []
+        },
+        {
+          "name": "Uphill-road",
+          "parent": "Road-topology-details",
+          "children": []
+        },
+        {
+          "name": "Downhill-road",
+          "parent": "Road-topology-details",
+          "children": []
+        },
+        {
+          "name": "Ramp-entrance",
+          "parent": "Road-topology-details",
+          "children": []
+        },
+        {
+          "name": "Ramp-exit",
+          "parent": "Road-topology-details",
+          "children": []
+        },
+        {
+          "name": "On-the-ramp",
+          "parent": "Road-topology-details",
+          "children": []
+        },
+        {
+          "name": "T-junction",
+          "parent": "Road-topology-details",
+          "children": []
+        },
+        {
+          "name": "Crossroads",
+          "parent": "Road-topology-details",
+          "children": []
+        },
+        {
+          "name": "Parking-lot-entrance",
+          "parent": "Road-topology-details",
+          "children": []
+        },
+        {
+          "name": "No-parking-area",
+          "parent": "Road-topology-details",
+          "children": []
+        },
+        {
+          "name": "Straight-waiting-area",
+          "parent": "Road-topology-details",
+          "children": []
+        },
+        {
+          "name": "Left-turn-waiting-area",
+          "parent": "Road-topology-details",
+          "children": []
+        },
+        {
+          "name": "Non-motorized-lane",
+          "parent": "Road-topology-details",
+          "children": []
+        },
+        {
+          "name": "Bus-lane",
+          "parent": "Road-topology-details",
+          "children": []
+        },
+        {
+          "name": "Emergency-lane",
+          "parent": "Road-topology-details",
+          "children": []
+        },
+        {
+          "name": "Marked-parking-space",
+          "parent": "Road-topology-details",
+          "children": []
+        },
+        {
+          "name": "Unmarked-parking-space",
+          "parent": "Road-topology-details",
+          "children": []
+        },
+        {
+          "name": "aothers",
+          "parent": "Road-topology-details",
+          "children": []
+        },
+        {
+          "name": "none5",
+          "parent": "Road-topology-details",
+          "children": []
+        },
+        {
+          "name": "Y-junction",
+          "parent": "Road-topology-details",
+          "children": []
+        },
+        {
+          "name": "zebra-crossing",
+          "parent": "Road-topology-details",
+          "children": []
+        },
+        {
+          "name": "Wide-lane",
+          "parent": "Road-topology-details",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "Parking-scenario",
+      "parent": "OperationalDesignDomain",
+      "children": []
+    }
+  ]
+}

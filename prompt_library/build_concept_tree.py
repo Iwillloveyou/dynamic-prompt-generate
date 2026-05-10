@@ -203,7 +203,7 @@ def validate_tree_structure(root_node: TreeNode, all_concepts: Dict) -> bool:
 def main():
     """主函数"""
     input_file = "openadd.json"
-    output_file = "concept_tree.json"
+    output_file = "result/concept_tree.json"
 
     print(f"📖 读取概念文件: {input_file}")
 

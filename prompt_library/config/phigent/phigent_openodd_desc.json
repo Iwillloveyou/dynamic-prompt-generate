@@ -1,0 +1,995 @@
+{
+  "OperationalDesignDomain": {
+    "parent": null,
+    "children": [
+      "funodd",
+      "MainVehicleBehavior",
+      "position-of-the-obstacle",
+      "obstacle-type",
+      "road-topology",
+      "sign",
+      "stop-zebra-crossing",
+      "traffic-light-type",
+      "parking-space-material",
+      "traffic-light",
+      "time-period",
+      "weather",
+      "light-source",
+      "blurred-camera",
+      "parking-line-types",
+      "supplementary-information",
+      "curb-parking-space-boundary-types",
+      "Lane-marking-types",
+      "Obstacle-behavior",
+      "Road-topology-details",
+      "Parking-scenario"
+    ],
+    "desc": "The complete set of conditions under which the automated driving system is designed to operate (ASAM OpenODD 1.0.0 official description). This extended version covers functional scenarios, vehicle behaviors, obstacles, road conditions and other core elements of driving scenes."
+  },
+  "funodd": {
+    "parent": "OperationalDesignDomain",
+    "children": [
+      "highway",
+      "urban",
+      "country-road"
+    ],
+    "desc": "Functional classification of driving scenarios, used to distinguish different types of road environments and adapt to different driving requirements."
+  },
+  "highway": {
+    "parent": "funodd",
+    "children": [],
+    "desc": "High-grade road designed for high-speed through traffic, with few intersections, no non-motor vehicles, and mainly for long-distance driving (reference OpenODD official description of Highway)."
+  },
+  "urban": {
+    "parent": "funodd",
+    "children": [],
+    "desc": "Road located in urban areas, with dense intersections, mixed traffic participants (vehicles, pedestrians, non-motor vehicles), and complex traffic conditions (reference OpenODD official description of UrbanRoad)."
+  },
+  "country-road": {
+    "parent": "funodd",
+    "children": [],
+    "desc": "Road in rural or low-density residential areas, with small traffic volume, simple road conditions, and possible unexpected traffic participants such as pedestrians and animals (reference OpenODD official description of RuralRoad)."
+  },
+  "MainVehicleBehavior": {
+    "parent": "OperationalDesignDomain",
+    "children": [
+      "Pull-Away",
+      "Go-Straight",
+      "Turn-Left",
+      "Turn-Right",
+      "U-Turn",
+      "Follow",
+      "Brake",
+      "Remain-Stationary",
+      "Change-Lanes",
+      "Wait-to-Change-Lanes",
+      "cut-back",
+      "bypass",
+      "Borrow-an-Adjacent-Lane",
+      "Reverse",
+      "Enter-the-Main-Road",
+      "Enter-the-Service-Road",
+      "Enter-the-Ramp",
+      "Exit-the-Ramp",
+      "Enter-the-Roundabout",
+      "Exit-the-Roundabout",
+      "enter-the-parking-lot",
+      "exit-the-parking-lot",
+      "merge-into",
+      "parking"
+    ],
+    "desc": "All behaviors that the main vehicle may perform in the driving process, covering start, driving, turning, parking and other full-scenario operations."
+  },
+  "Pull-Away": {
+    "parent": "MainVehicleBehavior",
+    "children": [],
+    "desc": "The behavior of the main vehicle starting to move forward from a stationary state, usually occurring at traffic lights, intersections or after parking."
+  },
+  "Go-Straight": {
+    "parent": "MainVehicleBehavior",
+    "children": [],
+    "desc": "The main vehicle maintains a straight driving direction without turning or changing lanes, which is the most basic driving behavior."
+  },
+  "Turn-Left": {
+    "parent": "MainVehicleBehavior",
+    "children": [],
+    "desc": "The main vehicle turns to the left at intersections or road junctions, requiring observation of oncoming traffic and pedestrians to ensure safety."
+  },
+  "Turn-Right": {
+    "parent": "MainVehicleBehavior",
+    "children": [],
+    "desc": "The main vehicle turns to the right at intersections or road junctions, requiring observation of pedestrians and non-motor vehicles on the right side."
+  },
+  "U-Turn": {
+    "parent": "MainVehicleBehavior",
+    "children": [],
+    "desc": "The main vehicle turns around 180 degrees on the road to change the driving direction, which is usually restricted in some road sections."
+  },
+  "Follow": {
+    "parent": "MainVehicleBehavior",
+    "children": [],
+    "desc": "The main vehicle keeps a safe distance and follows the vehicle in front to drive, which is a common behavior in congested or normal traffic conditions."
+  },
+  "Brake": {
+    "parent": "MainVehicleBehavior",
+    "children": [],
+    "desc": "The main vehicle reduces the speed or stops by stepping on the brake, usually to avoid obstacles, respond to traffic signals or adapt to traffic conditions."
+  },
+  "Remain-Stationary": {
+    "parent": "MainVehicleBehavior",
+    "children": [],
+    "desc": "The main vehicle keeps stationary and does not move, usually at traffic lights, stop lines, parking lots or when waiting for obstacles to pass."
+  },
+  "Change-Lanes": {
+    "parent": "MainVehicleBehavior",
+    "children": [],
+    "desc": "The main vehicle moves from the current lane to an adjacent lane, requiring observation of the rear and side traffic to ensure a safe gap."
+  },
+  "Wait-to-Change-Lanes": {
+    "parent": "MainVehicleBehavior",
+    "children": [],
+    "desc": "The main vehicle intends to change lanes but waits temporarily due to insufficient safe gap in adjacent lanes, and starts to change lanes after the gap appears."
+  },
+  "cut-back": {
+    "parent": "MainVehicleBehavior",
+    "children": [],
+    "desc": "The main vehicle changes lanes to a certain lane and then quickly changes back to the original lane, which is usually used to avoid temporary obstacles in the original lane."
+  },
+  "bypass": {
+    "parent": "MainVehicleBehavior",
+    "children": [],
+    "desc": "The main vehicle bypasses obstacles (such as parked vehicles, slow-moving vehicles) on the current lane by changing lanes or driving along the edge of the lane."
+  },
+  "Borrow-an-Adjacent-Lane": {
+    "parent": "MainVehicleBehavior",
+    "children": [],
+    "desc": "When the current lane is blocked or cannot be used normally, the main vehicle temporarily borrows the adjacent lane to drive and returns to the original lane after passing the blocked section."
+  },
+  "Reverse": {
+    "parent": "MainVehicleBehavior",
+    "children": [],
+    "desc": "The main vehicle drives backward, usually used in parking, reversing out of the garage or correcting the vehicle position, requiring observation of the rear and surrounding environment."
+  },
+  "Enter-the-Main-Road": {
+    "parent": "MainVehicleBehavior",
+    "children": [],
+    "desc": "The main vehicle enters the main road from auxiliary roads, ramps or residential areas, requiring observation of the traffic flow on the main road and merging safely."
+  },
+  "Enter-the-Service-Road": {
+    "parent": "MainVehicleBehavior",
+    "children": [],
+    "desc": "The main vehicle enters the service road from the main road, which is usually used to access surrounding facilities, residential areas or avoid main road congestion."
+  },
+  "Enter-the-Ramp": {
+    "parent": "MainVehicleBehavior",
+    "children": [],
+    "desc": "The main vehicle enters the ramp from the main road, usually for up and down overpasses, highways or other road sections, requiring speed adjustment to adapt to the ramp curvature."
+  },
+  "Exit-the-Ramp": {
+    "parent": "MainVehicleBehavior",
+    "children": [],
+    "desc": "The main vehicle exits the ramp and enters the main road or auxiliary road, requiring speed reduction and observation of the traffic flow of the target road."
+  },
+  "Enter-the-Roundabout": {
+    "parent": "MainVehicleBehavior",
+    "children": [],
+    "desc": "The main vehicle enters the roundabout, needs to yield to the vehicles already in the roundabout, and drives along the roundabout direction."
+  },
+  "Exit-the-Roundabout": {
+    "parent": "MainVehicleBehavior",
+    "children": [],
+    "desc": "The main vehicle exits the roundabout from the designated exit, needs to turn on the turn signal in advance and observe the surrounding traffic conditions."
+  },
+  "enter-the-parking-lot": {
+    "parent": "MainVehicleBehavior",
+    "children": [],
+    "desc": "The main vehicle enters the parking lot from the road, needs to slow down, observe the parking lot entrance signs and traffic guidance, and enter in an orderly manner."
+  },
+  "exit-the-parking-lot": {
+    "parent": "MainVehicleBehavior",
+    "children": [],
+    "desc": "The main vehicle exits the parking lot and enters the road, needs to observe the road traffic flow at the exit, and merge safely into the road."
+  },
+  "merge-into": {
+    "parent": "MainVehicleBehavior",
+    "children": [],
+    "desc": "The main vehicle merges into a certain lane or traffic flow from the side (such as ramps, auxiliary roads), requiring observation of the target lane traffic and finding a safe merge gap."
+  },
+  "parking": {
+    "parent": "MainVehicleBehavior",
+    "children": [
+      "qacwbr",
+      "ParkingOut",
+      "Enter-parking-space"
+    ],
+    "desc": "The behavior of the main vehicle stopping and parking in the designated parking space, including entering the parking space, parking stably and driving out of the parking space."
+  },
+  "qacwbr": {
+    "parent": "parking",
+    "children": [],
+    "desc": "Abbreviation for quick access and continuous parking, referring to the behavior of the main vehicle quickly entering the parking space and completing parking continuously without repeated adjustments."
+  },
+  "ParkingOut": {
+    "parent": "parking",
+    "children": [],
+    "desc": "The behavior of the main vehicle driving out of the parked parking space, requiring observation of the surrounding environment to avoid colliding with adjacent vehicles or obstacles."
+  },
+  "Enter-parking-space": {
+    "parent": "parking",
+    "children": [],
+    "desc": "The behavior of the main vehicle driving into the designated parking space, adjusting the direction and position to ensure that it is parked within the parking space range."
+  },
+  "position-of-the-obstacle": {
+    "parent": "OperationalDesignDomain",
+    "children": [
+      "opposite-the-intersection",
+      "left-of-the-intersection",
+      "right-of-the-intersection",
+      "crosswalk",
+      "ahead",
+      "side",
+      "front-side",
+      "back-side",
+      "opposite-lane",
+      "bus-stop",
+      "no-message"
+    ],
+    "desc": "The relative position of obstacles relative to the main vehicle or key road nodes (such as intersections), which is used to describe the spatial distribution of obstacles in the driving scene."
+  },
+  "opposite-the-intersection": {
+    "parent": "position-of-the-obstacle",
+    "children": [],
+    "desc": "The obstacle is located directly opposite the intersection, relative to the main vehicle's driving direction, which may affect the main vehicle's turning or straight driving at the intersection."
+  },
+  "left-of-the-intersection": {
+    "parent": "position-of-the-obstacle",
+    "children": [],
+    "desc": "The obstacle is located on the left side of the intersection, relative to the main vehicle's driving direction, which may affect the main vehicle's left turn or straight driving."
+  },
+  "right-of-the-intersection": {
+    "parent": "position-of-the-obstacle",
+    "children": [],
+    "desc": "The obstacle is located on the right side of the intersection, relative to the main vehicle's driving direction, which may affect the main vehicle's right turn or observation of pedestrians."
+  },
+  "crosswalk": {
+    "parent": "position-of-the-obstacle",
+    "children": [],
+    "desc": "The obstacle is located on the crosswalk, which may be pedestrians, non-motor vehicles or other objects, requiring the main vehicle to slow down or stop to yield."
+  },
+  "ahead": {
+    "parent": "position-of-the-obstacle",
+    "children": [],
+    "desc": "The obstacle is located directly in front of the main vehicle, on the same lane or adjacent lanes, which is the most common obstacle position affecting the main vehicle's straight driving."
+  },
+  "side": {
+    "parent": "position-of-the-obstacle",
+    "children": [],
+    "desc": "The obstacle is located on the side of the main vehicle (left or right side), which may affect the main vehicle's lane change, bypass or parking behavior."
+  },
+  "front-side": {
+    "parent": "position-of-the-obstacle",
+    "children": [],
+    "desc": "The obstacle is located at the front side of the main vehicle (between the front and the side), which may affect the main vehicle's turning, lane change or observation of the front side traffic."
+  },
+  "back-side": {
+    "parent": "position-of-the-obstacle",
+    "children": [],
+    "desc": "The obstacle is located at the back side of the main vehicle (between the rear and the side), which mainly affects the main vehicle's reversing, lane changing to the rear side or observing the rear environment."
+  },
+  "opposite-lane": {
+    "parent": "position-of-the-obstacle",
+    "children": [],
+    "desc": "The obstacle is located in the opposite lane of the main vehicle, which may affect the main vehicle's left turn, U-turn or observation of oncoming traffic."
+  },
+  "bus-stop": {
+    "parent": "position-of-the-obstacle",
+    "children": [],
+    "desc": "The obstacle is located at the bus stop, which may be buses, pedestrians waiting for the bus or other objects, requiring the main vehicle to slow down and observe when passing."
+  },
+  "no-message": {
+    "parent": "position-of-the-obstacle",
+    "children": [],
+    "desc": "There is no information about the position of the obstacle, that is, no obstacle is detected or the obstacle position cannot be determined."
+  },
+  "obstacle-type": {
+    "parent": "OperationalDesignDomain",
+    "children": [
+      "motor-vehicle",
+      "tricycle",
+      "non-motorized-vehicle",
+      "pedestrian",
+      "general-obstacle",
+      "road-surface-obstacle",
+      "other",
+      "none7"
+    ],
+    "desc": "Classification of obstacles in the driving scene, according to the type of obstacle to distinguish its impact on driving safety and the main vehicle's response strategy (reference OpenODD official description of TrafficParticipants and Obstacle)."
+  },
+  "motor-vehicle": {
+    "parent": "obstacle-type",
+    "children": [
+      "motorcycle",
+      "car",
+      "van",
+      "police-car",
+      "school-bus",
+      "ambulance",
+      "fire-truck",
+      "bus",
+      "coach",
+      "truck",
+      "flatbed-ruck",
+      "car-carrier",
+      "water-truck",
+      "engineering-vehicle",
+      "street-sweeper"
+    ],
+    "desc": "Motorized vehicles that may be encountered as obstacles in the driving scene, with different sizes, speeds and functions, and have different impacts on driving safety (reference OpenODD official description of Vehicle)."
+  },
+  "motorcycle": {
+    "parent": "motor-vehicle",
+    "children": [],
+    "desc": "Two-wheeled motorized vehicle, small in size, flexible in driving, but poor in stability and protection, which is a vulnerable obstacle (reference OpenODD official description of Motorcycle)."
+  },
+  "car": {
+    "parent": "motor-vehicle",
+    "children": [],
+    "desc": "Small passenger motor vehicle, the most common motor vehicle obstacle in driving scenes, with moderate size and speed (reference OpenODD official description of Car)."
+  },
+  "van": {
+    "parent": "motor-vehicle",
+    "children": [],
+    "desc": "Small and medium-sized cargo or passenger motor vehicle, larger than ordinary cars, with limited visibility for the driver."
+  },
+  "police-car": {
+    "parent": "motor-vehicle",
+    "children": [],
+    "desc": "Special motor vehicle used by the police for law enforcement, usually with priority when on duty, and the main vehicle needs to give way (reference OpenODD official description of EmergencyVehicle)."
+  },
+  "school-bus": {
+    "parent": "motor-vehicle",
+    "children": [],
+    "desc": "Special motor vehicle used to pick up and drop off students, with strict speed limits and priority in driving, and the main vehicle needs to slow down and yield when encountering it."
+  },
+  "ambulance": {
+    "parent": "motor-vehicle",
+    "children": [],
+    "desc": "Special motor vehicle used for emergency medical rescue, with the highest priority when on duty, and the main vehicle needs to give way immediately (reference OpenODD official description of EmergencyVehicle)."
+  },
+  "fire-truck": {
+    "parent": "motor-vehicle",
+    "children": [],
+    "desc": "Special motor vehicle used for fire fighting and rescue, with high priority when on duty, and the main vehicle needs to give way immediately (reference OpenODD official description of EmergencyVehicle)."
+  },
+  "bus": {
+    "parent": "motor-vehicle",
+    "children": [],
+    "desc": "Large passenger motor vehicle used for public transport, with large size, slow speed, and often stops at bus stations to pick up and drop off passengers (reference OpenODD official description of Bus)."
+  },
+  "coach": {
+    "parent": "motor-vehicle",
+    "children": [],
+    "desc": "Large passenger motor vehicle used for long-distance travel, with large capacity, high comfort, and relatively fixed driving routes and speeds."
+  },
+  "truck": {
+    "parent": "motor-vehicle",
+    "children": [],
+    "desc": "Large cargo motor vehicle, heavy weight, large size, slow speed, long braking distance, and large impact when colliding (reference OpenODD official description of Truck)."
+  },
+  "flatbed-ruck": {
+    "parent": "motor-vehicle",
+    "children": [],
+    "desc": "A type of truck with a flat cargo compartment, used to transport large, bulky goods (such as construction materials, machinery), and the cargo may be an additional obstacle."
+  },
+  "car-carrier": {
+    "parent": "motor-vehicle",
+    "children": [],
+    "desc": "A type of truck used to transport motor vehicles (such as cars), with a multi-layer cargo compartment, large size and high center of gravity, requiring careful observation when passing."
+  },
+  "water-truck": {
+    "parent": "motor-vehicle",
+    "children": [],
+    "desc": "A special truck used to transport water or sprinkle water on the road, which may affect road surface conditions (such as wet roads) when sprinkling water."
+  },
+  "engineering-vehicle": {
+    "parent": "motor-vehicle",
+    "children": [],
+    "desc": "Special vehicles used for road construction, maintenance and other engineering operations (such as excavators, road rollers), usually slow-moving and may occupy lanes."
+  },
+  "street-sweeper": {
+    "parent": "motor-vehicle",
+    "children": [],
+    "desc": "Special vehicles used for road cleaning, slow-moving, with cleaning equipment, which may affect the driving of surrounding vehicles when working."
+  },
+  "tricycle": {
+    "parent": "obstacle-type",
+    "children": [
+      "manned-tricycle",
+      "unmanned-tricycle"
+    ],
+    "desc": "Three-wheeled vehicles, which can be motorized or non-motorized, with poor stability, and are common obstacles in urban and rural roads."
+  },
+  "manned-tricycle": {
+    "parent": "tricycle",
+    "children": [],
+    "desc": "Three-wheeled vehicles with drivers, which may carry passengers or goods, with flexible driving but poor safety awareness, and are easy to occupy lanes randomly."
+  },
+  "unmanned-tricycle": {
+    "parent": "tricycle",
+    "children": [],
+    "desc": "Unmanned three-wheeled vehicles, usually used for logistics distribution and other scenarios, with fixed driving routes but may have unexpected movements."
+  },
+  "non-motorized-vehicle": {
+    "parent": "obstacle-type",
+    "children": [
+      "cyclist",
+      "electric-bike",
+      "unmanned-two-wheeled-vehicle"
+    ],
+    "desc": "Vehicles that do not rely on motor power, with slow speed but flexible movement, and are vulnerable groups in traffic, which are common obstacles in driving scenes (reference OpenODD official description of Non-motorizedVehicle)."
+  },
+  "cyclist": {
+    "parent": "non-motorized-vehicle",
+    "children": [],
+    "desc": "People riding bicycles, slow in speed, flexible in movement, and easy to change lanes randomly, requiring the main vehicle to pay attention to avoidance (reference OpenODD official description of Cyclist)."
+  },
+  "electric-bike": {
+    "parent": "non-motorized-vehicle",
+    "children": [],
+    "desc": "Two-wheeled vehicles relying on electric power, faster than bicycles, with poor stability, and are common non-motor vehicle obstacles in urban roads."
+  },
+  "unmanned-two-wheeled-vehicle": {
+    "parent": "non-motorized-vehicle",
+    "children": [],
+    "desc": "Unmanned two-wheeled vehicles, usually used for express delivery, food delivery and other scenarios, with small size and flexible movement, but may have irregular driving paths."
+  },
+  "pedestrian": {
+    "parent": "obstacle-type",
+    "children": [
+      "adult",
+      "child",
+      "police-officer",
+      "cycling-law-enforcer"
+    ],
+    "desc": "People traveling on foot, the most vulnerable traffic participants, with flexible movement and unpredictable paths, which are important obstacles affecting driving safety (reference OpenODD official description of Pedestrian)."
+  },
+  "adult": {
+    "parent": "pedestrian",
+    "children": [],
+    "desc": "Adult pedestrians, with relatively standard traffic safety awareness, usually walk on sidewalks or crosswalks, but may also have illegal behaviors such as jaywalking."
+  },
+  "child": {
+    "parent": "pedestrian",
+    "children": [],
+    "desc": "Child pedestrians, with poor safety awareness, flexible and random movements, easy to rush into the road suddenly, requiring the main vehicle to slow down and observe carefully."
+  },
+  "police-officer": {
+    "parent": "pedestrian",
+    "children": [],
+    "desc": "Police officers performing on-site traffic command, their gestures and commands have priority over traffic signals, and the main vehicle needs to obey their command."
+  },
+  "cycling-law-enforcer": {
+    "parent": "pedestrian",
+    "children": [],
+    "desc": "Law enforcement personnel responsible for managing non-motor vehicle traffic, usually on the road to guide and correct non-motor vehicle violations, requiring the main vehicle to avoid and cooperate."
+  },
+  "general-obstacle": {
+    "parent": "obstacle-type",
+    "children": [
+      "traffic-cone",
+      "water-filled-barrier",
+      "crash-bucket",
+      "A-frame-no-entry-sign",
+      "bollard",
+      "tripod",
+      "construction-sign",
+      "column",
+      "stopper",
+      "parking-lock",
+      "gate-and-railing"
+    ],
+    "desc": "Fixed or temporary non-living obstacles in the driving scene, usually used for traffic guidance, road construction or safety protection (reference OpenODD official description of GeneralObstacle)."
+  },
+  "traffic-cone": {
+    "parent": "general-obstacle",
+    "children": [],
+    "desc": "Conical temporary traffic guidance facilities, usually orange, used to isolate construction areas, guide traffic flow or mark obstacles (reference OpenODD official description of TrafficCone)."
+  },
+  "water-filled-barrier": {
+    "parent": "general-obstacle",
+    "children": [],
+    "desc": "Temporary barrier filled with water, used to isolate road sections, construction areas or accident scenes, with good stability and impact resistance."
+  },
+  "crash-bucket": {
+    "parent": "general-obstacle",
+    "children": [],
+    "desc": "Special collision-resistant facilities, usually installed at road exits, ramps and other positions, used to buffer the impact of vehicle collisions and reduce accident losses."
+  },
+  "A-frame-no-entry-sign": {
+    "parent": "general-obstacle",
+    "children": [],
+    "desc": "A-shaped temporary no-entry sign, used to close a certain road section, prohibiting vehicles and pedestrians from entering, usually used in construction or accident scenes."
+  },
+  "bollard": {
+    "parent": "general-obstacle",
+    "children": [],
+    "desc": "Fixed cylindrical facilities, usually installed on sidewalks, parking lots or road edges, used to prevent vehicles from rushing into non-motor vehicle areas or pedestrian areas (reference OpenODD official description of Bollard)."
+  },
+  "tripod": {
+    "parent": "general-obstacle",
+    "children": [],
+    "desc": "Temporary triangular support facilities, usually used with warning signs to remind drivers of road obstacles or construction ahead."
+  },
+  "construction-sign": {
+    "parent": "general-obstacle",
+    "children": [],
+    "desc": "Signs used to indicate road construction, usually with warning colors and clear text/graphics, reminding drivers to slow down and bypass (reference OpenODD official description of ConstructionSign)."
+  },
+  "column": {
+    "parent": "general-obstacle",
+    "children": [],
+    "desc": "Fixed cylindrical structures (such as street lamp columns, bridge piers), distributed on both sides of the road or in the middle, which are fixed obstacles that need to be avoided."
+  },
+  "stopper": {
+    "parent": "general-obstacle",
+    "children": [],
+    "desc": "Small fixed obstacles installed at the end of parking spaces, road edges or ramps, used to prevent vehicles from driving over or hitting other facilities."
+  },
+  "parking-lock": {
+    "parent": "general-obstacle",
+    "children": [],
+    "desc": "Facilities used to lock parking spaces, usually installed in private parking spaces or paid parking spaces, which will block the main vehicle from parking if not opened."
+  },
+  "gate-and-railing": {
+    "parent": "general-obstacle",
+    "children": [],
+    "desc": "Gates and railings installed at the entrances and exits of communities, parking lots or restricted areas, used to control the entry and exit of vehicles and pedestrians, and are obstacles when closed."
+  },
+  "road-surface-obstacle": {
+    "parent": "obstacle-type",
+    "children": [
+      "speed-bump",
+      "manhole-cover",
+      "rumble-strip"
+    ],
+    "desc": "Obstacles existing on the road surface, which will affect the driving comfort and stability of the vehicle, and some may also damage the vehicle (reference OpenODD official description of RoadSurfaceObstacle)."
+  },
+  "speed-bump": {
+    "parent": "road-surface-obstacle",
+    "children": [],
+    "desc": "Raised facilities installed on the road surface, used to force vehicles to slow down, usually installed in residential areas, school districts, parking lots and other areas (reference OpenODD official description of SpeedBump)."
+  },
+  "manhole-cover": {
+    "parent": "road-surface-obstacle",
+    "children": [],
+    "desc": "Covers used to protect underground pipelines (water, electricity, gas, etc.), installed on the road surface, which may be loose or missing, posing a threat to driving safety."
+  },
+  "rumble-strip": {
+    "parent": "road-surface-obstacle",
+    "children": [],
+    "desc": "Striped raised or recessed facilities on the road surface, which will produce vibration and noise when the vehicle passes, used to remind drivers to pay attention to safety (such as lane departure, speed limit)."
+  },
+  "other": {
+    "parent": "obstacle-type",
+    "children": [
+      "shopping-cart"
+    ],
+    "desc": "Other types of obstacles not covered by the above categories, which are relatively rare but may appear in specific driving scenes."
+  },
+  "shopping-cart": {
+    "parent": "other",
+    "children": [],
+    "desc": "Shopping carts used in supermarkets or shopping malls, which may be left on the road or parking lot accidentally, becoming obstacles affecting vehicle driving."
+  },
+  "none7": {
+    "parent": "obstacle-type",
+    "children": [],
+    "desc": "No obstacles are detected in the driving scene, or there is no information about obstacles."
+  },
+  "road-topology": {
+    "parent": "OperationalDesignDomain",
+    "children": [
+      "straight-road",
+      "curved-road",
+      "ramp",
+      "tunnel",
+      "overpass",
+      "roundabout",
+      "main-road-and-auxiliary-road",
+      "slope-road",
+      "symmetric-intersection",
+      "asymmetric-intersection",
+      "toll-station",
+      "surface-parking-ot",
+      "basement-parking",
+      "park-exit"
+    ],
+    "desc": "The overall structure and shape of the road, including the type, layout and key nodes of the road, which determines the driving path and mode of the vehicle (reference OpenODD official description of RoadTopology)."
+  },
+  "straight-road": {
+    "parent": "road-topology",
+    "children": [],
+    "desc": "Road with a straight driving direction, no obvious curvature, the most basic road topology, suitable for high-speed driving (reference OpenODD official description of StraightRoad)."
+  },
+  "curved-road": {
+    "parent": "road-topology",
+    "children": [],
+    "desc": "Road with a certain curvature, requiring the main vehicle to slow down and turn, and pay attention to the blind area of the curve (reference OpenODD official description of CurvedRoad)."
+  },
+  "ramp": {
+    "parent": "road-topology",
+    "children": [],
+    "desc": "Connecting road between different road levels (such as main road and overpass, highway and urban road), usually with a certain slope and curvature, requiring speed adjustment (reference OpenODD official description of Ramp)."
+  },
+  "tunnel": {
+    "parent": "road-topology",
+    "children": [],
+    "desc": "Enclosed passage built through mountains or underground, with closed environment, relying on artificial lighting and ventilation, and requiring speed limit and careful driving (reference OpenODD official description of Tunnel)."
+  },
+  "overpass": {
+    "parent": "road-topology",
+    "children": [],
+    "desc": "Elevated road built to avoid intersection conflicts, with no level crossing with the ground road, suitable for fast through traffic (reference OpenODD official description of Overpass)."
+  },
+  "roundabout": {
+    "parent": "road-topology",
+    "children": [],
+    "desc": "Circular intersection, vehicles drive along the circular direction, no traffic lights are needed in most cases, which can reduce intersection conflicts (reference OpenODD official description of Roundabout)."
+  },
+  "main-road-and-auxiliary-road": {
+    "parent": "road-topology",
+    "children": [],
+    "desc": "Road structure composed of main road and auxiliary road, the main road is used for fast through traffic, and the auxiliary road is used for accessing surrounding facilities and slowing down and merging."
+  },
+  "slope-road": {
+    "parent": "road-topology",
+    "children": [],
+    "desc": "Road with a certain slope (uphill or downhill), requiring the main vehicle to adjust the speed and gear, and pay attention to braking and anti-slip when going downhill (reference OpenODD official description of SlopeRoad)."
+  },
+  "symmetric-intersection": {
+    "parent": "road-topology",
+    "children": [],
+    "desc": "Intersection with symmetric structure, the number of lanes and traffic flow directions of each entrance are the same, with regular traffic rules and easy to judge."
+  },
+  "asymmetric-intersection": {
+    "parent": "road-topology",
+    "children": [],
+    "desc": "Intersection with asymmetric structure, the number of lanes and traffic flow directions of each entrance are different, with complex traffic conditions and requiring careful observation."
+  },
+  "toll-station": {
+    "parent": "road-topology",
+    "children": [],
+    "desc": "Facilities set on highways, bridges and other roads to collect tolls, usually with toll lanes, requiring the main vehicle to slow down and stop to pay tolls."
+  },
+  "surface-parking-ot": {
+    "parent": "road-topology",
+    "children": [],
+    "desc": "Open-air parking lot built on the ground, with simple structure, sufficient lighting, and easy entry and exit, which is a common parking topology."
+  },
+  "basement-parking": {
+    "parent": "road-topology",
+    "children": [],
+    "desc": "Parking lot built underground, with closed environment, limited space, relying on artificial lighting and ventilation, and requiring careful driving and parking."
+  },
+  "park-exit": {
+    "parent": "road-topology",
+    "children": [],
+    "desc": "Exit of the parking lot (surface or underground), connecting the parking lot and the road, requiring the main vehicle to observe the road traffic flow and merge safely."
+  },
+  "sign": {
+    "parent": "OperationalDesignDomain",
+    "children": [
+      "speed-limit-sign",
+      "prohibition-sign",
+      "warning-sign",
+      "ground-arrow",
+      "none",
+      "end-speed-limit-sigh"
+    ],
+    "desc": "Traffic signs used to guide, restrict and warn driving behavior, which are important information sources for the main vehicle to judge the driving environment (reference OpenODD official description of TrafficSigns)."
+  },
+  "speed-limit-sign": {
+    "parent": "sign",
+    "children": [],
+    "desc": "Signs indicating the maximum speed allowed on the road, the main vehicle must drive within the speed limit range to ensure safety (reference OpenODD official description of SpeedLimitSign)."
+  },
+  "prohibition-sign": {
+    "parent": "sign",
+    "children": [],
+    "desc": "Signs prohibiting certain driving behaviors (such as no left turn, no parking, no entry), the main vehicle must abide by them to avoid violations (reference OpenODD official description of ProhibitionSign)."
+  },
+  "warning-sign": {
+    "parent": "sign",
+    "children": [],
+    "desc": "Signs warning drivers of potential dangers ahead (such as curves, slopes, pedestrians, construction), requiring the main vehicle to slow down and be alert (reference OpenODD official description of WarningSign)."
+  },
+  "ground-arrow": {
+    "parent": "sign",
+    "children": [],
+    "desc": "Traffic signs painted on the road surface, usually indicating the driving direction (such as straight, left turn, right turn), guiding the main vehicle to drive in the correct lane."
+  },
+  "none": {
+    "parent": "sign",
+    "children": [],
+    "desc": "No traffic signs are detected in the driving scene, or there is no sign information affecting driving."
+  },
+  "end-speed-limit-sigh": {
+    "parent": "sign",
+    "children": [],
+    "desc": "Signs indicating the end of the speed limit section, the main vehicle can resume the normal speed allowed by the road after passing this sign (typo: sigh should be sign, reserved original text)."
+  },
+  "stop-zebra-crossing": {
+    "parent": "OperationalDesignDomain",
+    "children": [
+      "stop-zebra-crossing1",
+      "stop-only-line",
+      "zebra-crossing-only",
+      "none1"
+    ],
+    "desc": "Traffic facilities related to stopping and zebra crossings, used to standardize the main vehicle's stopping behavior at zebra crossings and ensure the safety of pedestrians crossing the road."
+  },
+  "stop-zebra-crossing1": {
+    "parent": "stop-zebra-crossing",
+    "children": [],
+    "desc": "Facilities with both stop lines and zebra crossings, the main vehicle must stop at the stop line when encountering red lights or needing to yield, and observe pedestrians crossing the zebra crossing."
+  },
+  "stop-only-line": {
+    "parent": "stop-zebra-crossing",
+    "children": [],
+    "desc": "Only stop lines are set, no zebra crossings, the main vehicle must stop at the stop line according to traffic signals or traffic rules."
+  },
+  "zebra-crossing-only": {
+    "parent": "stop-zebra-crossing",
+    "children": [],
+    "desc": "Only zebra crossings are set, no stop lines, the main vehicle must slow down and yield to pedestrians crossing the zebra crossing when passing."
+  },
+  "none1": {
+    "parent": "stop-zebra-crossing",
+    "children": [],
+    "desc": "No stop lines or zebra crossings are set at the current road section, the main vehicle can drive normally but needs to observe whether there are pedestrians crossing the road."
+  },
+  "traffic-light-type": {
+    "parent": "OperationalDesignDomain",
+    "children": [
+      "circular-light",
+      "arrow-signal-light",
+      "round-signal-light-with-timer",
+      "arrow-signal-light-with-timer",
+      "none2"
+    ],
+    "desc": "Classification of traffic light types, different types of traffic lights have different guiding functions, which directly determine the driving behavior of the main vehicle (reference OpenODD official description of TrafficLights)."
+  },
+  "circular-light": {
+    "parent": "traffic-light-type",
+    "children": [],
+    "desc": "Circular traffic lights, including red, yellow and green lights, indicating that the main vehicle can go straight, turn left or right (subject to traffic rules) when the green light is on (reference OpenODD official description of CircularLight)."
+  },
+  "arrow-signal-light": {
+    "parent": "traffic-light-type",
+    "children": [],
+    "desc": "Arrow-shaped traffic lights, indicating the specific driving direction (left turn, right turn, straight), the main vehicle can only drive in the direction indicated by the green arrow (reference OpenODD official description of ArrowSignalLight)."
+  },
+  "round-signal-light-with-timer": {
+    "parent": "traffic-light-type",
+    "children": [],
+    "desc": "Circular traffic lights with a countdown timer, displaying the remaining time of the current light color, helping the main vehicle to predict and adjust the driving speed."
+  },
+  "arrow-signal-light-with-timer": {
+    "parent": "traffic-light-type",
+    "children": [],
+    "desc": "Arrow-shaped traffic lights with a countdown timer, displaying the remaining time of the current arrow signal, facilitating the main vehicle to make driving decisions in advance."
+  },
+  "none2": {
+    "parent": "traffic-light-type",
+    "children": [],
+    "desc": "No traffic lights are set at the current road section, the main vehicle needs to observe the traffic rules and yield to ensure safe driving."
+  },
+  "parking-space-material": {
+    "parent": "OperationalDesignDomain",
+    "children": [
+      "paint",
+      "cement",
+      "brick",
+      "asphalt",
+      "epoxy-flooring",
+      "none8"
+    ],
+    "desc": "The material of the parking space surface, which affects the friction between the vehicle tires and the ground, and also affects the parking stability and comfort."
+  },
+  "paint": {
+    "parent": "parking-space-material",
+    "children": [],
+    "desc": "Parking spaces marked with paint on the ground (such as asphalt, cement ground), the paint is used to distinguish the parking space range, and the ground friction depends on the base material."
+  },
+  "cement": {
+    "parent": "parking-space-material",
+    "children": [],
+    "desc": "Parking spaces with cement as the surface material, hard texture, good wear resistance, and high friction, suitable for outdoor and indoor parking lots."
+  },
+  "brick": {
+    "parent": "parking-space-material",
+    "children": [],
+    "desc": "Parking spaces with bricks as the surface material, good water permeability, but relatively low friction, usually used in outdoor open-air parking lots."
+  },
+  "asphalt": {
+    "parent": "parking-space-material",
+    "children": [],
+    "desc": "Parking spaces with asphalt as the surface material, smooth surface, good friction, and low noise when parking, usually used in outdoor parking lots (reference OpenODD official description of AsphaltRoadSurface)."
+  },
+  "epoxy-flooring": {
+    "parent": "parking-space-material",
+    "children": [],
+    "desc": "Parking spaces with epoxy flooring as the surface material, smooth, wear-resistant, corrosion-resistant, and easy to clean, usually used in indoor basement parking lots."
+  },
+  "none8": {
+    "parent": "parking-space-material",
+    "children": [],
+    "desc": "No specific parking space material information, or the parking space surface material is not within the above categories."
+  },
+  "traffic-light": {
+    "parent": "OperationalDesignDomain",
+    "children": [
+      "red-light",
+      "green-light",
+      "yellow-light",
+      "red-light-turning-green",
+      "green-light-turning-red",
+      "flashing-yellow-light",
+      "non-lit-light",
+      "none6"
+    ],
+    "desc": "The state of traffic lights, which directly guides the driving behavior of the main vehicle, and is an important traffic control facility at intersections (reference OpenODD official description of TrafficLightStates)."
+  },
+  "red-light": {
+    "parent": "traffic-light",
+    "children": [],
+    "desc": "Traffic lights are red, indicating that the main vehicle must stop at the stop line and wait, and is not allowed to pass (reference OpenODD official description of RedLight)."
+  },
+  "green-light": {
+    "parent": "traffic-light",
+    "children": [],
+    "desc": "Traffic lights are green, indicating that the main vehicle can pass normally, but needs to observe the surrounding traffic conditions (reference OpenODD official description of GreenLight)."
+  },
+  "yellow-light": {
+    "parent": "traffic-light",
+    "children": [],
+    "desc": "Traffic lights are yellow, indicating that the signal is about to change, vehicles that have crossed the stop line can continue to pass, and vehicles that have not crossed the stop line should stop and wait (reference OpenODD official description of YellowLight)."
+  },
+  "red-light-turning-green": {
+    "parent": "traffic-light",
+    "children": [],
+    "desc": "The red light is about to turn green, the main vehicle can prepare to start in advance, but must not pass before the green light is on."
+  },
+  "green-light-turning-red": {
+    "parent": "traffic-light",
+    "children": [],
+    "desc": "The green light is about to turn red, the main vehicle should slow down and stop in time, and should not rush through the intersection."
+  },
+  "flashing-yellow-light": {
+    "parent": "traffic-light",
+    "children": [],
+    "desc": "Traffic lights flash yellow, indicating that the main vehicle can pass, but needs to slow down and observe, and yield to pedestrians and other vehicles to ensure safety."
+  },
+  "non-lit-light": {
+    "parent": "traffic-light",
+    "children": [],
+    "desc": "Traffic lights are not lit (malfunction or power failure), the main vehicle should treat it as an unmarked intersection, slow down and observe, and yield to ensure safe passage."
+  },
+  "none6": {
+    "parent": "traffic-light",
+    "children": [],
+    "desc": "No traffic lights are detected at the current intersection, the main vehicle should abide by the traffic rules of unmarked intersections and yield to ensure safety."
+  },
+  "time-period": {
+    "parent": "OperationalDesignDomain",
+    "children": [
+      "evening",
+      "daytime",
+      "nighttime"
+    ],
+    "desc": "The time period of the driving scene, different time periods have different lighting conditions, traffic flow and driving risks (reference OpenODD official description of TemporalConditions)."
+  },
+  "evening": {
+    "parent": "time-period",
+    "children": [],
+    "desc": "The time period from dusk to nightfall, the natural light gradually dims, the visibility decreases, and the main vehicle needs to turn on the vehicle lights and drive carefully (reference OpenODD official description of Twilight)."
+  },
+  "daytime": {
+    "parent": "time-period",
+    "children": [],
+    "desc": "The time period from sunrise to sunset, sufficient natural light, good visibility, which is the most favorable time period for driving (reference OpenODD official description of Daylight)."
+  },
+  "nighttime": {
+    "parent": "time-period",
+    "children": [],
+    "desc": "The time period from nightfall to sunrise, insufficient natural light, low visibility, relying on vehicle lights and street lights, and high driving risks (reference OpenODD official description of Night)."
+  },
+  "weather": {
+    "parent": "OperationalDesignDomain",
+    "children": [
+      "sunny",
+      "snowy",
+      "rainy",
+      "foggy"
+    ],
+    "desc": "Atmospheric conditions of the driving scene, different weather conditions affect visibility, road surface friction and vehicle performance (reference OpenODD official description of Weather)."
+  },
+  "sunny": {
+    "parent": "weather",
+    "children": [],
+    "desc": "Sunny weather, no clouds or precipitation, sufficient light, good visibility, dry road surface, which is the most favorable weather for driving (reference OpenODD official description of ClearWeather)."
+  },
+  "snowy": {
+    "parent": "weather",
+    "children": [],
+    "desc": "Snowy weather, snow falls from the sky, the road surface is covered with snow, low friction, easy to slip, and visibility decreases, requiring the main vehicle to slow down and drive carefully (reference OpenODD official description of SnowyWeather)."
+  },
+  "rainy": {
+    "parent": "weather",
+    "children": [],
+    "desc": "Rainy weather, liquid precipitation, the road surface is wet, low friction, reduced visibility, and possible water accumulation, requiring the main vehicle to slow down and avoid hydroplaning (reference OpenODD official description of RainyWeather)."
+  },
+  "foggy": {
+    "parent": "weather",
+    "children": [],
+    "desc": "Foggy weather, the air is filled with fog, visibility is significantly reduced, which seriously affects driving safety, requiring the main vehicle to slow down, turn on fog lights, and even stop and wait (reference OpenODD official description of FoggyWeather)."
+  },
+  "light-source": {
+    "parent": "OperationalDesignDomain",
+    "children": [
+      "backlit",
+      "normal-light",
+      "car-headlight",
+      "bicycle-headlight",
+      "bicycle-taillight",
+      "left-indicator-light",
+      "right-indicator-light",
+      "emergency-flashers",
+      "car-brake-light",
+      "streetlight",
+      "without-streetlights"
+    ],
+    "desc": "Light sources in the driving scene, including natural light and artificial light, which affect the visibility of the main vehicle and the recognition of surrounding objects (reference OpenODD official description of Illumination)."
+  },
+  "backlit": {
+    "parent": "light-source",
+    "children": [],
+    "desc": "The light source is behind the main vehicle, causing the front of the vehicle to be backlit, the driver's vision is affected, and it is difficult to recognize objects in front, requiring the main vehicle to adjust the sunshade or slow down."
+  },
+  "normal-light": {
+    "parent": "light-source",
+    "children": [],
+    "desc": "The light source is normal, the illumination is sufficient and uniform, which does not affect the driver's vision, and is the most favorable light condition for driving."
+  },
+  "car-headlight": {
+    "parent": "light-source",
+    "children": [],
+    "desc": "The headlight of the main vehicle or other vehicles, used to illuminate the road ahead at night or in low light, and also to remind other vehicles of their own position."
+  },
+  "bicycle-headlight": {
+    "parent": "light-source",
+    "children": [],
+    "desc": "The headlight installed on the bicycle, used to illuminate the road ahead when the bicycle is driving at night, and remind other vehicles to avoid."
+  },
+  "bicycle-taillight": {
+    "parent": "light-source",
+    "children": [],
+    "desc": "The taillight installed on the bicycle, usually red, used to remind the vehicles behind to pay attention to the distance and avoid collision when the bicycle is driving at night."
+  },
+  "left-indicator-light": {
+    "parent": "light-source",
+    "children": [],
+    "desc": "The left turn signal light of the vehicle, used to indicate that the vehicle is about to turn left or change lanes to the left, reminding surrounding vehicles and pedestrians."
+  },
+  "right-indicator-light": {
+    "parent": "light-source",
+    "children": [],
+    "desc": "The right turn signal light of the vehicle, used to indicate that the vehicle is about to turn right or change lanes to the right, reminding surrounding vehicles and pedestrians."
+  },
+  "emergency-flashers": {
+    "parent": "light-source",
+    "children": [],
+    "desc": "The emergency warning light of the vehicle, usually flashing red and yellow, used when the vehicle breaks down or has an accident, to remind surrounding vehicles to bypass (reference OpenODD official description of EmergencyFlashers)."
+  },
+  "car-brake-light": {
+    "parent
