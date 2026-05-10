@@ -9,12 +9,14 @@ from PIL import Image
 import numpy as np
 from tqdm import tqdm
 
+#文本动态提示生成检索网络 测试集/验证集构造还需完善：测试集不用区分正负样本，且同一batch应采集自不同track，验证集需提供候选集
+
 # -------------------- 配置参数 --------------------
 class Config:
     # 数据集路径（请根据实际情况修改）
-    data_root = './cityflow-nl'           # 数据集根目录，包含 images 和 annotations.json
-    image_dir = os.path.join(data_root, 'images')
-    ann_file = os.path.join(data_root, 'annotations.json')
+    data_root = './cityflow-nl-data/'           # 数据集根目录，包含 images 和 annotations.json
+    image_dir = data_root
+    ann_file = './cityflow_nl_dataset_handler/annotations/cityflow-nl.json'
 
     # CLIP模型
     clip_model_name = 'ViT-B/32'
@@ -103,8 +105,8 @@ class CityFlowNLDataset(Dataset):
         for item in data:
             if item['split'] == split:
                 self.samples.append({
-                    'image_path': os.path.join(image_dir, item['image']),
-                    'caption': item['caption']
+                    'image_path': os.path.join(image_dir, item['frames']),
+                    'caption': item['nl']
                 })
 
     def __len__(self):
@@ -148,10 +150,10 @@ def train_epoch(model, generator, dataloader, optimizer, device, temperature):
         # 计算相似度矩阵
         logits = text_feat_aug @ image_feat.T / temperature  # [batch, batch]
 
-        # 构造标签（对角线为正样本）
+        # 构造标签（对角线为正样本） 即对角线上元素的未知
         labels = torch.arange(batch_size, device=device)
 
-        # 双向对比损失
+        # 双向对比损失 分别集散logits中每个查询的交叉熵，其中正样本的概率会增大，负样本概率会缩小
         loss_t2i = F.cross_entropy(logits, labels)
         loss_i2t = F.cross_entropy(logits.T, labels)
         loss = (loss_t2i + loss_i2t) / 2
@@ -224,7 +226,7 @@ def evaluate(model, generator, dataloader, device, temperature, k_list=[1,5,10])
 def main():
     # 数据集
     train_dataset = CityFlowNLDataset(config.ann_file, config.image_dir, preprocess, split='train')
-    val_dataset = CityFlowNLDataset(config.ann_file, config.image_dir, preprocess, split='val')   # 假设有val
+    val_dataset = CityFlowNLDataset(config.ann_file, config.image_dir, preprocess, split='validation')   # 假设有val
     train_loader = DataLoader(train_dataset, batch_size=config.batch_size, shuffle=True, num_workers=config.num_workers)
     val_loader = DataLoader(val_dataset, batch_size=config.batch_size, shuffle=False, num_workers=config.num_workers)
 
