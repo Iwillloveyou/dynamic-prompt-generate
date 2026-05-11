@@ -82,6 +82,60 @@ class PromptGenerator(nn.Module):
         combined = F.normalize(combined, dim=-1)
         return combined
 
+# -------------------- SemanticPromptGenerator --------------------
+class SemanticPromptGenerator(nn.Module):
+    def __init__(self, concept_name_embs, concept_extend_embs, temperature=0.07):
+        """
+        concept_name_embs: [C, D] 概念名称 embedding (已归一化)
+        concept_extend_embs: list of list of [D] tensors (每个概念的扩展描述 embedding，已归一化)
+        """
+        super().__init__()
+        self.register_buffer('concept_names', concept_name_embs)   # [C, D]
+        # 存储扩展描述 embeddings，每个概念的扩展可能长度不一，需要用 list 保存（不能直接注册 buffer）
+        self.concept_extend_embs = concept_extend_embs   # list of list of tensors
+        self.temperature = nn.Parameter(torch.tensor(temperature))
+
+    def forward(self, text_feat, img_feat=None):
+        """
+        text_feat: [B, D]
+        img_feat: [B, D] or None
+        """
+        if img_feat is not None:
+            # 融合两种模态：简单相加或拼接投影？这里取两者平均（可以调整）
+            query_feat = F.normalize(text_feat + img_feat, dim=-1)
+        else:
+            query_feat = text_feat
+
+        batch_size = query_feat.size(0)
+        C = self.concept_names.size(0)
+
+        # 计算每个查询与每个概念的扩展描述的相似度，取最大值
+        concept_scores = torch.zeros(batch_size, C, device=query_feat.device)
+        for c in range(C):
+            # 该概念的所有扩展描述 embedding
+            exts = self.concept_extend_embs[c]   # list of tensors [D]
+            if len(exts) == 0:
+                # 如果没有扩展描述，则使用概念名称本身
+                exts = [self.concept_names[c]]
+            # 将所有扩展描述堆叠为 [M, D]
+            exts_tensor = torch.stack(exts, dim=0).to(query_feat.device)  # [M, D]
+            # 计算相似度矩阵 [B, M]
+            sim = query_feat @ exts_tensor.T
+            # 取每个查询的最大值作为该概念的分值
+            concept_scores[:, c] = sim.max(dim=1)[0]
+
+        # 应用温度系数
+        logits = concept_scores / self.temperature
+        weights = F.softmax(logits, dim=-1)   # [B, C]
+
+        # 加权组合概念名称向量
+        dyn_prompt = weights @ self.concept_names   # [B, D]
+
+        # 融合原始文本特征与动态提示
+        combined = text_feat + dyn_prompt
+        combined = F.normalize(combined, dim=-1)
+        return combined
+
 # -------------------- 数据集构建 --------------------
 def build_train_triplets(track_ann_file, image_root, allowed_track_ids=None):
     """
@@ -440,6 +494,31 @@ def retrieve(query_text, query_image_path, candidate_image_paths, clip_model, ge
         top_indices = sim.argsort(descending=True)[:top_k]
     return [(candidate_image_paths[i], sim[i].item()) for i in top_indices]
 
+# ==================== 加载提示库 ====================
+def load_concept_extensions(json_path, npz_path):
+    with open(json_path, 'r') as f:
+        concepts = json.load(f)   # list of dict
+    npz = np.load(npz_path)
+
+    concept_names = []
+    concept_name_embs = []
+    concept_extend_embs = []   # list of list of tensors
+    for item in concepts:
+        name = item['name']
+        name_key = item['name_emb_key']
+        name_emb = torch.from_numpy(npz[name_key]).float()
+
+        # 扩展描述的 embedding 列表
+        extend_keys = item['extend_desc_emb_key']
+        extend_embs = [torch.from_numpy(npz[key]).float() for key in extend_keys]
+
+        concept_names.append(name)
+        concept_name_embs.append(name_emb)
+        concept_extend_embs.append(extend_embs)
+
+    concept_name_embs = torch.stack(concept_name_embs, dim=0)  # [C, D]
+    return concept_names, concept_name_embs, concept_extend_embs
+
 # -------------------- 主函数 --------------------
 def main():
     # 1. 构建训练三元组和验证数据
@@ -470,8 +549,16 @@ def main():
     # 验证时不使用 DataLoader 的 batch，因为需要逐一查询并检索整个候选集，我们直接在 evaluate 中遍历
 
     # 3. 模型和优化器
-    generator = PromptGenerator(concept_vectors, clip_dim, num_concepts, config.hidden_dim).to(config.device)
-    optimizer = torch.optim.Adam(generator.parameters(), lr=config.lr)
+    concept_names, concept_name_embs, concept_extend_embs = load_concept_extensions(
+        'concept_extend.json', 'concept_extend.embeddings.npz'
+    )
+    # 创建生成器
+    generator = SemanticPromptGenerator(concept_name_embs, concept_extend_embs, temperature=0.07).to(device)
+    # 可选：将 temperature 设为可学习
+    generator.temperature.requires_grad = True
+    optimizer = torch.optim.Adam([generator.temperature], lr=0.01)  # 只训练温度
+    # generator = PromptGenerator(concept_vectors, clip_dim, num_concepts, config.hidden_dim).to(config.device)
+    # optimizer = torch.optim.Adam(generator.parameters(), lr=config.lr)
 
     # 4. 训练循环
     best_map = 0.0
