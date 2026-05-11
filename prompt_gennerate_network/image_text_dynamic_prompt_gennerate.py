@@ -211,7 +211,7 @@ def build_validation_data(track_ann_file, image_root, val_track_ids, num_targets
             continue
         frames = tracks[tid]['frames']
         for frame in frames:
-            img_path = os.path.join(image_root, frame)
+            img_path = os.path.join(image_root, frame.lstrip('./'))
             candidate_images.append(img_path)
             candidate_track_ids.append(tid)
             img_to_idx[img_path] = len(candidate_images) - 1
@@ -552,10 +552,20 @@ def load_concept_extensions(json_path, npz_path):
 # -------------------- 主函数 --------------------
 def main():
     # 1. 构建训练三元组和验证数据
+    # -------------------- 测试模式开关 --------------------
+    test_mode = True   # 改为 False 关闭测试模式
+    if test_mode:
+        print("=== TEST MODE ENABLED: using small subset of data ===")
+        test_track_limit = 20       # 只取前20个车辆
+        config.epochs = 1           # 只训练1个epoch
+        config.batch_size = 8       # 减小batch size
+        config.num_workers = 0      # 避免多进程问题
     # 获取所有车辆 ID
     with open(config.track_ann_file, 'r') as f:
         tracks = json.load(f)
     all_track_ids = list(tracks.keys())
+    if test_mode:
+        all_track_ids = all_track_ids[:test_track_limit]
     random.shuffle(all_track_ids)
     split_idx = int(len(all_track_ids) * 0.8)   # 80% 训练，20% 验证
     train_track_ids = set(all_track_ids[:split_idx])
@@ -563,9 +573,16 @@ def main():
     print(f"Total tracks: {len(all_track_ids)}, Train tracks: {len(train_track_ids)}, Val tracks: {len(val_track_ids)}")
     print("Building training triplets...")
     train_triplets = build_train_triplets(config.track_ann_file, config.image_root, allowed_track_ids=train_track_ids)
+    if test_mode:
+        # 限制训练三元组数量，加快测试
+        train_triplets = train_triplets[:200]
     print(f"Number of training triplets: {len(train_triplets)}")
     print("Building validation data...")
     candidate_images, val_queries = build_validation_data(config.track_ann_file, config.image_root, val_track_ids, 3)
+    if test_mode:
+        # 限制验证集大小
+        candidate_images = candidate_images[:100]
+        val_queries = val_queries[:10]
     print(f"Validation candidates: {len(candidate_images)}, queries: {len(val_queries)}")
     # 2. 创建 Dataset 和 DataLoader
     train_dataset = TripletDataset(train_triplets, preprocess)
@@ -589,7 +606,7 @@ def main():
     # generator.temperature.requires_grad = True
     # optimizer = torch.optim.Adam([generator.temperature], lr=0.01)  # 只训练温度
     # 结合扩展语义与可学习 MLP
-    generator = PromptGenerator(concept_extend_embs, clip_dim, concept_names, config.hidden_dim).to(config.device)
+    generator = PromptGenerator(concept_name_embs, concept_extend_embs, clip_dim,  len(concept_names), config.hidden_dim).to(config.device)
     optimizer = torch.optim.Adam(generator.parameters(), lr=config.lr)
 
     # 4. 训练循环
@@ -600,7 +617,7 @@ def main():
         print(f"Train Loss: {train_loss:.4f}")
 
         # 每 5 个 epoch 验证一次
-        if epoch % 5 == 0:
+        if not test_mode and epoch % 5 == 0:
             recalls, mAP = evaluate_batched(clip_model, generator, val_dataset, config.device, config.temperature)
             print(f"Validation Results: R@1={recalls[1]:.2f}, R@5={recalls[5]:.2f}, R@10={recalls[10]:.2f}, MRR={mAP:.2f}")
             # mrr是什么指标，如果要计算map，该怎么修改
