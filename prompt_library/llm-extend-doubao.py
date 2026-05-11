@@ -302,7 +302,7 @@ def main():
     successful_embeddings = {}
 
     # 测试模式：只处理第一个概念
-    test_mode = True  # 设为 False 时处理全部概念
+    test_mode = False  # 设为 False 时处理全部概念
     concepts_to_process = concepts[:1] if test_mode else concepts
     print(f"测试概念: {concepts_to_process[0]['name']} (类别: {concepts_to_process[0]['category']})")
 
