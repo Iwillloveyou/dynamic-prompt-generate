@@ -3,7 +3,7 @@
 一. OPENODD的提示库构建
 
 对应文件在prompt_library下
-ASAM OPENODD原始基础概念：openadd.json
+ASAM OPENODD原始基础概念：openadd.json 其中openadd_desc.json是含有每个概念描述的
 加载原始基础概念脚本：load_openadd.py
 将原始基础概念转为概念树脚本：build_concept_tree.py，运行后得到：
 ASAM OPENODD原始基础概念树：concept_tree.json
@@ -22,7 +22,37 @@ ASAM OPENODD基础概念树简化列表：concept_tree_simple.json
 最大深度: 4 (概念: Car)
 
 针对概念树每个节点使用llm扩展描述脚本：llm-extend-doubao.py，其中，special_rules.json是针对特定部分概念在llm扩展时必须用到的微调规则；category_attributes.json针对部分概念的在llm扩展时必须用到的属性描述配置。当二者同时存在时，优先用special_rules中的。
-产生的结果文件在concepts_vectors.npz中，里面存放了概念及其描述信息，概念是key，向量信息是concept_vectors，其中name_emb是概念名的clip文本编码，desc_emb是多条场景描述的平均clip文本编码。后续参与动态提示生产就用到它们。
+产生的结果prompt_library/result下，文件说明：
+concept.json 扩展的概念列表
+concept_extend.json 概念扩展的结果列表，概念是name，其中name_emb是概念名的clip文本编码，desc_emb是多条场景描述的平均clip文本编码。示例如下：
+{
+    "name": "OperationalDesignDomain",
+    "name_emb_key": "name_emb_0",
+    "desc": "The complete set of conditions under which the automated driving system is designed to operate.",
+    "desc_emb_key": "desc_emb_0",
+    "extend_desc": [
+    "A sunny afternoon on a multi-lane urban highway, with moderate traffic flow and clear lane markings, within the vehicle's operational design domain for highway driving.",
+    "Dense fog reduces visibility to 50 meters on a rural two-lane road at dawn, challenging the perception system's operational limits in adverse weather conditions.",
+    "Heavy rain at night on a well-lit city street with reflective road surfaces, testing the sensor suite's performance under combined low-light and precipitation conditions.",
+    "A complex urban intersection during evening rush hour with multiple traffic signals, pedestrian crossings, and cyclists, within the defined ODD for city navigation.",
+    "Dry asphalt on a clear mountain pass road with sharp curves and elevation changes, operating within the system's validated road geometry parameters.",
+    "Light snowfall during daytime in a residential area with parked vehicles on both sides, evaluating performance in winter conditions within specified temperature ranges.",
+    "A construction zone on a suburban arterial road with temporary lane markings and reduced speed limits, within the ODD for road work navigation.",
+    "A well-maintained parking garage with concrete pillars and artificial lighting at midday, operating within the confined space parameters of the automated parking system."
+    ],
+    "extend_desc_emb_key": [
+    "extend_emb_0_0",
+    "extend_emb_0_1",
+    "extend_emb_0_2",
+    "extend_emb_0_3",
+    "extend_emb_0_4",
+    "extend_emb_0_5",
+    "extend_emb_0_6",
+    "extend_emb_0_7"
+    ],
+    "desc_mean_emb_key": "desc_mean_emb_0"
+}
+concept_extend.embeddings.npz 存放了向量key及其embedding，后续参与动态提示生产就用到它们。
 
 二. 基于cityflow-nl的数据集准备
 对应文件在cityflow_nl_dataset_handler下
@@ -57,6 +87,9 @@ cityflow-nl/
 
 
 三.基于以上提示库的图文条件式动态提示网络
-对应文件在prompt_gennerate_network下
-3). 通过CLIP的tokenizer分别对其中的图像和文本进行编码，
+1.根据描述检索图像的条件式动态提示网络
 训练网络脚本:dynamic_prompt_gennerate.py，训练完成后，模型存在checkpoints/best_generator.pth下。
+
+2.根据描述与参考图像联合检索的条件式动态提示网络
+训练网络脚本:image_text_dynamic_prompt_gennerate.py
+
