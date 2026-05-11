@@ -51,33 +51,60 @@ concept_vectors = torch.from_numpy(concept_vectors).float().to(config.device)
 concept_vectors = F.normalize(concept_vectors, dim=-1)
 num_concepts = concept_vectors.size(0)
 
+def compute_prior_scores(query_feat, concept_extend_embs):
+    """
+    query_feat: [B, D]
+    concept_extend_embs: list of list of tensors (each shape [D])
+    returns: [B, C] prior scores
+    """
+    B = query_feat.size(0)
+    C = len(concept_extend_embs)
+    scores = torch.zeros(B, C, device=query_feat.device)
+    for c, exts in enumerate(concept_extend_embs):
+        if len(exts) == 0:
+            continue
+        ext_mat = torch.stack(exts, dim=0)  # [M, D]
+        sim = query_feat @ ext_mat.T        # [B, M]
+        scores[:, c] = sim.max(dim=1)[0]    # 最大相似度
+    return scores
+
 # -------------------- PromptGenerator --------------------
 class PromptGenerator(nn.Module):
-    def __init__(self, concept_vectors, clip_dim, num_concepts, hidden_dim=512):
+    def __init__(self, concept_name_embs, concept_extend_embs, clip_dim, num_concepts, hidden_dim=256):
         super().__init__()
-        self.register_buffer('concept_vectors', concept_vectors)
-        # 纯文本 MLP
-        self.text_mlp = nn.Sequential(
-            nn.Linear(clip_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, num_concepts)
-        )
-        # 图文融合 MLP
-        self.fusion_mlp = nn.Sequential(
-            nn.Linear(clip_dim * 2, hidden_dim),
+        self.concept_names = concept_name_embs   # [C, D]
+        self.concept_extend_embs = concept_extend_embs  # list of list
+
+        # 可学习 MLP：输入是 先验得分 + 原始查询特征（可选）
+        self.mlp = nn.Sequential(
+            nn.Linear(num_concepts + clip_dim, hidden_dim),
             nn.ReLU(),
             nn.Linear(hidden_dim, num_concepts)
         )
         self.alpha = nn.Parameter(torch.tensor(0.5))
+        self.temperature = nn.Parameter(torch.tensor(0.07))
 
     def forward(self, text_feat, img_feat=None):
-        if img_feat is None:
-            logits = self.text_mlp(text_feat)
+        # 1. 融合文本和图像得到查询特征
+        if img_feat is not None:
+            query_feat = F.normalize(text_feat + img_feat, dim=-1)
         else:
-            fused = torch.cat([text_feat, img_feat], dim=-1)
-            logits = self.fusion_mlp(fused)
-        weights = F.softmax(logits, dim=-1)
-        dyn_prompt = torch.einsum('bc,cd->bd', weights, self.concept_vectors)
+            query_feat = text_feat
+
+        # 2. 计算先验得分（基于扩展描述的最大相似度）
+        prior = compute_prior_scores(query_feat, self.concept_extend_embs)   # [B, C]
+
+        # 3. 将先验得分与原始查询特征拼接，输入 MLP 得到调整后的 logits
+        mlp_input = torch.cat([prior, query_feat], dim=-1)   # [B, C + D]
+        logits = self.mlp(mlp_input)                         # [B, C]
+
+        # 4. 应用温度和 softmax
+        weights = F.softmax(logits / self.temperature, dim=-1)
+
+        # 5. 加权组合概念名称向量生成提示
+        dyn_prompt = weights @ self.concept_names            # [B, D]
+
+        # 6. 融合回原始文本特征
         combined = text_feat + self.alpha * dyn_prompt
         combined = F.normalize(combined, dim=-1)
         return combined
@@ -553,12 +580,14 @@ def main():
         'concept_extend.json', 'concept_extend.embeddings.npz'
     )
     # 创建生成器
-    generator = SemanticPromptGenerator(concept_name_embs, concept_extend_embs, temperature=0.07).to(device)
-    # 可选：将 temperature 设为可学习
-    generator.temperature.requires_grad = True
-    optimizer = torch.optim.Adam([generator.temperature], lr=0.01)  # 只训练温度
-    # generator = PromptGenerator(concept_vectors, clip_dim, num_concepts, config.hidden_dim).to(config.device)
-    # optimizer = torch.optim.Adam(generator.parameters(), lr=config.lr)
+    # 直接利用语义相似度，基于二阶段的零样本检索，
+    # generator = SemanticPromptGenerator(concept_name_embs, concept_extend_embs, temperature=0.07).to(device)
+    # # 可选：将 temperature 设为可学习
+    # generator.temperature.requires_grad = True
+    # optimizer = torch.optim.Adam([generator.temperature], lr=0.01)  # 只训练温度
+    # 结合扩展语义与可学习 MLP
+    generator = PromptGenerator(concept_vectors, concept_extend_embs, clip_dim, num_concepts, config.hidden_dim).to(config.device)
+    optimizer = torch.optim.Adam(generator.parameters(), lr=config.lr)
 
     # 4. 训练循环
     best_map = 0.0
