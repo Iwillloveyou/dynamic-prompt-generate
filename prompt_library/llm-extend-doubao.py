@@ -35,6 +35,7 @@ CLIP_MODEL_NAME = "openai/clip-vit-base-patch32"
 JSON_PATH = "openodd_desc.json"
 RESULT_SAVE_DIR = "./result/"
 OUTPUT_VECTORS = RESULT_SAVE_DIR + "concept_vectors.npy"
+CONCEPT_OUTPUT_NAMES = RESULT_SAVE_DIR + "concept.json"
 CONCEPT_EXTEND_OUTPUT_NAMES = RESULT_SAVE_DIR + "concept_extend.json"
 CONCEPT_EXTEND_EMBEDDING_OUTPUT_NAMES= RESULT_SAVE_DIR + "concept_extend.embeddings.npz"
 
@@ -272,10 +273,11 @@ def encode_texts(texts: List[str]) -> np.ndarray:
     使用 CLIP 模型编码文本列表，返回归一化后的向量数组 (n, dim)。
     """
     if not texts:
-        return None
+        return np.array([])  # 修复空值
     inputs = clip_tokenizer(texts, padding=True, truncation=True, return_tensors="pt").to(device)
     with torch.no_grad():
-        embeddings = clip_model.get_text_features(**inputs)
+        outputs = clip_model.text_model(**inputs)  # ✅ 强制走 text_model
+        embeddings = outputs.pooler_output  # ✅ 取出真正的 tensor！
         embeddings = embeddings / embeddings.norm(dim=-1, keepdim=True)  # L2 归一化
     return embeddings.cpu().numpy()
 
@@ -368,19 +370,21 @@ def main():
 
     # 3. 保存结果
     if concept_vectors:
-        with open(CONCEPT_EXTEND_OUTPUT_NAMES, "w", encoding="utf-8") as f:
+        with open(CONCEPT_OUTPUT_NAMES, "w", encoding="utf-8") as f:
             json.dump(successful_concepts, f, ensure_ascii=False, indent=2)
-        print(f"✅ 概念向量已保存至: {CONCEPT_EXTEND_OUTPUT_NAMES}")
+        print(f"✅ 概念向量已保存至: {CONCEPT_OUTPUT_NAMES}")
         print(f"  包含 {len(successful_concepts)} 个概念")
+
+        with open(CONCEPT_EXTEND_OUTPUT_NAMES, "w", encoding="utf-8") as f:
+            json.dump(concept_vectors, f, ensure_ascii=False, indent=2)
+        print(f"✅ 概念向量已保存至: {CONCEPT_EXTEND_OUTPUT_NAMES}")
+        print(f"  包含 {len(concept_vectors)} 个概念")
 
         # 保存嵌入向量到npz（压缩格式）
         np.savez_compressed(CONCEPT_EXTEND_EMBEDDING_OUTPUT_NAMES, **successful_embeddings)
         # concept_names = list(concept_vectors.keys())
         # vectors = np.array([concept_vectors[name] for name in concept_names])
         #
-        # np.save(OUTPUT_VECTORS, vectors)
-        # with open(OUTPUT_NAMES, "w", encoding="utf-8") as f:
-        #     json.dump(concept_names, f, indent=2)
         #
         # print(f"\n✅ 成功处理 {len(concept_names)} 个概念，失败 {len(failed_concepts)} 个。")
         # if failed_concepts:
