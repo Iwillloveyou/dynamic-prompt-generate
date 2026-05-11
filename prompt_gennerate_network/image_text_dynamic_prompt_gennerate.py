@@ -15,9 +15,12 @@ from torch.utils.data import Sampler
 # -------------------- 配置 --------------------
 class Config:
     # 数据路径（请根据实际情况修改）
-    data_root = './cityflow-nl-data/'            # 原始数据根目录（包含 train-tracks.json 等）
-    image_root = './cityflow-nl-data/train/'     # 提取的图像根目录（包含 S01, S03 等）
+    data_root = '../../dataset/cityflow-nl/'            # 原始数据根目录（包含 train-tracks.json 等）
+    image_root = '../../dataset/cityflow-nl/'     # 提取的图像根目录（包含 S01, S03 等）
     track_ann_file = os.path.join(data_root, 'train-tracks.json')   # 车辆轨迹标注
+    prompt_library_root = '../prompt_library/result/'
+    concept_extend_file = os.path.join(prompt_library_root, 'concept_extend.json')
+    concept_extend_embeddings = os.path.join(prompt_library_root, 'concept_extend.embeddings.npz')
     # CLIP 模型
     clip_model_name = 'ViT-B/32'
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -45,11 +48,11 @@ for param in clip_model.parameters():
     param.requires_grad = False
 clip_dim = clip_model.visual.output_dim
 
-print("Loading concept vectors...")
-concept_vectors = np.load(config.concept_vector_path)
-concept_vectors = torch.from_numpy(concept_vectors).float().to(config.device)
-concept_vectors = F.normalize(concept_vectors, dim=-1)
-num_concepts = concept_vectors.size(0)
+# print("Loading concept vectors...")
+# concept_vectors = np.load(config.concept_vector_path)
+# concept_vectors = torch.from_numpy(concept_vectors).float().to(config.device)
+# concept_vectors = F.normalize(concept_vectors, dim=-1)
+# num_concepts = concept_vectors.size(0)
 
 def compute_prior_scores(query_feat, concept_extend_embs):
     """
@@ -577,7 +580,7 @@ def main():
 
     # 3. 模型和优化器
     concept_names, concept_name_embs, concept_extend_embs = load_concept_extensions(
-        'concept_extend.json', 'concept_extend.embeddings.npz'
+        config.concept_extend_file, config.concept_extend_embeddings
     )
     # 创建生成器
     # 直接利用语义相似度，基于二阶段的零样本检索，
@@ -586,7 +589,7 @@ def main():
     # generator.temperature.requires_grad = True
     # optimizer = torch.optim.Adam([generator.temperature], lr=0.01)  # 只训练温度
     # 结合扩展语义与可学习 MLP
-    generator = PromptGenerator(concept_vectors, concept_extend_embs, clip_dim, num_concepts, config.hidden_dim).to(config.device)
+    generator = PromptGenerator(concept_extend_embs, clip_dim, concept_names, config.hidden_dim).to(config.device)
     optimizer = torch.optim.Adam(generator.parameters(), lr=config.lr)
 
     # 4. 训练循环
