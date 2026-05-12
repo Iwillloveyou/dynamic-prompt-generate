@@ -17,7 +17,7 @@ class Config:
     # 数据路径（请根据实际情况修改）
     data_root = '../../dataset/cityflow-nl/'            # 原始数据根目录（包含 train-tracks.json 等）
     image_root = '../../dataset/cityflow-nl/'     # 提取的图像根目录（包含 S01, S03 等）
-    track_ann_file = os.path.join(data_root, 'train-tracks.json')   # 车辆轨迹标注
+    track_ann_file = os.path.join(data_root, 'train_tracks.json')   # 车辆轨迹标注
     prompt_library_root = '../prompt_library/result/'
     concept_extend_file = os.path.join(prompt_library_root, 'concept_extend.json')
     concept_extend_embeddings = os.path.join(prompt_library_root, 'concept_extend.embeddings.npz')
@@ -40,6 +40,7 @@ class Config:
     val_candidate_size = -1
 
 config = Config()
+torch.set_default_dtype(torch.float32)
 
 # -------------------- 加载 CLIP 和概念向量 --------------------
 print("Loading CLIP model...")
@@ -56,29 +57,38 @@ clip_dim = clip_model.visual.output_dim
 
 def compute_prior_scores(query_feat, concept_extend_embs):
     """
-    query_feat: [B, D]
-    concept_extend_embs: list of list of tensors (each shape [D])
-    returns: [B, C] prior scores
+    计算查询特征与每个概念扩展描述的相似度（取最大值）
+    返回 float32 类型的得分矩阵
     """
     B = query_feat.size(0)
     C = len(concept_extend_embs)
-    scores = torch.zeros(B, C, device=query_feat.device)
+    device = query_feat.device
+    # 强制使用 float32
+    scores = torch.zeros(B, C, device=device, dtype=torch.float32)
     for c, exts in enumerate(concept_extend_embs):
         if len(exts) == 0:
             continue
-        ext_mat = torch.stack(exts, dim=0)  # [M, D]
-        sim = query_feat @ ext_mat.T        # [B, M]
-        scores[:, c] = sim.max(dim=1)[0]    # 最大相似度
+        # 将扩展描述堆叠并转换为 float32
+        ext_mat = torch.stack(exts, dim=0).to(device=device, dtype=torch.float32)
+        # 确保 query_feat 也是 float32
+        q = query_feat.float()  # 如果已经是 float32，此操作无影响
+        sim = q @ ext_mat.T
+        scores[:, c] = sim.max(dim=1)[0]
     return scores
 
 # -------------------- PromptGenerator --------------------
 class PromptGenerator(nn.Module):
     def __init__(self, concept_name_embs, concept_extend_embs, clip_dim, num_concepts, hidden_dim=256):
         super().__init__()
-        self.concept_names = concept_name_embs   # [C, D]
-        self.concept_extend_embs = concept_extend_embs  # list of list
+        # # 确保概念名称向量为 float32 并注册为 buffer
+        # self.register_buffer('concept_names', concept_name_embs.float())
+        # 扩展描述向量列表（每个元素已是 float32）
+        self.concept_name_embs = concept_name_embs
 
-        # 可学习 MLP：输入是 先验得分 + 原始查询特征（可选）
+        # 扩展描述向量列表（每个元素已是 float32）
+        self.concept_extend_embs = concept_extend_embs
+
+        # 可学习 MLP：输入是 先验得分 + 原始查询特征
         self.mlp = nn.Sequential(
             nn.Linear(num_concepts + clip_dim, hidden_dim),
             nn.ReLU(),
@@ -88,13 +98,18 @@ class PromptGenerator(nn.Module):
         self.temperature = nn.Parameter(torch.tensor(0.07))
 
     def forward(self, text_feat, img_feat=None):
+        # 将输入的文本和图像特征统一转为 float32
+        text_feat = text_feat.float()
+        if img_feat is not None:
+            img_feat = img_feat.float()
+
         # 1. 融合文本和图像得到查询特征
         if img_feat is not None:
             query_feat = F.normalize(text_feat + img_feat, dim=-1)
         else:
             query_feat = text_feat
 
-        # 2. 计算先验得分（基于扩展描述的最大相似度）
+        # 2. 计算先验得分（返回 float32）
         prior = compute_prior_scores(query_feat, self.concept_extend_embs)   # [B, C]
 
         # 3. 将先验得分与原始查询特征拼接，输入 MLP 得到调整后的 logits
@@ -105,7 +120,7 @@ class PromptGenerator(nn.Module):
         weights = F.softmax(logits / self.temperature, dim=-1)
 
         # 5. 加权组合概念名称向量生成提示
-        dyn_prompt = weights @ self.concept_names            # [B, D]
+        dyn_prompt = weights @ self.concept_name_embs            # [B, D]
 
         # 6. 融合回原始文本特征
         combined = text_feat + self.alpha * dyn_prompt
@@ -312,7 +327,7 @@ class ValidationDataset(Dataset):
         ref_img = Image.open(query['ref_img']).convert('RGB')
         ref_img = self.preprocess(ref_img)
         text = clip.tokenize(query['caption'], truncate=True).squeeze(0)
-        return ref_img, text, query['target_idx'], query['track_id']
+        return ref_img, text, query['target_idxs'], query['track_id']
 
 class TrackMutualSampler(Sampler):
     def __init__(self, triplets, batch_size, shuffle=True):
@@ -325,25 +340,27 @@ class TrackMutualSampler(Sampler):
         self.shuffle = shuffle
 
     def __iter__(self):
-        # 每个 epoch 随机打乱 track 顺序
         track_ids = self.track_ids.copy()
         if self.shuffle:
             random.shuffle(track_ids)
+
         batch = []
         for tid in track_ids:
-            # 从当前 track 的所有三元组中随机选择一个
             idx = random.choice(self.track_to_indices[tid])
             batch.append(idx)
+
+            # 满一个 batch 就输出
             if len(batch) == self.batch_size:
                 yield batch
                 batch = []
-        # 丢弃最后不足 batch_size 的部分（或可补全，但丢弃更简单）
+
+        # 【修复】最后剩下的样本也输出（测试模式关键）
         if len(batch) > 0:
-            # 可选：补充一些样本或直接丢弃
-            pass
+            yield batch
 
     def __len__(self):
-        return len(self.track_ids) // self.batch_size
+        # 【修复】向上取整，绝对不会返回 0
+        return (len(self.track_ids) + self.batch_size - 1) // self.batch_size
 
 # -------------------- 训练函数 --------------------
 def train_epoch(clip_model, generator, dataloader, optimizer, device, temperature):
@@ -351,18 +368,25 @@ def train_epoch(clip_model, generator, dataloader, optimizer, device, temperatur
     generator.train()
     total_loss = 0
     num_batches = 0
-    for ref_imgs, target_imgs, texts in tqdm(dataloader, desc='Training'):
+    for ref_imgs, target_imgs, texts, _ in tqdm(dataloader, desc='Training'):
         ref_imgs = ref_imgs.to(device)
         target_imgs = target_imgs.to(device)
         texts = texts.to(device)
         batch_size = ref_imgs.size(0)
 
         with torch.no_grad():
-            ref_feat = F.normalize(clip_model.encode_image(ref_imgs), dim=-1)
-            target_feat = F.normalize(clip_model.encode_image(target_imgs), dim=-1)
-            text_feat = F.normalize(clip_model.encode_text(texts), dim=-1)
+            # 编码并归一化，然后转换为 float32
+            ref_feat = clip_model.encode_image(ref_imgs)
+            ref_feat = F.normalize(ref_feat, dim=-1).float()
+            target_feat = clip_model.encode_image(target_imgs)
+            target_feat = F.normalize(target_feat, dim=-1).float()
+            text_feat = clip_model.encode_text(texts)
+            text_feat = F.normalize(text_feat, dim=-1).float()
 
-        query_feat = generator(text_feat, ref_feat)   # [B, D]
+        # 生成查询特征（生成器内部已做类型转换，但再次确保）
+        query_feat = generator(text_feat, ref_feat).float()
+
+        # 计算相似度矩阵
         logits = query_feat @ target_feat.T / temperature
         labels = torch.arange(batch_size, device=device)
         loss = (F.cross_entropy(logits, labels) + F.cross_entropy(logits.T, labels)) / 2
@@ -537,16 +561,33 @@ def load_concept_extensions(json_path, npz_path):
         name = item['name']
         name_key = item['name_emb_key']
         name_emb = torch.from_numpy(npz[name_key]).float()
+        # 修复：去除多余的维度，确保 shape 为 (D,)
+        if name_emb.dim() == 2:
+            if name_emb.size(0) == 1:
+                name_emb = name_emb.squeeze(0)
+            elif name_emb.size(1) == 1:
+                name_emb = name_emb.squeeze(1)
+        # 如果依然是二维但 size(0) 和 size(1) 都不为 1，则报错或取均值等
+        if name_emb.dim() != 1:
+            raise ValueError(f"Unexpected shape for {name_key}: {name_emb.shape}")
 
-        # 扩展描述的 embedding 列表
         extend_keys = item['extend_desc_emb_key']
-        extend_embs = [torch.from_numpy(npz[key]).float() for key in extend_keys]
+        extend_embs = []
+        for key in extend_keys:
+            emb = torch.from_numpy(npz[key]).float()
+            # 同样处理扩展描述的维度
+            if emb.dim() == 2:
+                if emb.size(0) == 1:
+                    emb = emb.squeeze(0)
+                elif emb.size(1) == 1:
+                    emb = emb.squeeze(1)
+            extend_embs.append(emb)
 
         concept_names.append(name)
         concept_name_embs.append(name_emb)
         concept_extend_embs.append(extend_embs)
 
-    concept_name_embs = torch.stack(concept_name_embs, dim=0)  # [C, D]
+    concept_name_embs = torch.stack(concept_name_embs, dim=0).to(config.device)  # [C, D]
     return concept_names, concept_name_embs, concept_extend_embs
 
 # -------------------- 主函数 --------------------
@@ -587,10 +628,17 @@ def main():
     # 2. 创建 Dataset 和 DataLoader
     train_dataset = TripletDataset(train_triplets, preprocess)
     # 注意：训练时使用普通的随机采样即可，对比学习会利用 batch 内的负样本
-    train_sampler = TrackMutualSampler(train_triplets, config.batch_size, shuffle=True)
-    train_loader = DataLoader(train_dataset, batch_size=config.batch_size,
-                          sampler=train_sampler, num_workers=config.num_workers,
-                          pin_memory=True, drop_last=True)
+    # train_sampler = TrackMutualSampler(train_triplets, config.batch_size, shuffle=True)
+    sampler = TrackMutualSampler(train_triplets, batch_size=config.batch_size, shuffle=True)
+    train_loader = DataLoader(
+        train_dataset,
+        batch_sampler=sampler,  # 必须是 batch_sampler，不是 sampler！
+        num_workers=config.num_workers,
+        pin_memory=True
+    )
+    # train_loader = DataLoader(train_dataset, batch_size=config.batch_size,
+    #                       sampler=train_sampler, num_workers=config.num_workers,
+    #                       pin_memory=True, drop_last=True)
     val_dataset = ValidationDataset(candidate_images, val_queries, preprocess,
                                     cache_path=os.path.join(config.save_dir, 'candidate_feats.pt'))
     # 验证时不使用 DataLoader 的 batch，因为需要逐一查询并检索整个候选集，我们直接在 evaluate 中遍历
