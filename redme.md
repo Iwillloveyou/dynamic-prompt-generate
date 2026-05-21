@@ -54,6 +54,10 @@ concept_extend.json 概念扩展的结果列表，概念是name，其中name_emb
 }
 concept_extend.embeddings.npz 存放了向量key及其embedding，后续参与动态提示生产就用到它们。
 
+提示库指标评估时，需要安装相关包
+pip install scikit-learn sentence-transformers -i https://pypi.tuna.tsinghua.edu.cn/simple
+其中nltk是必须的，可以执行nltk.install.python安装合验证
+
 二. 基于cityflow-nl的数据集准备
 对应文件在cityflow_nl_dataset_handler下
 训练的数据集来自cityflow-nl，需要提前参照AI City Challenge官方网站数据集（2023 Track 2: Tracked-Vehicle Retrieval by Natural Language Descriptions）和其官方GitHub仓库（https://github.com/Microsoft/CityFlow-NL）下载数据集与获取相关的预处理脚本和标注文件，并进行以下预处理：

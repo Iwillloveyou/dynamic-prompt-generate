@@ -24,7 +24,8 @@
       "extend_emb_0_6",
       "extend_emb_0_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_0"
+    "desc_mean_emb_key": "desc_mean_emb_0",
+    "parent": null
   },
   {
     "name": "Environment",
@@ -51,7 +52,8 @@
       "extend_emb_1_6",
       "extend_emb_1_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_1"
+    "desc_mean_emb_key": "desc_mean_emb_1",
+    "parent": "OperationalDesignDomain"
   },
   {
     "name": "Road",
@@ -78,7 +80,8 @@
       "extend_emb_2_6",
       "extend_emb_2_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_2"
+    "desc_mean_emb_key": "desc_mean_emb_2",
+    "parent": "OperationalDesignDomain"
   },
   {
     "name": "Traffic",
@@ -105,7 +108,8 @@
       "extend_emb_3_6",
       "extend_emb_3_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_3"
+    "desc_mean_emb_key": "desc_mean_emb_3",
+    "parent": "OperationalDesignDomain"
   },
   {
     "name": "DrivingDynamics",
@@ -132,7 +136,8 @@
       "extend_emb_4_6",
       "extend_emb_4_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_4"
+    "desc_mean_emb_key": "desc_mean_emb_4",
+    "parent": "OperationalDesignDomain"
   },
   {
     "name": "Infrastructure",
@@ -159,7 +164,8 @@
       "extend_emb_5_6",
       "extend_emb_5_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_5"
+    "desc_mean_emb_key": "desc_mean_emb_5",
+    "parent": "OperationalDesignDomain"
   },
   {
     "name": "TemporalConditions",
@@ -186,7 +192,8 @@
       "extend_emb_6_6",
       "extend_emb_6_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_6"
+    "desc_mean_emb_key": "desc_mean_emb_6",
+    "parent": "OperationalDesignDomain"
   },
   {
     "name": "LegalRegulatoryConditions",
@@ -213,7 +220,8 @@
       "extend_emb_7_6",
       "extend_emb_7_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_7"
+    "desc_mean_emb_key": "desc_mean_emb_7",
+    "parent": "OperationalDesignDomain"
   },
   {
     "name": "VehicleCapabilities",
@@ -240,7 +248,8 @@
       "extend_emb_8_6",
       "extend_emb_8_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_8"
+    "desc_mean_emb_key": "desc_mean_emb_8",
+    "parent": "OperationalDesignDomain"
   },
   {
     "name": "Perception",
@@ -267,7 +276,8 @@
       "extend_emb_9_6",
       "extend_emb_9_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_9"
+    "desc_mean_emb_key": "desc_mean_emb_9",
+    "parent": "OperationalDesignDomain"
   },
   {
     "name": "Map",
@@ -294,7 +304,8 @@
       "extend_emb_10_6",
       "extend_emb_10_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_10"
+    "desc_mean_emb_key": "desc_mean_emb_10",
+    "parent": "OperationalDesignDomain"
   },
   {
     "name": "Weather",
@@ -321,7 +332,8 @@
       "extend_emb_11_6",
       "extend_emb_11_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_11"
+    "desc_mean_emb_key": "desc_mean_emb_11",
+    "parent": "Environment"
   },
   {
     "name": "Illumination",
@@ -348,7 +360,8 @@
       "extend_emb_12_6",
       "extend_emb_12_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_12"
+    "desc_mean_emb_key": "desc_mean_emb_12",
+    "parent": "Environment"
   },
   {
     "name": "Precipitation",
@@ -375,7 +388,8 @@
       "extend_emb_13_6",
       "extend_emb_13_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_13"
+    "desc_mean_emb_key": "desc_mean_emb_13",
+    "parent": "Environment"
   },
   {
     "name": "Fog",
@@ -402,7 +416,8 @@
       "extend_emb_14_6",
       "extend_emb_14_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_14"
+    "desc_mean_emb_key": "desc_mean_emb_14",
+    "parent": "Environment"
   },
   {
     "name": "Temperature",
@@ -429,7 +444,8 @@
       "extend_emb_15_6",
       "extend_emb_15_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_15"
+    "desc_mean_emb_key": "desc_mean_emb_15",
+    "parent": "Environment"
   },
   {
     "name": "Wind",
@@ -456,7 +472,8 @@
       "extend_emb_16_6",
       "extend_emb_16_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_16"
+    "desc_mean_emb_key": "desc_mean_emb_16",
+    "parent": "Environment"
   },
   {
     "name": "AirQuality",
@@ -483,7 +500,8 @@
       "extend_emb_17_6",
       "extend_emb_17_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_17"
+    "desc_mean_emb_key": "desc_mean_emb_17",
+    "parent": "Environment"
   },
   {
     "name": "Clear",
@@ -510,7 +528,8 @@
       "extend_emb_18_6",
       "extend_emb_18_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_18"
+    "desc_mean_emb_key": "desc_mean_emb_18",
+    "parent": "Weather"
   },
   {
     "name": "Cloudy",
@@ -537,7 +556,8 @@
       "extend_emb_19_6",
       "extend_emb_19_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_19"
+    "desc_mean_emb_key": "desc_mean_emb_19",
+    "parent": "Weather"
   },
   {
     "name": "Rain",
@@ -564,7 +584,8 @@
       "extend_emb_20_6",
       "extend_emb_20_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_20"
+    "desc_mean_emb_key": "desc_mean_emb_20",
+    "parent": "Weather"
   },
   {
     "name": "Snow",
@@ -591,7 +612,8 @@
       "extend_emb_21_6",
       "extend_emb_21_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_21"
+    "desc_mean_emb_key": "desc_mean_emb_21",
+    "parent": "Weather"
   },
   {
     "name": "Sleet",
@@ -618,7 +640,8 @@
       "extend_emb_22_6",
       "extend_emb_22_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_22"
+    "desc_mean_emb_key": "desc_mean_emb_22",
+    "parent": "Weather"
   },
   {
     "name": "Hail",
@@ -645,7 +668,8 @@
       "extend_emb_23_6",
       "extend_emb_23_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_23"
+    "desc_mean_emb_key": "desc_mean_emb_23",
+    "parent": "Weather"
   },
   {
     "name": "Storm",
@@ -672,7 +696,8 @@
       "extend_emb_24_6",
       "extend_emb_24_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_24"
+    "desc_mean_emb_key": "desc_mean_emb_24",
+    "parent": "Weather"
   },
   {
     "name": "Daylight",
@@ -699,7 +724,8 @@
       "extend_emb_25_6",
       "extend_emb_25_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_25"
+    "desc_mean_emb_key": "desc_mean_emb_25",
+    "parent": "Illumination"
   },
   {
     "name": "Twilight",
@@ -726,7 +752,8 @@
       "extend_emb_26_6",
       "extend_emb_26_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_26"
+    "desc_mean_emb_key": "desc_mean_emb_26",
+    "parent": "Illumination"
   },
   {
     "name": "Night",
@@ -753,7 +780,8 @@
       "extend_emb_27_6",
       "extend_emb_27_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_27"
+    "desc_mean_emb_key": "desc_mean_emb_27",
+    "parent": "Illumination"
   },
   {
     "name": "ArtificialLight",
@@ -780,7 +808,8 @@
       "extend_emb_28_6",
       "extend_emb_28_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_28"
+    "desc_mean_emb_key": "desc_mean_emb_28",
+    "parent": "Illumination"
   },
   {
     "name": "NoPrecipitation",
@@ -807,7 +836,8 @@
       "extend_emb_29_6",
       "extend_emb_29_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_29"
+    "desc_mean_emb_key": "desc_mean_emb_29",
+    "parent": "Precipitation"
   },
   {
     "name": "Light",
@@ -834,7 +864,8 @@
       "extend_emb_30_6",
       "extend_emb_30_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_30"
+    "desc_mean_emb_key": "desc_mean_emb_30",
+    "parent": "Precipitation"
   },
   {
     "name": "Moderate",
@@ -861,7 +892,8 @@
       "extend_emb_31_6",
       "extend_emb_31_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_31"
+    "desc_mean_emb_key": "desc_mean_emb_31",
+    "parent": "Precipitation"
   },
   {
     "name": "Heavy",
@@ -888,7 +920,8 @@
       "extend_emb_32_6",
       "extend_emb_32_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_32"
+    "desc_mean_emb_key": "desc_mean_emb_32",
+    "parent": "Precipitation"
   },
   {
     "name": "NoFog",
@@ -915,7 +948,8 @@
       "extend_emb_33_6",
       "extend_emb_33_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_33"
+    "desc_mean_emb_key": "desc_mean_emb_33",
+    "parent": "Fog"
   },
   {
     "name": "LightFog",
@@ -942,7 +976,8 @@
       "extend_emb_34_6",
       "extend_emb_34_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_34"
+    "desc_mean_emb_key": "desc_mean_emb_34",
+    "parent": "Fog"
   },
   {
     "name": "MediumFog",
@@ -969,7 +1004,8 @@
       "extend_emb_35_6",
       "extend_emb_35_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_35"
+    "desc_mean_emb_key": "desc_mean_emb_35",
+    "parent": "Fog"
   },
   {
     "name": "DenseFog",
@@ -996,7 +1032,8 @@
       "extend_emb_36_6",
       "extend_emb_36_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_36"
+    "desc_mean_emb_key": "desc_mean_emb_36",
+    "parent": "Fog"
   },
   {
     "name": "RoadType",
@@ -1023,7 +1060,8 @@
       "extend_emb_37_6",
       "extend_emb_37_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_37"
+    "desc_mean_emb_key": "desc_mean_emb_37",
+    "parent": "Road"
   },
   {
     "name": "RoadGeometry",
@@ -1050,7 +1088,8 @@
       "extend_emb_38_6",
       "extend_emb_38_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_38"
+    "desc_mean_emb_key": "desc_mean_emb_38",
+    "parent": "Road"
   },
   {
     "name": "RoadSurface",
@@ -1077,7 +1116,8 @@
       "extend_emb_39_6",
       "extend_emb_39_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_39"
+    "desc_mean_emb_key": "desc_mean_emb_39",
+    "parent": "Road"
   },
   {
     "name": "LaneMarkings",
@@ -1104,7 +1144,8 @@
       "extend_emb_40_6",
       "extend_emb_40_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_40"
+    "desc_mean_emb_key": "desc_mean_emb_40",
+    "parent": "Road"
   },
   {
     "name": "RoadConditions",
@@ -1131,7 +1172,8 @@
       "extend_emb_41_6",
       "extend_emb_41_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_41"
+    "desc_mean_emb_key": "desc_mean_emb_41",
+    "parent": "Road"
   },
   {
     "name": "Shoulder",
@@ -1158,7 +1200,8 @@
       "extend_emb_42_6",
       "extend_emb_42_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_42"
+    "desc_mean_emb_key": "desc_mean_emb_42",
+    "parent": "Road"
   },
   {
     "name": "Median",
@@ -1185,7 +1228,8 @@
       "extend_emb_43_6",
       "extend_emb_43_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_43"
+    "desc_mean_emb_key": "desc_mean_emb_43",
+    "parent": "Road"
   },
   {
     "name": "Intersection",
@@ -1212,7 +1256,8 @@
       "extend_emb_44_6",
       "extend_emb_44_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_44"
+    "desc_mean_emb_key": "desc_mean_emb_44",
+    "parent": "Road"
   },
   {
     "name": "Bridge",
@@ -1239,7 +1284,8 @@
       "extend_emb_45_6",
       "extend_emb_45_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_45"
+    "desc_mean_emb_key": "desc_mean_emb_45",
+    "parent": "Road"
   },
   {
     "name": "Tunnel",
@@ -1266,7 +1312,8 @@
       "extend_emb_46_6",
       "extend_emb_46_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_46"
+    "desc_mean_emb_key": "desc_mean_emb_46",
+    "parent": "Road"
   },
   {
     "name": "Highway",
@@ -1293,7 +1340,8 @@
       "extend_emb_47_6",
       "extend_emb_47_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_47"
+    "desc_mean_emb_key": "desc_mean_emb_47",
+    "parent": "RoadType"
   },
   {
     "name": "UrbanRoad",
@@ -1320,7 +1368,8 @@
       "extend_emb_48_6",
       "extend_emb_48_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_48"
+    "desc_mean_emb_key": "desc_mean_emb_48",
+    "parent": "RoadType"
   },
   {
     "name": "RuralRoad",
@@ -1347,7 +1396,8 @@
       "extend_emb_49_6",
       "extend_emb_49_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_49"
+    "desc_mean_emb_key": "desc_mean_emb_49",
+    "parent": "RoadType"
   },
   {
     "name": "ResidentialRoad",
@@ -1374,7 +1424,8 @@
       "extend_emb_50_6",
       "extend_emb_50_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_50"
+    "desc_mean_emb_key": "desc_mean_emb_50",
+    "parent": "RoadType"
   },
   {
     "name": "ServiceRoad",
@@ -1401,7 +1452,8 @@
       "extend_emb_51_6",
       "extend_emb_51_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_51"
+    "desc_mean_emb_key": "desc_mean_emb_51",
+    "parent": "RoadType"
   },
   {
     "name": "Parking",
@@ -1428,7 +1480,8 @@
       "extend_emb_52_6",
       "extend_emb_52_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_52"
+    "desc_mean_emb_key": "desc_mean_emb_52",
+    "parent": "RoadType"
   },
   {
     "name": "Dry",
@@ -1455,7 +1508,8 @@
       "extend_emb_53_6",
       "extend_emb_53_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_53"
+    "desc_mean_emb_key": "desc_mean_emb_53",
+    "parent": "RoadSurface"
   },
   {
     "name": "Wet",
@@ -1482,7 +1536,8 @@
       "extend_emb_54_6",
       "extend_emb_54_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_54"
+    "desc_mean_emb_key": "desc_mean_emb_54",
+    "parent": "RoadSurface"
   },
   {
     "name": "Icy",
@@ -1509,7 +1564,8 @@
       "extend_emb_55_6",
       "extend_emb_55_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_55"
+    "desc_mean_emb_key": "desc_mean_emb_55",
+    "parent": "RoadSurface"
   },
   {
     "name": "Snowy",
@@ -1536,7 +1592,8 @@
       "extend_emb_56_6",
       "extend_emb_56_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_56"
+    "desc_mean_emb_key": "desc_mean_emb_56",
+    "parent": "RoadSurface"
   },
   {
     "name": "Muddy",
@@ -1563,7 +1620,8 @@
       "extend_emb_57_6",
       "extend_emb_57_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_57"
+    "desc_mean_emb_key": "desc_mean_emb_57",
+    "parent": "RoadSurface"
   },
   {
     "name": "Potholes",
@@ -1590,7 +1648,8 @@
       "extend_emb_58_6",
       "extend_emb_58_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_58"
+    "desc_mean_emb_key": "desc_mean_emb_58",
+    "parent": "RoadSurface"
   },
   {
     "name": "TrafficParticipants",
@@ -1617,7 +1676,8 @@
       "extend_emb_59_6",
       "extend_emb_59_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_59"
+    "desc_mean_emb_key": "desc_mean_emb_59",
+    "parent": "Traffic"
   },
   {
     "name": "TrafficFlow",
@@ -1644,7 +1704,8 @@
       "extend_emb_60_6",
       "extend_emb_60_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_60"
+    "desc_mean_emb_key": "desc_mean_emb_60",
+    "parent": "Traffic"
   },
   {
     "name": "TrafficDensity",
@@ -1671,7 +1732,8 @@
       "extend_emb_61_6",
       "extend_emb_61_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_61"
+    "desc_mean_emb_key": "desc_mean_emb_61",
+    "parent": "Traffic"
   },
   {
     "name": "TrafficRules",
@@ -1698,7 +1760,8 @@
       "extend_emb_62_6",
       "extend_emb_62_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_62"
+    "desc_mean_emb_key": "desc_mean_emb_62",
+    "parent": "Traffic"
   },
   {
     "name": "TrafficSigns",
@@ -1725,7 +1788,8 @@
       "extend_emb_63_6",
       "extend_emb_63_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_63"
+    "desc_mean_emb_key": "desc_mean_emb_63",
+    "parent": "Traffic"
   },
   {
     "name": "TrafficSignals",
@@ -1752,7 +1816,8 @@
       "extend_emb_64_6",
       "extend_emb_64_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_64"
+    "desc_mean_emb_key": "desc_mean_emb_64",
+    "parent": "Traffic"
   },
   {
     "name": "Vehicle",
@@ -1779,7 +1844,8 @@
       "extend_emb_65_6",
       "extend_emb_65_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_65"
+    "desc_mean_emb_key": "desc_mean_emb_65",
+    "parent": "TrafficParticipants"
   },
   {
     "name": "VulnerableRoadUser",
@@ -1806,7 +1872,8 @@
       "extend_emb_66_6",
       "extend_emb_66_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_66"
+    "desc_mean_emb_key": "desc_mean_emb_66",
+    "parent": "TrafficParticipants"
   },
   {
     "name": "Animal",
@@ -1833,7 +1900,8 @@
       "extend_emb_67_6",
       "extend_emb_67_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_67"
+    "desc_mean_emb_key": "desc_mean_emb_67",
+    "parent": "TrafficParticipants"
   },
   {
     "name": "Car",
@@ -1860,7 +1928,8 @@
       "extend_emb_68_6",
       "extend_emb_68_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_68"
+    "desc_mean_emb_key": "desc_mean_emb_68",
+    "parent": "Vehicle"
   },
   {
     "name": "Truck",
@@ -1887,7 +1956,8 @@
       "extend_emb_69_6",
       "extend_emb_69_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_69"
+    "desc_mean_emb_key": "desc_mean_emb_69",
+    "parent": "Vehicle"
   },
   {
     "name": "Bus",
@@ -1914,7 +1984,8 @@
       "extend_emb_70_6",
       "extend_emb_70_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_70"
+    "desc_mean_emb_key": "desc_mean_emb_70",
+    "parent": "Vehicle"
   },
   {
     "name": "Motorcycle",
@@ -1941,7 +2012,8 @@
       "extend_emb_71_6",
       "extend_emb_71_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_71"
+    "desc_mean_emb_key": "desc_mean_emb_71",
+    "parent": "Vehicle"
   },
   {
     "name": "Bicycle",
@@ -1968,7 +2040,8 @@
       "extend_emb_72_6",
       "extend_emb_72_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_72"
+    "desc_mean_emb_key": "desc_mean_emb_72",
+    "parent": "Vehicle"
   },
   {
     "name": "EmergencyVehicle",
@@ -1995,7 +2068,8 @@
       "extend_emb_73_6",
       "extend_emb_73_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_73"
+    "desc_mean_emb_key": "desc_mean_emb_73",
+    "parent": "Vehicle"
   },
   {
     "name": "Pedestrian",
@@ -2022,7 +2096,8 @@
       "extend_emb_74_6",
       "extend_emb_74_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_74"
+    "desc_mean_emb_key": "desc_mean_emb_74",
+    "parent": "VulnerableRoadUser"
   },
   {
     "name": "Cyclist",
@@ -2049,7 +2124,8 @@
       "extend_emb_75_6",
       "extend_emb_75_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_75"
+    "desc_mean_emb_key": "desc_mean_emb_75",
+    "parent": "VulnerableRoadUser"
   },
   {
     "name": "Motorcyclist",
@@ -2076,7 +2152,8 @@
       "extend_emb_76_6",
       "extend_emb_76_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_76"
+    "desc_mean_emb_key": "desc_mean_emb_76",
+    "parent": "VulnerableRoadUser"
   },
   {
     "name": "WheelchairUser",
@@ -2103,7 +2180,8 @@
       "extend_emb_77_6",
       "extend_emb_77_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_77"
+    "desc_mean_emb_key": "desc_mean_emb_77",
+    "parent": "VulnerableRoadUser"
   },
   {
     "name": "Speed",
@@ -2130,7 +2208,8 @@
       "extend_emb_78_6",
       "extend_emb_78_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_78"
+    "desc_mean_emb_key": "desc_mean_emb_78",
+    "parent": "DrivingDynamics"
   },
   {
     "name": "Acceleration",
@@ -2157,7 +2236,8 @@
       "extend_emb_79_6",
       "extend_emb_79_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_79"
+    "desc_mean_emb_key": "desc_mean_emb_79",
+    "parent": "DrivingDynamics"
   },
   {
     "name": "Deceleration",
@@ -2184,7 +2264,8 @@
       "extend_emb_80_6",
       "extend_emb_80_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_80"
+    "desc_mean_emb_key": "desc_mean_emb_80",
+    "parent": "DrivingDynamics"
   },
   {
     "name": "LateralMovement",
@@ -2211,7 +2292,8 @@
       "extend_emb_81_6",
       "extend_emb_81_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_81"
+    "desc_mean_emb_key": "desc_mean_emb_81",
+    "parent": "DrivingDynamics"
   },
   {
     "name": "Stopping",
@@ -2238,7 +2320,8 @@
       "extend_emb_82_6",
       "extend_emb_82_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_82"
+    "desc_mean_emb_key": "desc_mean_emb_82",
+    "parent": "DrivingDynamics"
   },
   {
     "name": "TrafficLight",
@@ -2265,7 +2348,8 @@
       "extend_emb_83_6",
       "extend_emb_83_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_83"
+    "desc_mean_emb_key": "desc_mean_emb_83",
+    "parent": "Infrastructure"
   },
   {
     "name": "TrafficSign",
@@ -2292,7 +2376,8 @@
       "extend_emb_84_6",
       "extend_emb_84_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_84"
+    "desc_mean_emb_key": "desc_mean_emb_84",
+    "parent": "Infrastructure"
   },
   {
     "name": "GuardRail",
@@ -2319,7 +2404,8 @@
       "extend_emb_85_6",
       "extend_emb_85_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_85"
+    "desc_mean_emb_key": "desc_mean_emb_85",
+    "parent": "Infrastructure"
   },
   {
     "name": "Barrier",
@@ -2346,7 +2432,8 @@
       "extend_emb_86_6",
       "extend_emb_86_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_86"
+    "desc_mean_emb_key": "desc_mean_emb_86",
+    "parent": "Infrastructure"
   },
   {
     "name": "Crosswalk",
@@ -2373,7 +2460,8 @@
       "extend_emb_87_6",
       "extend_emb_87_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_87"
+    "desc_mean_emb_key": "desc_mean_emb_87",
+    "parent": "Infrastructure"
   },
   {
     "name": "RailroadCrossing",
@@ -2400,7 +2488,8 @@
       "extend_emb_88_6",
       "extend_emb_88_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_88"
+    "desc_mean_emb_key": "desc_mean_emb_88",
+    "parent": "Infrastructure"
   },
   {
     "name": "TimeOfDay",
@@ -2427,7 +2516,8 @@
       "extend_emb_89_6",
       "extend_emb_89_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_89"
+    "desc_mean_emb_key": "desc_mean_emb_89",
+    "parent": "TemporalConditions"
   },
   {
     "name": "Season",
@@ -2454,7 +2544,8 @@
       "extend_emb_90_6",
       "extend_emb_90_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_90"
+    "desc_mean_emb_key": "desc_mean_emb_90",
+    "parent": "TemporalConditions"
   },
   {
     "name": "Holiday",
@@ -2481,7 +2572,8 @@
       "extend_emb_91_6",
       "extend_emb_91_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_91"
+    "desc_mean_emb_key": "desc_mean_emb_91",
+    "parent": "TemporalConditions"
   },
   {
     "name": "SpecialEvent",
@@ -2508,7 +2600,8 @@
       "extend_emb_92_6",
       "extend_emb_92_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_92"
+    "desc_mean_emb_key": "desc_mean_emb_92",
+    "parent": "TemporalConditions"
   },
   {
     "name": "SpeedLimits",
@@ -2535,7 +2628,8 @@
       "extend_emb_93_6",
       "extend_emb_93_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_93"
+    "desc_mean_emb_key": "desc_mean_emb_93",
+    "parent": "LegalRegulatoryConditions"
   },
   {
     "name": "RightOfWayRules",
@@ -2562,7 +2656,8 @@
       "extend_emb_94_6",
       "extend_emb_94_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_94"
+    "desc_mean_emb_key": "desc_mean_emb_94",
+    "parent": "LegalRegulatoryConditions"
   },
   {
     "name": "OvertakingRules",
@@ -2589,7 +2684,8 @@
       "extend_emb_95_6",
       "extend_emb_95_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_95"
+    "desc_mean_emb_key": "desc_mean_emb_95",
+    "parent": "LegalRegulatoryConditions"
   },
   {
     "name": "ParkingRules",
@@ -2616,7 +2712,8 @@
       "extend_emb_96_6",
       "extend_emb_96_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_96"
+    "desc_mean_emb_key": "desc_mean_emb_96",
+    "parent": "LegalRegulatoryConditions"
   },
   {
     "name": "RegionalLegislation",
@@ -2643,7 +2740,8 @@
       "extend_emb_97_6",
       "extend_emb_97_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_97"
+    "desc_mean_emb_key": "desc_mean_emb_97",
+    "parent": "LegalRegulatoryConditions"
   },
   {
     "name": "AutonomyLevel",
@@ -2670,7 +2768,8 @@
       "extend_emb_98_6",
       "extend_emb_98_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_98"
+    "desc_mean_emb_key": "desc_mean_emb_98",
+    "parent": "VehicleCapabilities"
   },
   {
     "name": "SensorSuite",
@@ -2697,7 +2796,8 @@
       "extend_emb_99_6",
       "extend_emb_99_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_99"
+    "desc_mean_emb_key": "desc_mean_emb_99",
+    "parent": "VehicleCapabilities"
   },
   {
     "name": "ActuatorPerformance",
@@ -2724,7 +2824,8 @@
       "extend_emb_100_6",
       "extend_emb_100_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_100"
+    "desc_mean_emb_key": "desc_mean_emb_100",
+    "parent": "VehicleCapabilities"
   },
   {
     "name": "Communication",
@@ -2751,7 +2852,8 @@
       "extend_emb_101_6",
       "extend_emb_101_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_101"
+    "desc_mean_emb_key": "desc_mean_emb_101",
+    "parent": "VehicleCapabilities"
   },
   {
     "name": "VisibilityRange",
@@ -2778,7 +2880,8 @@
       "extend_emb_102_6",
       "extend_emb_102_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_102"
+    "desc_mean_emb_key": "desc_mean_emb_102",
+    "parent": "Perception"
   },
   {
     "name": "ObstacleDetection",
@@ -2805,7 +2908,8 @@
       "extend_emb_103_6",
       "extend_emb_103_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_103"
+    "desc_mean_emb_key": "desc_mean_emb_103",
+    "parent": "Perception"
   },
   {
     "name": "LaneRecognition",
@@ -2832,7 +2936,8 @@
       "extend_emb_104_6",
       "extend_emb_104_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_104"
+    "desc_mean_emb_key": "desc_mean_emb_104",
+    "parent": "Perception"
   },
   {
     "name": "SignRecognition",
@@ -2859,7 +2964,8 @@
       "extend_emb_105_6",
       "extend_emb_105_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_105"
+    "desc_mean_emb_key": "desc_mean_emb_105",
+    "parent": "Perception"
   },
   {
     "name": "MapAccuracy",
@@ -2886,7 +2992,8 @@
       "extend_emb_106_6",
       "extend_emb_106_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_106"
+    "desc_mean_emb_key": "desc_mean_emb_106",
+    "parent": "Map"
   },
   {
     "name": "MapCoverage",
@@ -2913,7 +3020,8 @@
       "extend_emb_107_6",
       "extend_emb_107_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_107"
+    "desc_mean_emb_key": "desc_mean_emb_107",
+    "parent": "Map"
   },
   {
     "name": "MapType",
@@ -2940,7 +3048,8 @@
       "extend_emb_108_6",
       "extend_emb_108_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_108"
+    "desc_mean_emb_key": "desc_mean_emb_108",
+    "parent": "Map"
   },
   {
     "name": "LaneLevelMap",
@@ -2967,6 +3076,7 @@
       "extend_emb_109_6",
       "extend_emb_109_7"
     ],
-    "desc_mean_emb_key": "desc_mean_emb_109"
+    "desc_mean_emb_key": "desc_mean_emb_109",
+    "parent": "Map"
   }
 ]

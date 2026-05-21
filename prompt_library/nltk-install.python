@@ -1,0 +1,20 @@
+import nltk
+import ssl
+
+# 解决下载报错
+ssl._create_default_https_context = ssl._create_unverified_context
+
+# 用国内镜像下载
+nltk.download('punkt', download_dir='./nltk_data')
+nltk.download('averaged_perceptron_tagger', download_dir='./nltk_data')
+nltk.download('words', download_dir='./nltk_data')
+nltk.download('punkt_tab', download_dir='/root/nltk_data')
+nltk.download('averaged_perceptron_tagger_eng', download_dir='/root/nltk_data')
+
+# 测试分词
+text = "Hello world, this is test nltk"
+tokens = nltk.word_tokenize(text)
+print(tokens)
+
+# 测试词性标注
+print(nltk.pos_tag(tokens))
