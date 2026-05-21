@@ -308,6 +308,7 @@ def main():
 
     for idx, item in enumerate(tqdm(concepts_to_process, desc="处理概念")):
         concept = item["name"]
+        parent = item["parent"]
         category = item["category"]
         desc = item["desc"]
 
@@ -344,6 +345,7 @@ def main():
             concept_vector = concept_vector / np.linalg.norm(concept_vector)
             concept_vector_data = {}
             concept_vector_data["name"] = concept
+            concept_vector_data["parent"] = parent
             name_emb = encode_texts(concept)
             concept_vector_data["name_emb_key"] = f"name_emb_{idx}"
             concept_vector_data["desc"] = desc
