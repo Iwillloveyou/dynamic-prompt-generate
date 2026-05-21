@@ -97,3 +97,11 @@ cityflow-nl/
 2.根据描述与参考图像联合检索的条件式动态提示网络
 训练网络脚本:image_text_dynamic_prompt_gennerate.py
 
+主实验部分
+主程序image_text_dynamic_prompt_gennerate.py
+为了保证使用同一训练和验证分类，将加载好的训练id放在checkpoints/track_split.pkl中
+
+对比实验部分
+1.clip4cir
+主程序clip4cir_baseline.py
+其中，需要预加载训练好的clip4cir模型，本文使用基于CIRR训练好的cirr_comb_RN50x4_fullft.pt模型，具体下载路径参照https://drive.google.com/drive/folders/1d3zayARGi7zG-wkojk-i0UBXrHe96CGT

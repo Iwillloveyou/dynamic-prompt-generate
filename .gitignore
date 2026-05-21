@@ -2,3 +2,4 @@
 *.log
 *.iml
 **/nltk_data/
+**/checkpoints/

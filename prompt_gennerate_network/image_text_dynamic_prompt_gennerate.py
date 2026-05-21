@@ -11,6 +11,7 @@ from PIL import Image
 import numpy as np
 from tqdm import tqdm
 from torch.utils.data import Sampler
+import pickle
 
 # -------------------- 配置 --------------------
 class Config:
@@ -27,9 +28,9 @@ class Config:
     # 概念向量库
     concept_vector_path = './concept_vectors.npy'
     # 训练参数
-    batch_size = 32
+    batch_size =64
     epochs = 50
-    lr = 1e-4
+    lr = 1e-5
     temperature = 0.07
     hidden_dim = 512
     num_workers = 4
@@ -54,6 +55,31 @@ clip_dim = clip_model.visual.output_dim
 # concept_vectors = torch.from_numpy(concept_vectors).float().to(config.device)
 # concept_vectors = F.normalize(concept_vectors, dim=-1)
 # num_concepts = concept_vectors.size(0)
+
+def get_or_create_track_split(track_ann_file, split_file, train_ratio=0.8, seed=42):
+    """
+    如果 split_file 存在，则加载并返回 train_track_ids, val_track_ids；
+    否则，从 track_ann_file 读取所有 track_id，按比例随机划分，保存到 split_file，再返回。
+    """
+    if os.path.exists(split_file):
+        print(f"Loading track split from {split_file}")
+        with open(split_file, 'rb') as f:
+            train_track_ids, val_track_ids = pickle.load(f)
+        return train_track_ids, val_track_ids
+    else:
+        print(f"Creating new track split, saving to {split_file}")
+        with open(track_ann_file, 'r') as f:
+            tracks = json.load(f)
+        all_track_ids = list(tracks.keys())
+        random.seed(seed)
+        random.shuffle(all_track_ids)
+        split_idx = int(len(all_track_ids) * train_ratio)
+        train_track_ids = set(all_track_ids[:split_idx])
+        val_track_ids = set(all_track_ids[split_idx:])
+        # 保存为 set 列表 (pickle 支持 set)
+        with open(split_file, 'wb') as f:
+            pickle.dump((train_track_ids, val_track_ids), f)
+        return train_track_ids, val_track_ids
 
 def compute_prior_scores(query_feat, concept_extend_embs):
     """
@@ -210,7 +236,7 @@ def build_train_triplets(track_ann_file, image_root, allowed_track_ids=None):
             })
     return triplets
 
-def build_validation_data(track_ann_file, image_root, val_track_ids, num_targets=2):
+def build_validation_data(track_ann_file, image_root, val_track_ids, num_targets=2, sample_print=True, num_samples=5):
     """
     划分验证集车辆，构建：
         candidate_images: 所有验证车辆的全部图像路径列表
@@ -263,6 +289,20 @@ def build_validation_data(track_ann_file, image_root, val_track_ids, num_targets
                 'target_idxs': target_idxs,   # 存储多个索引
                 'track_id': tid
             })
+
+        # 随机抽样打印验证
+        if sample_print and len(queries) > 0:
+            print("\n=== Random samples from validation queries ===")
+            sample_queries = random.sample(queries, min(num_samples, len(queries)))
+            for i, q in enumerate(sample_queries):
+                print(f"\nSample {i+1}:")
+                print(f"  Track ID: {q['track_id']}")
+                print(f"  Caption: {q['caption']}")
+                print(f"  Reference image: {q['ref_img']}")
+                print(f"  Target image(s):")
+                for idx in q['target_idxs']:
+                    print(f"    - {candidate_images[idx]}")
+                print("  ---")
     return candidate_images, queries
 
 # -------------------- 数据集类 --------------------
@@ -280,7 +320,7 @@ class TripletDataset(Dataset):
         target_img = Image.open(item['target_img']).convert('RGB')
         ref_img = self.preprocess(ref_img)
         target_img = self.preprocess(target_img)
-        text = clip.tokenize(item['caption'], truncate=True).squeeze(0)
+        text = clip.tokenize(item['caption']).squeeze(0)
         return ref_img, target_img, text, item['track_id']   # 增加 track_id
 
 class ValidationDataset(Dataset):
@@ -326,7 +366,7 @@ class ValidationDataset(Dataset):
         query = self.queries[idx]
         ref_img = Image.open(query['ref_img']).convert('RGB')
         ref_img = self.preprocess(ref_img)
-        text = clip.tokenize(query['caption'], truncate=True).squeeze(0)
+        text = clip.tokenize(query['caption']).squeeze(0)
         return ref_img, text, query['target_idxs'], query['track_id']
 
 class TrackMutualSampler(Sampler):
@@ -470,7 +510,7 @@ def evaluate_batched(clip_model, generator, val_dataset, device, temperature, ba
             ref_img = Image.open(q['ref_img']).convert('RGB')
             ref_img = val_dataset.preprocess(ref_img)
             ref_imgs.append(ref_img)
-            texts.append(clip.tokenize(q['caption'], truncation=True).squeeze(0))
+            texts.append(clip.tokenize(q['caption']).squeeze(0))
             target_idxss.append(q['target_idxs'])   # 存储列表
 
         ref_imgs = torch.stack(ref_imgs).to(device)
@@ -480,6 +520,10 @@ def evaluate_batched(clip_model, generator, val_dataset, device, temperature, ba
         text_feat = F.normalize(clip_model.encode_text(texts), dim=-1)
         query_feat = generator(text_feat, ref_feat)   # [B, D]
 
+        # 在 evaluate_batched 函数内部，获取候选特征后添加：
+        candidate_feats = candidate_feats.float()
+        # 在得到 query_feat 后也添加：
+        query_feat = query_feat.float()
         sim = query_feat @ candidate_feats.T / temperature   # [B, C]
 
         for i in range(batch_size_actual):
@@ -537,7 +581,7 @@ def retrieve(query_text, query_image_path, candidate_image_paths, clip_model, ge
         candidate_tensors.append(preprocess(img).unsqueeze(0))
     candidate_tensors = torch.cat(candidate_tensors, dim=0).to(device)
     # 编码文本
-    text_tokens = clip.tokenize(query_text, truncate=True).to(device)
+    text_tokens = clip.tokenize(query_text).to(device)
 
     with torch.no_grad():
         ref_feat = F.normalize(clip_model.encode_image(ref_img_tensor), dim=-1)
@@ -594,7 +638,7 @@ def load_concept_extensions(json_path, npz_path):
 def main():
     # 1. 构建训练三元组和验证数据
     # -------------------- 测试模式开关 --------------------
-    test_mode = True   # 改为 False 关闭测试模式
+    test_mode = False   # 改为 False 关闭测试模式
     if test_mode:
         print("=== TEST MODE ENABLED: using small subset of data ===")
         test_track_limit = 20       # 只取前20个车辆
@@ -602,16 +646,13 @@ def main():
         config.batch_size = 8       # 减小batch size
         config.num_workers = 0      # 避免多进程问题
     # 获取所有车辆 ID
-    with open(config.track_ann_file, 'r') as f:
-        tracks = json.load(f)
-    all_track_ids = list(tracks.keys())
+    split_file = os.path.join(Config.save_dir, 'track_split.pkl')   # 保存到 checkpoints 目录下
+    train_track_ids, val_track_ids = get_or_create_track_split(
+        Config.track_ann_file, split_file, train_ratio=0.8, seed=42
+    )
     if test_mode:
-        all_track_ids = all_track_ids[:test_track_limit]
-    random.shuffle(all_track_ids)
-    split_idx = int(len(all_track_ids) * 0.8)   # 80% 训练，20% 验证
-    train_track_ids = set(all_track_ids[:split_idx])
-    val_track_ids = set(all_track_ids[split_idx:])
-    print(f"Total tracks: {len(all_track_ids)}, Train tracks: {len(train_track_ids)}, Val tracks: {len(val_track_ids)}")
+        all_track_ids = train_track_ids[:test_track_limit]
+    print(f"Train tracks: {len(train_track_ids)}, Val tracks: {len(val_track_ids)}")
     print("Building training triplets...")
     train_triplets = build_train_triplets(config.track_ann_file, config.image_root, allowed_track_ids=train_track_ids)
     if test_mode:
@@ -663,6 +704,7 @@ def main():
         print(f"\nEpoch {epoch}/{config.epochs}")
         train_loss = train_epoch(clip_model, generator, train_loader, optimizer, config.device, config.temperature)
         print(f"Train Loss: {train_loss:.4f}")
+        torch.save(generator.state_dict(), os.path.join(config.save_dir, 'train_temp_generator.pth'))
 
         # 每 5 个 epoch 验证一次
         if not test_mode and epoch % 5 == 0:
