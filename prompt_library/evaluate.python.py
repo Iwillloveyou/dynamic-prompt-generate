@@ -319,38 +319,38 @@ def main():
             ext_parent_of[name] = parent
     print(f"扩展数据: 概念数={len(ext_concepts)}")
 
-    # # ---------- 结构完整性 ----------
-    # # 父子边保留率：一致的父子对数 / 标准总边数
-    # consistent_edges = 0
-    # for child, std_parent in std_parent_of.items():
-    #     if child in ext_parent_of and ext_parent_of[child] == std_parent:
-    #         consistent_edges += 1
-    # edge_preservation = consistent_edges / total_std_edges if total_std_edges > 0 else 0
-    # print(f"父子边保留率 ρ_edge: {edge_preservation:.4f}")
-    #
-    # # 无环性
-    # acyclic = check_acyclic(ext_parent_of)
-    # print(f"无环性: {'通过' if acyclic else '存在环路'}")
-    #
-    # # ---------- 层级深度 ----------
-    # depth_dict, max_depth, avg_depth, max_fanout, avg_fanout = compute_depth_and_fanout(ext_parent_of)
-    # print(f"最大层级 L_max: {max_depth}")
-    # print(f"平均层级 L_bar: {avg_depth:.4f}")
-    #
-    # # ---------- 分支广度 ----------
-    # print(f"最大扇出 f_max: {max_fanout}")
-    # print(f"平均扇出 f_bar: {avg_fanout:.4f}")
-    #
-    # # ---------- 知识覆盖 ----------
-    # # 概念覆盖率
-    # covered_concepts = ext_concepts.intersection(std_concepts)
-    # concept_coverage = len(covered_concepts) / len(std_concepts) if std_concepts else 0
-    # print(f"概念覆盖率 η_cov: {concept_coverage:.4f}")
-    #
-    # # 关系完整度（简化版：使用可还原的父子三元组比例，与边保留率相同，但论文中不同，此处输出占位符）
-    # # 由于论文中定义模糊，这里仅输出父子边保留率作为参考，实际应按论文要求定义
-    # relation_integraity = compute_relation_integrity(ext_data, emb_dict, std_parent_of, ext_parent_of, std_desc_of, std_concepts, 8)
-    # print(f"关系完整度 η_rel: 未明确定义，此处使用父子边保留率 {relation_integraity:.4f} 作为参考")
+    # ---------- 结构完整性 ----------
+    # 父子边保留率：一致的父子对数 / 标准总边数
+    consistent_edges = 0
+    for child, std_parent in std_parent_of.items():
+        if child in ext_parent_of and ext_parent_of[child] == std_parent:
+            consistent_edges += 1
+    edge_preservation = consistent_edges / total_std_edges if total_std_edges > 0 else 0
+    print(f"父子边保留率 ρ_edge: {edge_preservation:.4f}")
+
+    # 无环性
+    acyclic = check_acyclic(ext_parent_of)
+    print(f"无环性: {'通过' if acyclic else '存在环路'}")
+
+    # ---------- 层级深度 ----------
+    depth_dict, max_depth, avg_depth, max_fanout, avg_fanout = compute_depth_and_fanout(ext_parent_of)
+    print(f"最大层级 L_max: {max_depth}")
+    print(f"平均层级 L_bar: {avg_depth:.4f}")
+
+    # ---------- 分支广度 ----------
+    print(f"最大扇出 f_max: {max_fanout}")
+    print(f"平均扇出 f_bar: {avg_fanout:.4f}")
+
+    # ---------- 知识覆盖 ----------
+    # 概念覆盖率
+    covered_concepts = ext_concepts.intersection(std_concepts)
+    concept_coverage = len(covered_concepts) / len(std_concepts) if std_concepts else 0
+    print(f"概念覆盖率 η_cov: {concept_coverage:.4f}")
+
+    # 关系完整度（简化版：使用可还原的父子三元组比例，与边保留率相同，但论文中不同，此处输出占位符）
+    # 由于论文中定义模糊，这里仅输出父子边保留率作为参考，实际应按论文要求定义
+    relation_integraity = compute_relation_integrity(ext_data, emb_dict, std_parent_of, ext_parent_of, std_desc_of, std_concepts, 8)
+    print(f"关系完整度 η_rel: 未明确定义，此处使用父子边保留率 {relation_integraity:.4f} 作为参考")
 
     # ---------- 语义一致 ----------
     # 需要使用CLIP嵌入（已提供）
