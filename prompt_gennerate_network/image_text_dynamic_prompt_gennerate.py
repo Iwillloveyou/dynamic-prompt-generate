@@ -81,6 +81,20 @@ def get_or_create_track_split(track_ann_file, split_file, train_ratio=0.8, seed=
             pickle.dump((train_track_ids, val_track_ids), f)
         return train_track_ids, val_track_ids
 
+def compute_prior_scores_single(query_feat, concept_embs):
+    """
+    计算查询特征与每个概念名称/描述的相似度
+    query_feat: [B, D]
+    concept_embs: [C, D]  单个向量 per concept
+    returns: [B, C] 余弦相似度
+    """
+    # 确保都是 float32 并归一化
+    query_feat = query_feat.float()
+    concept_embs = concept_embs.float()
+    # 直接点积（因为已经归一化）
+    scores = query_feat @ concept_embs.T
+    return scores
+
 def compute_prior_scores(query_feat, concept_extend_embs):
     """
     计算查询特征与每个概念扩展描述的相似度（取最大值）
@@ -645,6 +659,7 @@ def load_concept_extensions(json_path, npz_path):
 
     concept_names = []
     concept_name_embs = []
+    concept_desc_embs = []
     concept_extend_embs = []   # list of list of tensors
     for item in concepts:
         name = item['name']
@@ -660,6 +675,19 @@ def load_concept_extensions(json_path, npz_path):
         if name_emb.dim() != 1:
             raise ValueError(f"Unexpected shape for {name_key}: {name_emb.shape}")
 
+        desc_key = item['desc_emb_key']
+        desc_emb = torch.from_numpy(npz[desc_key]).float()
+        # 修复：去除多余的维度，确保 shape 为 (D,)
+        if desc_emb.dim() == 2:
+            if desc_emb.size(0) == 1:
+                desc_emb = desc_emb.squeeze(0)
+            elif desc_emb.size(1) == 1:
+                desc_emb = desc_emb.squeeze(1)
+        # 如果依然是二维但 size(0) 和 size(1) 都不为 1，则报错或取均值等
+        if desc_emb.dim() != 1:
+            raise ValueError(f"Unexpected shape for {desc_key}: {desc_emb.shape}")
+
+
         extend_keys = item['extend_desc_emb_key']
         extend_embs = []
         for key in extend_keys:
@@ -674,10 +702,12 @@ def load_concept_extensions(json_path, npz_path):
 
         concept_names.append(name)
         concept_name_embs.append(name_emb)
+        concept_desc_embs.append(desc_emb)
         concept_extend_embs.append(extend_embs)
 
     concept_name_embs = torch.stack(concept_name_embs, dim=0).to(config.device)  # [C, D]
-    return concept_names, concept_name_embs, concept_extend_embs
+    concept_desc_embs = torch.stack(concept_desc_embs, dim=0).to(config.device)  # [C, D]
+    return concept_names, concept_name_embs, concept_extend_embs, concept_desc_embs
 
 # -------------------- 主函数 --------------------
 def main():
@@ -730,7 +760,7 @@ def main():
     # 验证时不使用 DataLoader 的 batch，因为需要逐一查询并检索整个候选集，我们直接在 evaluate 中遍历
 
     # 3. 模型和优化器
-    concept_names, concept_name_embs, concept_extend_embs = load_concept_extensions(
+    concept_names, concept_name_embs, concept_extend_embs, concept_desc_embs = load_concept_extensions(
         config.concept_extend_file, config.concept_extend_embeddings
     )
     # 创建生成器
