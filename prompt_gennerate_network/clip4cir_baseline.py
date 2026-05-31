@@ -175,7 +175,7 @@ def main():
 
     print("Building validation data...")
     candidate_images, val_queries = build_validation_data(
-        Config.track_ann_file, Config.image_root, val_track_ids, num_targets=3
+        Config.track_ann_file, Config.image_root, val_track_ids, num_targets=3, cache_file='path/to/validation_cache.pkl'
     )
     print(f"Candidates: {len(candidate_images)}, Queries: {len(val_queries)}")
 

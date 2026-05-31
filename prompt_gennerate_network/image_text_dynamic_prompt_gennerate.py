@@ -236,17 +236,48 @@ def build_train_triplets(track_ann_file, image_root, allowed_track_ids=None):
             })
     return triplets
 
-def build_validation_data(track_ann_file, image_root, val_track_ids, num_targets=2, sample_print=True, num_samples=5):
+def build_validation_data(track_ann_file, image_root, val_track_ids, num_targets=2, sample_print=True, num_samples=5, cache_file=None):
     """
     划分验证集车辆，构建：
         candidate_images: 所有验证车辆的全部图像路径列表
         queries: 每个查询包含 ref_img_path, caption, target_img_path (在 candidate_images 中的索引)
+
+    Args:
+        cache_file: 缓存文件路径，如果提供且存在，则直接加载缓存；否则构建并保存
     """
+    # 如果提供了缓存文件且存在，则直接加载
+    if cache_file is not None and os.path.exists(cache_file):
+        print(f"Loading cached validation data from {cache_file}")
+        with open(cache_file, 'rb') as f:
+            cached_data = pickle.load(f)
+        candidate_images = cached_data['candidate_images']
+        queries = cached_data['queries']
+
+        # 如果 sample_print 为 True，打印一些样本信息
+        if sample_print and len(queries) > 0:
+            print("\n=== Random samples from validation queries (loaded from cache) ===")
+            sample_queries = random.sample(queries, min(num_samples, len(queries)))
+            for i, q in enumerate(sample_queries):
+                print(f"\nSample {i+1}:")
+                print(f"  Track ID: {q['track_id']}")
+                print(f"  Caption: {q['caption']}")
+                print(f"  Reference image: {q['ref_img']}")
+                print(f"  Target image(s):")
+                for idx in q['target_idxs']:
+                    print(f"    - {candidate_images[idx]}")
+                print("  ---")
+
+        return candidate_images, queries
+
+    # 否则，正常构建
+    print("Building validation data...")
     with open(track_ann_file, 'r') as f:
         tracks = json.load(f)
+
     candidate_images = []
     candidate_track_ids = []
     img_to_idx = {}
+
     for tid in val_track_ids:
         if tid not in tracks:
             continue
@@ -256,6 +287,7 @@ def build_validation_data(track_ann_file, image_root, val_track_ids, num_targets
             candidate_images.append(img_path)
             candidate_track_ids.append(tid)
             img_to_idx[img_path] = len(candidate_images) - 1
+
     queries = []
     for tid in val_track_ids:
         frames = tracks[tid]['frames']
@@ -290,19 +322,32 @@ def build_validation_data(track_ann_file, image_root, val_track_ids, num_targets
                 'track_id': tid
             })
 
-        # 随机抽样打印验证
-        if sample_print and len(queries) > 0:
-            print("\n=== Random samples from validation queries ===")
-            sample_queries = random.sample(queries, min(num_samples, len(queries)))
-            for i, q in enumerate(sample_queries):
-                print(f"\nSample {i+1}:")
-                print(f"  Track ID: {q['track_id']}")
-                print(f"  Caption: {q['caption']}")
-                print(f"  Reference image: {q['ref_img']}")
-                print(f"  Target image(s):")
-                for idx in q['target_idxs']:
-                    print(f"    - {candidate_images[idx]}")
-                print("  ---")
+    # 保存缓存
+    if cache_file is not None:
+        print(f"Saving validation data cache to {cache_file}")
+        cache_dir = os.path.dirname(cache_file)
+        if cache_dir and not os.path.exists(cache_dir):
+            os.makedirs(cache_dir)
+        with open(cache_file, 'wb') as f:
+            pickle.dump({
+                'candidate_images': candidate_images,
+                'queries': queries
+            }, f)
+
+    # 随机抽样打印验证
+    if sample_print and len(queries) > 0:
+        print("\n=== Random samples from validation queries ===")
+        sample_queries = random.sample(queries, min(num_samples, len(queries)))
+        for i, q in enumerate(sample_queries):
+            print(f"\nSample {i+1}:")
+            print(f"  Track ID: {q['track_id']}")
+            print(f"  Caption: {q['caption']}")
+            print(f"  Reference image: {q['ref_img']}")
+            print(f"  Target image(s):")
+            for idx in q['target_idxs']:
+                print(f"    - {candidate_images[idx]}")
+            print("  ---")
+
     return candidate_images, queries
 
 # -------------------- 数据集类 --------------------
