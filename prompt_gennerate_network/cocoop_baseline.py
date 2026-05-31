@@ -41,52 +41,49 @@ class Config:
 
 # ---------- CoOp 实现 ----------
 class CoOpTextEncoder(nn.Module):
-    """CoOp: 静态可学习上下文向量，与原始文本拼接"""
     def __init__(self, clip_model, n_ctx=4, ctx_init="", dtype=torch.float32):
         super().__init__()
         self.clip_model = clip_model
         self.dtype = dtype
-        self.n_ctx = n_ctx
-        token_embedding = clip_model.token_embedding
-        self.token_dim = token_embedding.embedding_dim
+        self.token_embedding = clip_model.token_embedding
+        self.token_dim = self.token_embedding.embedding_dim
+        self.max_seq_len = clip_model.positional_embedding.size(0)  # 通常是77
 
         if ctx_init:
+            # 使用给定的词初始化
             ctx_init = ctx_init.replace("_", " ")
-            ctx_words = ctx_init.split(" ")
-            n_ctx = len(ctx_words)
+            n_ctx = len(ctx_init.split(" "))
             with torch.no_grad():
-                ctx_ids = clip.tokenize(ctx_init).to(device).squeeze(0)[1:-1]
-                ctx_embeddings = token_embedding(ctx_ids).to(dtype)
+                ctx_ids = clip.tokenize(ctx_init).to(device).squeeze(0)[1:-1]  # 去掉SOS/EOS
+                ctx_embeddings = self.token_embedding(ctx_ids).to(dtype)
             self.ctx = nn.Parameter(ctx_embeddings)
         else:
-            n_ctx = self.n_ctx   # 保留原传入值
             self.ctx = nn.Parameter(torch.empty(n_ctx, self.token_dim, dtype=dtype))
             nn.init.normal_(self.ctx, std=0.02)
-        # 关键：将实际使用的 n_ctx 赋值给 self.n_ctx
         self.n_ctx = n_ctx
 
     def forward(self, text_tokens):
-        """
-        text_tokens: [B, L] token ids
-        返回增强后的文本特征 [B, D]
-        """
-        # token embeddings
-        x = self.clip_model.token_embedding(text_tokens).type(self.dtype)  # [B, L, D]
+        # text_tokens: [B, L] 其中 L = 77
+        # 获取原始 token embeddings
+        x = self.token_embedding(text_tokens).type(self.dtype)  # [B, L, D]
 
-        # 上下文向量扩展到 batch 维度
+        # 替换策略：将前 n_ctx 个 token 的 embedding 替换为 ctx 向量
+        # 注意：通常 text_tokens 的第一个 token 是 SOS（起始符），不应替换。因此我们从索引1开始替换
+        # 假设模板为 [SOS, token1, token2, ..., tokenN, EOS, PAD...]
+        # 我们将从索引1开始的 n_ctx 个 token 替换为 ctx
         ctx = self.ctx.unsqueeze(0).expand(text_tokens.size(0), -1, -1)  # [B, n_ctx, D]
+        x[:, 1:1+self.n_ctx, :] = ctx
 
-        # 拼接：上下文向量放在文本 tokens 之前（也可之后，此处按常见做法）
-        x = torch.cat([ctx, x], dim=1)  # [B, n_ctx+L, D]
-
-        # 通过 CLIP 文本 transformer
+        self.clip_model = self.clip_model.float()
+        # 序列长度保持不变，掩码无需修改
         x = x.permute(1, 0, 2)  # [L, B, D]
         x = self.clip_model.transformer(x)
         x = x.permute(1, 0, 2)  # [B, L, D]
         x = self.clip_model.ln_final(x).type(self.dtype)
 
-        # 取 EOS token 位置的特征（原始 EOS 位置需要加上偏移 n_ctx）
-        eos_positions = text_tokens.argmax(dim=-1) + self.n_ctx
+        # 取 EOS 位置的特征（通常 EOS 在原始序列中的位置不变）
+        # 简化：取最后一个 token（但可能不是 EOS）。更准确的做法是找到每个样本的 EOS 索引
+        eos_positions = text_tokens.argmax(dim=-1)  # 找到EOS token位置（CLIP中EOS id为49407）
         x = x[torch.arange(x.size(0)), eos_positions] @ self.clip_model.text_projection
         return F.normalize(x, dim=-1)
 
@@ -224,6 +221,7 @@ def evaluate_retriever(retriever, val_dataset, device, temperature=0.07, batch_s
             query_feat = retriever(text_tokens, None)
 
         # 相似度计算
+        candidate_feats = candidate_feats.float()
         sim = query_feat @ candidate_feats.T / temperature
 
         for i in range(len(batch_queries)):
@@ -265,11 +263,58 @@ def evaluate_retriever(retriever, val_dataset, device, temperature=0.07, batch_s
     print(f"mAP: {ap_sum / num_q * 100:.2f}%")
     return recalls, ap_sum
 
+def load_pretrained_weights(retriever, weights_path, device, method="coop"):
+    """
+    加载 CoOp/CoCoOp 官方预训练权重（适配 .pth.tar-50 格式）
+    """
+    checkpoint = torch.load(weights_path, map_location=device, weights_only=False)
+
+    # 1. 提取模型参数字典（尝试常见 key）
+    if "state_dict" in checkpoint:
+        state_dict = checkpoint["state_dict"]
+    elif "model" in checkpoint:
+        state_dict = checkpoint["model"]
+    else:
+        state_dict = checkpoint  # 直接就是参数字典
+
+    # 2. 移除可能的 'module.' 前缀（多卡训练时产生）
+    state_dict = {k.replace("module.", ""): v for k, v in state_dict.items()}
+
+    # 3. 打印几个原始键名示例，便于调试
+    sample_keys = list(state_dict.keys())[:5]
+    print(f"Original keys example: {sample_keys}")
+
+    # 4. 为所有键添加 'text_encoder.' 前缀，因为我们的 retriever 将参数封装在 text_encoder 下
+    new_state_dict = {}
+    for k, v in state_dict.items():
+        new_state_dict[f"text_encoder.{k}"] = v
+
+    # 5. 加载权重（strict=False 允许键不完全匹配）
+    missing, unexpected = retriever.load_state_dict(new_state_dict, strict=False)
+
+    if missing:
+        print(f"Missing keys (first 10): {missing[:10]}")
+    if unexpected:
+        print(f"Unexpected keys (first 10): {unexpected[:10]}")
+
+    # 6. 验证是否加载了关键参数（例如 ctx）
+    if hasattr(retriever.text_encoder, "ctx"):
+        print(f"✅ ctx mean value after loading: {retriever.text_encoder.ctx.data.mean().item():.4f}")
+    else:
+        print("⚠️ Warning: text_encoder.ctx not found, loading may have failed.")
+
+    print(f"✅ {method.upper()} weights loaded from {weights_path}")
 
 # ---------- 主函数 ----------
+# 使用预训练权重评估 CoOp
+#python coop_cocoop_baseline.py --method coop --n_ctx 4 --weights /path/to/coop_vit_b32_ep50.pth
+
+# 使用预训练权重评估 CoCoOp
+#python coop_cocoop_baseline.py --method cocoop --n_ctx 4 --weights /path/to/cocoop_vit_b32_ep10.pth
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--method", type=str, default="coop", choices=["coop", "cocoop"])
+    parser.add_argument("--weights", type=str, default="")
     parser.add_argument("--n_ctx", type=int, default=4, help="Number of context tokens")
     parser.add_argument("--quick", action="store_true", help="Use small subset for testing")
     args = parser.parse_args()
@@ -300,18 +345,31 @@ def main():
 
     val_dataset = pg.ValidationDataset(
         candidate_images, val_queries, preprocess,
-        cache_path=os.path.join(Config.save_dir, f'candidate_feats_{args.method}.pt')
+        cache_path=os.path.join(Config.save_dir, f'candidate_feats_clip4cir.pt')
     )
 
-    # 创建检索器
+    # ... 解析参数 ...
     if args.method == "coop":
         retriever = CoOpRetriever(clip_model, n_ctx=args.n_ctx).to(device)
     else:
         retriever = CoCoOpRetriever(clip_model, n_ctx=args.n_ctx).to(device)
+
+    if args.weights:
+        load_pretrained_weights(retriever, args.weights, device, args.method)
+    else:
+        print("⚠️ No pretrained weights provided. Using random initialization. Results will be poor.")
 
     print(f"\n=== Evaluating {args.method.upper()} ===")
     evaluate_retriever(retriever, val_dataset, device)
 
 
 if __name__ == "__main__":
+    import sys
+    # 直接在这里写参数，代替命令行
+    sys.argv = [
+        "coop_cocoop_baseline.py",
+        "--method", "coop",
+        "--n_ctx", "4",
+        "--weights", "./checkpoints/model.pth.tar-50"
+    ]
     main()
