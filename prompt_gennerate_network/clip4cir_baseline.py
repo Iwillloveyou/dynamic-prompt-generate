@@ -9,6 +9,7 @@ from PIL import Image
 import torch.nn as nn
 import torch.nn.functional as F
 import clip
+from torch.utils.data import Dataset, DataLoader
 
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if parent_dir not in sys.path:
@@ -20,6 +21,8 @@ Config = pg.Config
 build_validation_data = pg.build_validation_data
 get_or_create_track_split = pg.get_or_create_track_split
 ValidationDataset = pg.ValidationDataset
+TripletDataset=pg.TripletDataset
+TrackMutualSampler=pg.TrackMutualSampler
 clip_model = pg.clip_model
 preprocess = pg.preprocess
 clip_dim = pg.clip_dim
@@ -63,6 +66,41 @@ class Combiner(nn.Module):
         s = self.dynamic_scalar(combined)
         out = self.output_layer(combined)
         return F.normalize(out, dim=-1)
+
+def train_epoch_clip4cir(clip_model, combiner, train_loader, optimizer, device, temperature=0.07):
+    """训练一个epoch"""
+    clip_model.eval()
+    combiner.train()
+    total_loss = 0
+    num_batches = 0
+
+    for ref_imgs, target_imgs, texts, _ in tqdm(train_loader, desc="Training"):
+        ref_imgs = ref_imgs.to(device)
+        target_imgs = target_imgs.to(device)
+        texts = texts.to(device)
+        batch_size = ref_imgs.size(0)
+
+        with torch.no_grad():
+            ref_feat = F.normalize(clip_model.encode_image(ref_imgs), dim=-1).float()
+            target_feat = F.normalize(clip_model.encode_image(target_imgs), dim=-1).float()
+            text_feat = F.normalize(clip_model.encode_text(texts), dim=-1).float()
+
+        # Combiner 融合
+        query_feat = combiner(ref_feat, text_feat)
+
+        # 对比损失
+        logits = query_feat @ target_feat.T / temperature
+        labels = torch.arange(batch_size, device=device)
+        loss = (F.cross_entropy(logits, labels) + F.cross_entropy(logits.T, labels)) / 2
+
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        total_loss += loss.item()
+        num_batches += 1
+
+    return total_loss / num_batches
 
 def evaluate_clip4cir(candidate_images, queries, clip_model, combiner, preprocess, device,
                       temperature=0.07, batch_size=64):
@@ -162,7 +200,63 @@ def evaluate_clip4cir(candidate_images, queries, clip_model, combiner, preproces
     print(f"mAP: {ap_sum / num_queries * 100:.2f}%")
     return recalls, mrr, ap_sum
 
-def main():
+def define_train():
+    # 1. 划分训练/验证车辆
+    split_file = os.path.join(Config.save_dir, 'track_split.pkl')
+    train_track_ids, val_track_ids = get_or_create_track_split(
+        Config.track_ann_file, split_file, train_ratio=0.8, seed=42
+    )
+    print(f"Train tracks: {len(train_track_ids)}, Val tracks: {len(val_track_ids)}")
+
+    # 2. 构建训练集和验证集
+    print("Building training triplets...")
+    train_triplets = pg.build_train_triplets(
+        Config.track_ann_file, Config.image_root, allowed_track_ids=train_track_ids
+    )
+    print(f"Training triplets: {len(train_triplets)}")
+
+    # 使用互斥采样器（确保batch内车辆不重复）
+    train_dataset = pg.TripletDataset(train_triplets, preprocess)
+    sampler = TrackMutualSampler(train_triplets, batch_size=Config.batch_size, shuffle=True)
+    train_loader = DataLoader(
+        train_dataset, batch_sampler=sampler,
+        num_workers=Config.num_workers, pin_memory=True
+    )
+
+    print("Building validation data...")
+    candidate_images, val_queries = build_validation_data(
+        Config.track_ann_file, Config.image_root, val_track_ids, num_targets=3
+    )
+    val_dataset = ValidationDataset(
+        candidate_images, val_queries, preprocess,
+        cache_path=os.path.join(Config.save_dir, 'candidate_feats_clip4cir.pt')
+    )
+    print(f"Validation: {len(candidate_images)} candidates, {len(val_queries)} queries")
+
+    # 3. 初始化模型
+    combiner = Combiner(input_dim=clip_dim).to(device)
+    optimizer = torch.optim.Adam(combiner.parameters(), lr=Config.lr)
+
+    # 4. 训练循环
+    best_map = 0.0
+    for epoch in range(1, Config.epochs + 1):
+        print(f"\nEpoch {epoch}/{Config.epochs}")
+        train_loss = train_epoch_clip4cir(
+            clip_model, combiner, train_loader, optimizer, device, Config.temperature
+        )
+        print(f"Train Loss: {train_loss:.4f}")
+
+        # 每5个epoch验证一次
+        if epoch % 5 == 0:
+            recalls, mAP = evaluate_clip4cir(combiner, val_dataset, device, Config.temperature)
+            if mAP > best_map:
+                best_map = mAP
+                torch.save(combiner.state_dict(), os.path.join(Config.save_dir, 'best_clip4cir_combiner.pth'))
+                print("Best model saved.")
+
+    print("Training finished.")
+
+def use_pre_model_val():
     # -------------------------------------------------------------------
     # ✅ 【修复 2】打印当前目录 + 绝对路径构建（永不找不到文件）
     # -------------------------------------------------------------------
@@ -210,4 +304,4 @@ def main():
     )
 
 if __name__ == "__main__":
-    main()
+    define_train()

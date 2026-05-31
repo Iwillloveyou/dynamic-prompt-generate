@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 """
-CoOp / CoCoOp 对比实验脚本（修复版）
-真正使用可学习提示或实例条件提示生成查询特征
+CoCoOp 训练脚本（适配 CityFlow-NL 数据集）
+使用可学习实例条件提示生成查询特征
 """
 
 import os
@@ -38,6 +38,12 @@ class Config:
     track_ann_file = pg.Config.track_ann_file
     image_root = pg.Config.image_root
     num_targets = 3
+    # 训练参数
+    batch_size = 32
+    epochs = 50
+    lr = 1e-4
+    temperature = 0.07
+    num_workers = 4
 
 # ---------- CoOp 实现 ----------
 class CoOpTextEncoder(nn.Module):
@@ -96,7 +102,6 @@ class CoOpRetriever(nn.Module):
     def forward(self, text_tokens, img_feat=None):
         # CoOp 不使用图像特征
         return self.text_encoder(text_tokens)
-
 
 # ---------- CoCoOp 实现 ----------
 class MetaNet(nn.Module):
@@ -177,7 +182,48 @@ class CoCoOpRetriever(nn.Module):
         return self.text_encoder(text_tokens, img_feat)
 
 
-# ---------- 评估函数（正确使用 retriever）----------
+# ---------- 训练函数 ----------
+def train_epoch_cocoop(clip_model, retriever, train_loader, optimizer, device, temperature=0.07):
+    """训练一个 epoch"""
+    clip_model.eval()
+    retriever.train()
+    total_loss = 0
+    num_batches = 0
+
+    for ref_imgs, target_imgs, texts, _ in tqdm(train_loader, desc="Training"):
+        ref_imgs = ref_imgs.to(device)
+        target_imgs = target_imgs.to(device)
+        texts = texts.to(device)
+        batch_size = ref_imgs.size(0)
+
+        with torch.no_grad():
+            ref_feat = F.normalize(clip_model.encode_image(ref_imgs), dim=-1).float()
+            target_feat = F.normalize(clip_model.encode_image(target_imgs), dim=-1).float()
+            text_feat = F.normalize(clip_model.encode_text(texts), dim=-1).float()
+            # 注意：CoCoOp 需要原始的 text_tokens，不能直接用 text_feat
+            # 所以我们不能在 with torch.no_grad() 里直接获取 text_feat
+            # 需要重新获取 text_tokens
+        text_tokens = texts  # texts 已经是 tokenized 的 ids
+
+        # 生成查询特征（CoCoOp 使用图像特征和文本 tokens）
+        query_feat = retriever(text_tokens, ref_feat)
+
+        # 对比损失
+        logits = query_feat @ target_feat.T / temperature
+        labels = torch.arange(batch_size, device=device)
+        loss = (F.cross_entropy(logits, labels) + F.cross_entropy(logits.T, labels)) / 2
+
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        total_loss += loss.item()
+        num_batches += 1
+
+    return total_loss / num_batches
+
+
+# ---------- 评估函数 ----------
 @torch.no_grad()
 def evaluate_retriever(retriever, val_dataset, device, temperature=0.07, batch_size=64):
     retriever.eval()
@@ -185,6 +231,7 @@ def evaluate_retriever(retriever, val_dataset, device, temperature=0.07, batch_s
 
     # 候选图像特征
     candidate_feats = val_dataset.load_or_extract_candidate_features(clip_model, device).to(device)
+    candidate_feats = candidate_feats.float()
 
     queries = val_dataset.queries
     num_queries = len(queries)
@@ -221,7 +268,6 @@ def evaluate_retriever(retriever, val_dataset, device, temperature=0.07, batch_s
             query_feat = retriever(text_tokens, None)
 
         # 相似度计算
-        candidate_feats = candidate_feats.float()
         sim = query_feat @ candidate_feats.T / temperature
 
         for i in range(len(batch_queries)):
@@ -305,13 +351,13 @@ def load_pretrained_weights(retriever, weights_path, device, method="coop"):
 
     print(f"✅ {method.upper()} weights loaded from {weights_path}")
 
-# ---------- 主函数 ----------
+# ---------- 使用预训练模型验证 ----------
 # 使用预训练权重评估 CoOp
 #python coop_cocoop_baseline.py --method coop --n_ctx 4 --weights /path/to/coop_vit_b32_ep50.pth
 
 # 使用预训练权重评估 CoCoOp
 #python coop_cocoop_baseline.py --method cocoop --n_ctx 4 --weights /path/to/cocoop_vit_b32_ep10.pth
-def main():
+def use_pre_train_model_val():
     parser = argparse.ArgumentParser()
     parser.add_argument("--method", type=str, default="coop", choices=["coop", "cocoop"])
     parser.add_argument("--weights", type=str, default="")
@@ -362,14 +408,77 @@ def main():
     print(f"\n=== Evaluating {args.method.upper()} ===")
     evaluate_retriever(retriever, val_dataset, device)
 
+# ---------- 主训练函数 ----------
+def train_cocoop():
+    """使用自己的数据集训练 CoCoOp"""
+    # 1. 划分训练/验证车辆
+    split_file = os.path.join(Config.save_dir, 'track_split.pkl')
+    if hasattr(pg, 'get_or_create_track_split'):
+        train_track_ids, val_track_ids = pg.get_or_create_track_split(
+            Config.track_ann_file, split_file, train_ratio=0.8, seed=42
+        )
+    else:
+        random.seed(42)
+        with open(Config.track_ann_file, 'r') as f:
+            tracks = json.load(f)
+        all_track_ids = list(tracks.keys())
+        random.shuffle(all_track_ids)
+        split_idx = int(len(all_track_ids) * 0.8)
+        train_track_ids = set(all_track_ids[:split_idx])
+        val_track_ids = set(all_track_ids[split_idx:])
+
+    print(f"Train tracks: {len(train_track_ids)}, Val tracks: {len(val_track_ids)}")
+
+    # 2. 构建训练集和验证集
+    print("Building training triplets...")
+    train_triplets = pg.build_train_triplets(
+        Config.track_ann_file, Config.image_root, allowed_track_ids=train_track_ids
+    )
+    print(f"Training triplets: {len(train_triplets)}")
+
+    # 使用互斥采样器（确保 batch 内车辆不重复）
+    train_dataset = pg.TripletDataset(train_triplets, preprocess)
+    sampler = pg.TrackMutualSampler(train_triplets, batch_size=Config.batch_size, shuffle=True)
+    train_loader = DataLoader(
+        train_dataset,
+        batch_sampler=sampler,
+        num_workers=Config.num_workers,
+        pin_memory=True
+    )
+
+    print("Building validation data...")
+    candidate_images, val_queries = pg.build_validation_data(
+        Config.track_ann_file, Config.image_root, val_track_ids, num_targets=Config.num_targets
+    )
+    val_dataset = pg.ValidationDataset(
+        candidate_images, val_queries, preprocess,
+        cache_path=os.path.join(Config.save_dir, 'candidate_feats_cocoop.pt')
+    )
+    print(f"Validation: {len(candidate_images)} candidates, {len(val_queries)} queries")
+
+    # 3. 初始化模型
+    retriever = CoCoOpRetriever(clip_model, n_ctx=4).to(device)
+    optimizer = torch.optim.Adam(retriever.parameters(), lr=Config.lr)
+
+    # 4. 训练循环
+    best_map = 0.0
+    for epoch in range(1, Config.epochs + 1):
+        print(f"\nEpoch {epoch}/{Config.epochs}")
+        train_loss = train_epoch_cocoop(
+            clip_model, retriever, train_loader, optimizer, device, Config.temperature
+        )
+        print(f"Train Loss: {train_loss:.4f}")
+
+        # 每 5 个 epoch 验证一次
+        if epoch % 5 == 0:
+            recalls, mAP = evaluate_retriever(retriever, val_dataset, device, Config.temperature)
+            if mAP > best_map:
+                best_map = mAP
+                torch.save(retriever.state_dict(), os.path.join(Config.save_dir, 'best_cocoop_retriever.pth'))
+                print("Best model saved.")
+
+    print(f"Training finished. Best mAP: {best_map:.2f}%")
+
 
 if __name__ == "__main__":
-    import sys
-    # 直接在这里写参数，代替命令行
-    sys.argv = [
-        "coop_cocoop_baseline.py",
-        "--method", "coop",
-        "--n_ctx", "4",
-        "--weights", "./checkpoints/model.pth.tar-50"
-    ]
-    main()
+    train_cocoop()
