@@ -163,7 +163,9 @@ class PromptGenerator(nn.Module):
         dyn_prompt = weights @ self.concept_name_embs            # [B, D]
 
         # 6. 融合回原始文本特征
-        combined = text_feat + self.alpha * dyn_prompt
+        # combined = text_feat + self.alpha * dyn_prompt
+        # 将动态提示与图像特征融合
+        combined = img_feat + self.alpha * dyn_prompt
         combined = F.normalize(combined, dim=-1)
         return combined
 
@@ -237,17 +239,20 @@ def build_train_triplets(track_ann_file, image_root, allowed_track_ids=None):
         captions = info['nl']
         if len(frames) < 2 or len(captions) == 0:
             continue
+        # 扩大批次，每个track_取5个
+        num_pairs_per_caption = 5
         for cap in captions:
-            ref_img_path, target_img_path = random.sample(frames, 2)
-            # 构建绝对路径
-            ref_full = os.path.join(image_root, ref_img_path.lstrip('./'))
-            target_full = os.path.join(image_root, target_img_path.lstrip('./'))
-            triplets.append({
-                'ref_img': ref_full,
-                'target_img': target_full,
-                'caption': cap,
-                'track_id': track_id
-            })
+            for _ in range(num_pairs_per_caption):
+                ref_img_path, target_img_path = random.sample(frames, 2)
+                # 构建绝对路径
+                ref_full = os.path.join(image_root, ref_img_path.lstrip('./'))
+                target_full = os.path.join(image_root, target_img_path.lstrip('./'))
+                triplets.append({
+                    'ref_img': ref_full,
+                    'target_img': target_full,
+                    'caption': cap,
+                    'track_id': track_id
+                })
     return triplets
 
 def build_validation_data(track_ann_file, image_root, val_track_ids, num_targets=2, sample_print=True, num_samples=5, cache_file=None):
@@ -366,9 +371,10 @@ def build_validation_data(track_ann_file, image_root, val_track_ids, num_targets
 
 # -------------------- 数据集类 --------------------
 class TripletDataset(Dataset):
-    def __init__(self, triplets, preprocess):
+    def __init__(self, triplets, preprocess, track_to_int=None):
         self.triplets = triplets
         self.preprocess = preprocess
+        self.track_to_int = track_to_int
 
     def __len__(self):
         return len(self.triplets)
@@ -380,7 +386,10 @@ class TripletDataset(Dataset):
         ref_img = self.preprocess(ref_img)
         target_img = self.preprocess(target_img)
         text = clip.tokenize(item['caption']).squeeze(0)
-        return ref_img, target_img, text, item['track_id']   # 增加 track_id
+        track_id = item['track_id']
+        if self.track_to_int is not None:
+            track_id = self.track_to_int[track_id]   # 转为整数
+        return ref_img, target_img, text, track_id   # 增加 track_id
 
 class ValidationDataset(Dataset):
     """验证集：存储所有候选图像和所有查询"""
@@ -461,13 +470,33 @@ class TrackMutualSampler(Sampler):
         # 【修复】向上取整，绝对不会返回 0
         return (len(self.track_ids) + self.batch_size - 1) // self.batch_size
 
+def multi_positive_contrastive_loss(query_feat, target_feat, track_ids, temperature=0.07):
+    device = query_feat.device
+    # 确保 track_ids 在正确设备上且为整数
+    if not isinstance(track_ids, torch.Tensor):
+        track_ids = torch.tensor(track_ids, device=device)
+    else:
+        track_ids = track_ids.to(device)
+    track_ids = track_ids.long().view(-1)
+
+    sim = query_feat @ target_feat.T / temperature
+    pos_mask = (track_ids[:, None] == track_ids[None, :]).float()
+    # 可选：去除对角线（避免自身匹配）
+    # pos_mask = pos_mask * (1 - torch.eye(track_ids.size(0), device=device))
+    exp_sim = torch.exp(sim)
+    pos_sum = (exp_sim * pos_mask).sum(dim=1)
+    all_sum = exp_sim.sum(dim=1)
+    loss = -torch.log(pos_sum / (all_sum + 1e-8)).mean()
+    return loss
+
+
 # -------------------- 训练函数 --------------------
 def train_epoch(clip_model, generator, dataloader, optimizer, device, temperature):
     clip_model.eval()
     generator.train()
     total_loss = 0
     num_batches = 0
-    for ref_imgs, target_imgs, texts, _ in tqdm(dataloader, desc='Training'):
+    for ref_imgs, target_imgs, texts, track_ids in tqdm(dataloader, desc='Training'):
         ref_imgs = ref_imgs.to(device)
         target_imgs = target_imgs.to(device)
         texts = texts.to(device)
@@ -486,9 +515,12 @@ def train_epoch(clip_model, generator, dataloader, optimizer, device, temperatur
         query_feat = generator(text_feat, ref_feat).float()
 
         # 计算相似度矩阵
-        logits = query_feat @ target_feat.T / temperature
-        labels = torch.arange(batch_size, device=device)
-        loss = (F.cross_entropy(logits, labels) + F.cross_entropy(logits.T, labels)) / 2
+        # logits = query_feat @ target_feat.T / temperature
+        # labels = torch.arange(batch_size, device=device)
+        # loss = (F.cross_entropy(logits, labels) + F.cross_entropy(logits.T, labels)) / 2
+        # 使用多正样本对比损失
+        track_ids = track_ids.to(device)   # 移动标签到 GPU
+        loss = multi_positive_contrastive_loss(query_feat, target_feat, track_ids, temperature)
 
         optimizer.zero_grad()
         loss.backward()
@@ -725,14 +757,17 @@ def main():
     train_track_ids, val_track_ids = get_or_create_track_split(
         Config.track_ann_file, split_file, train_ratio=0.8, seed=42
     )
-    if test_mode:
-        all_track_ids = train_track_ids[:test_track_limit]
     print(f"Train tracks: {len(train_track_ids)}, Val tracks: {len(val_track_ids)}")
     print("Building training triplets...")
     train_triplets = build_train_triplets(config.track_ann_file, config.image_root, allowed_track_ids=train_track_ids)
     if test_mode:
         # 限制训练三元组数量，加快测试
         train_triplets = train_triplets[:200]
+    if test_mode:
+        all_track_ids = train_track_ids[:test_track_limit]
+    else:
+        all_track_ids = sorted(set([t['track_id'] for t in train_triplets]))  # 排序保证确定性
+    track_to_int = {tid: idx for idx, tid in enumerate(all_track_ids)}
     print(f"Number of training triplets: {len(train_triplets)}")
     print("Building validation data...")
     candidate_images, val_queries = build_validation_data(config.track_ann_file, config.image_root, val_track_ids, 3)
@@ -742,19 +777,26 @@ def main():
         val_queries = val_queries[:10]
     print(f"Validation candidates: {len(candidate_images)}, queries: {len(val_queries)}")
     # 2. 创建 Dataset 和 DataLoader
-    train_dataset = TripletDataset(train_triplets, preprocess)
-    # 注意：训练时使用普通的随机采样即可，对比学习会利用 batch 内的负样本
-    # train_sampler = TrackMutualSampler(train_triplets, config.batch_size, shuffle=True)
-    sampler = TrackMutualSampler(train_triplets, batch_size=config.batch_size, shuffle=True)
+    # train_dataset = TripletDataset(train_triplets, preprocess)
+    # # 注意：训练时使用普通的随机采样即可，对比学习会利用 batch 内的负样本
+    # sampler = TrackMutualSampler(train_triplets, batch_size=config.batch_size, shuffle=True)
+    # train_loader = DataLoader(
+    #     train_dataset,
+    #     batch_sampler=sampler,  # 必须是 batch_sampler，不是 sampler！
+    #     num_workers=config.num_workers,
+    #     pin_memory=True
+    # )
+    # 放弃批内互斥采样，使用普通随机采样
+    train_dataset = TripletDataset(train_triplets, preprocess, track_to_int)
     train_loader = DataLoader(
         train_dataset,
-        batch_sampler=sampler,  # 必须是 batch_sampler，不是 sampler！
-        num_workers=config.num_workers,
-        pin_memory=True
+        batch_size=Config.batch_size,
+        shuffle=True,
+        num_workers=Config.num_workers,
+        pin_memory=True,
+        drop_last=True
     )
-    # train_loader = DataLoader(train_dataset, batch_size=config.batch_size,
-    #                       sampler=train_sampler, num_workers=config.num_workers,
-    #                       pin_memory=True, drop_last=True)
+
     val_dataset = ValidationDataset(candidate_images, val_queries, preprocess,
                                     cache_path=os.path.join(config.save_dir, 'candidate_feats.pt'))
     # 验证时不使用 DataLoader 的 batch，因为需要逐一查询并检索整个候选集，我们直接在 evaluate 中遍历
@@ -772,6 +814,7 @@ def main():
     # 结合扩展语义与可学习 MLP
     generator = PromptGenerator(concept_name_embs, concept_extend_embs, clip_dim,  len(concept_names), config.hidden_dim).to(config.device)
     optimizer = torch.optim.Adam(generator.parameters(), lr=config.lr)
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=50)  # 50个epoch
 
     # 4. 训练循环
     best_map = 0.0
@@ -791,6 +834,7 @@ def main():
                 torch.save(generator.state_dict(), os.path.join(config.save_dir, 'best_generator.pth'))
                 print("Best model saved.")
 
+        scheduler.step()
     print("Training finished.")
 
 if __name__ == '__main__':

@@ -377,6 +377,7 @@ def define_train():
         train_loss = train_epoch_clip4cir(
             clip_model, combiner, train_loader, optimizer, device, Config.temperature
         )
+        torch.save(combiner.state_dict(), os.path.join(Config.save_dir, 'train_temp_clip4cir_combiner.pth'))
         print(f"Train Loss: {train_loss:.4f}")
 
         # 每5个epoch验证一次

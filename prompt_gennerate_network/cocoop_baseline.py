@@ -39,9 +39,9 @@ class Config:
     image_root = pg.Config.image_root
     num_targets = 3
     # 训练参数
-    batch_size = 32
+    batch_size = 64
     epochs = 50
-    lr = 1e-4
+    lr = 1e-5
     temperature = 0.07
     num_workers = 4
 
@@ -130,11 +130,10 @@ class CoCoOpTextEncoder(nn.Module):
         self.n_ctx = n_ctx
         token_embedding = clip_model.token_embedding
         self.token_dim = token_embedding.embedding_dim
+        self.max_seq_len = clip_model.positional_embedding.size(0)   # 77
 
-        # 元网络
         self.meta_net = MetaNet(clip_dim, n_ctx, self.token_dim)
 
-        # 可学习的基向量
         if ctx_init:
             ctx_init = ctx_init.replace("_", " ")
             ctx_words = ctx_init.split(" ")
@@ -142,33 +141,31 @@ class CoCoOpTextEncoder(nn.Module):
             with torch.no_grad():
                 ctx_ids = clip.tokenize(ctx_init).to(device).squeeze(0)[1:-1]
                 ctx_embeddings = token_embedding(ctx_ids).to(self.dtype)
-            self.ctx = nn.Parameter(ctx_embeddings)
+            self.ctx_base = nn.Parameter(ctx_embeddings)
         else:
-            n_ctx = self.n_ctx   # 保留原传入值
-            self.ctx = nn.Parameter(torch.empty(n_ctx, self.token_dim, dtype=self.dtype))
-            nn.init.normal_(self.ctx, std=0.02)
-        # 关键：将实际使用的 n_ctx 赋值给 self.n_ctx
+            self.ctx_base = nn.Parameter(torch.empty(n_ctx, self.token_dim, dtype=self.dtype))
+            nn.init.normal_(self.ctx_base, std=0.02)
         self.n_ctx = n_ctx
 
     def forward(self, text_tokens, img_feat):
-        # 获取文本 token embeddings
-        x = self.clip_model.token_embedding(text_tokens).type(self.dtype)  # [B, L, D]
-
+        x = self.clip_model.token_embedding(text_tokens).type(self.dtype)
         # 生成条件向量并与基向量相加
-        ctx_cond = self.meta_net(img_feat)          # [B, n_ctx, D]
-        ctx = ctx_cond + self.ctx_base.unsqueeze(0)  # [B, n_ctx, D]
+        ctx_cond = self.meta_net(img_feat)               # [B, n_ctx, D]
+        ctx = ctx_cond + self.ctx_base.unsqueeze(0)      # [B, n_ctx, D]
 
-        # 拼接
-        x = torch.cat([ctx, x], dim=1)              # [B, n_ctx+L, D]
+        # 替换策略：从索引1开始的 n_ctx 个 token 替换为 ctx
+        x[:, 1:1+self.n_ctx, :] = ctx
 
-        # Transformer
+        # 添加位置编码（现在长度仍是77）
+        self.clip_model = self.clip_model.float()
+        x = x + self.clip_model.positional_embedding.type(self.dtype)
+
         x = x.permute(1, 0, 2)
         x = self.clip_model.transformer(x)
         x = x.permute(1, 0, 2)
         x = self.clip_model.ln_final(x).type(self.dtype)
 
-        # 取 EOS token
-        eos_positions = text_tokens.argmax(dim=-1) + self.n_ctx
+        eos_positions = text_tokens.argmax(dim=-1)       # 位置不变（因为替换没有改变长度）
         x = x[torch.arange(x.size(0)), eos_positions] @ self.clip_model.text_projection
         return F.normalize(x, dim=-1)
 
@@ -190,7 +187,7 @@ def train_epoch_cocoop(clip_model, retriever, train_loader, optimizer, device, t
     total_loss = 0
     num_batches = 0
 
-    for ref_imgs, target_imgs, texts, _ in tqdm(train_loader, desc="Training"):
+    for ref_imgs, target_imgs, texts, track_ids in tqdm(train_loader, desc="Training"):
         ref_imgs = ref_imgs.to(device)
         target_imgs = target_imgs.to(device)
         texts = texts.to(device)
@@ -209,9 +206,13 @@ def train_epoch_cocoop(clip_model, retriever, train_loader, optimizer, device, t
         query_feat = retriever(text_tokens, ref_feat)
 
         # 对比损失
-        logits = query_feat @ target_feat.T / temperature
-        labels = torch.arange(batch_size, device=device)
-        loss = (F.cross_entropy(logits, labels) + F.cross_entropy(logits.T, labels)) / 2
+        # logits = query_feat @ target_feat.T / temperature
+        # labels = torch.arange(batch_size, device=device)
+        # loss = (F.cross_entropy(logits, labels) + F.cross_entropy(logits.T, labels)) / 2
+        # 使用多正样本对比损失
+        track_ids = track_ids.to(device)   # 移动标签到 GPU
+        loss = pg.multi_positive_contrastive_loss(query_feat, target_feat, track_ids, temperature)
+
 
         optimizer.zero_grad()
         loss.backward()
@@ -434,27 +435,40 @@ def train_cocoop():
     train_triplets = pg.build_train_triplets(
         Config.track_ann_file, Config.image_root, allowed_track_ids=train_track_ids
     )
+    all_track_ids = sorted(set([t['track_id'] for t in train_triplets]))  # 排序保证确定性
+    track_to_int = {tid: idx for idx, tid in enumerate(all_track_ids)}
     print(f"Training triplets: {len(train_triplets)}")
 
     # 使用互斥采样器（确保 batch 内车辆不重复）
-    train_dataset = pg.TripletDataset(train_triplets, preprocess)
-    sampler = pg.TrackMutualSampler(train_triplets, batch_size=Config.batch_size, shuffle=True)
+    # train_dataset = pg.TripletDataset(train_triplets, preprocess)
+    # sampler = pg.TrackMutualSampler(train_triplets, batch_size=Config.batch_size, shuffle=True)
+    # train_loader = DataLoader(
+    #     train_dataset,
+    #     batch_sampler=sampler,
+    #     num_workers=Config.num_workers,
+    #     pin_memory=True
+    # )
+    # 放弃批内互斥采样，使用普通随机采样
+    train_dataset = pg.TripletDataset(train_triplets, preprocess, track_to_int)
     train_loader = DataLoader(
         train_dataset,
-        batch_sampler=sampler,
+        batch_size=Config.batch_size,
+        shuffle=True,
         num_workers=Config.num_workers,
-        pin_memory=True
+        pin_memory=True,
+        drop_last=True
     )
 
     print("Building validation data...")
+    valid_file = os.path.join(Config.save_dir, 'validation_cache.pkl')
     candidate_images, val_queries = pg.build_validation_data(
-        Config.track_ann_file, Config.image_root, val_track_ids, num_targets=Config.num_targets
+        Config.track_ann_file, Config.image_root, val_track_ids, num_targets=3, cache_file=valid_file
     )
     val_dataset = pg.ValidationDataset(
         candidate_images, val_queries, preprocess,
-        cache_path=os.path.join(Config.save_dir, 'candidate_feats_cocoop.pt')
+        cache_path=os.path.join(Config.save_dir, 'candidate_feats_clipzeroshort.pt')
     )
-    print(f"Validation: {len(candidate_images)} candidates, {len(val_queries)} queries")
+    print(f"Candidates: {len(candidate_images)}, Queries: {len(val_queries)}")
 
     # 3. 初始化模型
     retriever = CoCoOpRetriever(clip_model, n_ctx=4).to(device)
@@ -467,6 +481,7 @@ def train_cocoop():
         train_loss = train_epoch_cocoop(
             clip_model, retriever, train_loader, optimizer, device, Config.temperature
         )
+        torch.save(retriever.state_dict(), os.path.join(Config.save_dir, 'train_temp_cocoop_retriever.pth'))
         print(f"Train Loss: {train_loss:.4f}")
 
         # 每 5 个 epoch 验证一次
