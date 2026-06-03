@@ -20,7 +20,7 @@ from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_excep
 # ==================== 配置区域 ====================
 # 加载环境变量（推荐将 API Key 存储在 .env 文件中）
 load_dotenv()
-DOUBAO_API_KEY = os.getenv("DOUBAO_API_KEY", "3f948467-3cc4-4d7c-8697-eed5c97f8e17")  # 替换为你的豆包API Key
+DOUBAO_API_KEY = os.getenv("DOUBAO_API_KEY", "xxx")  # 替换为你的豆包API Key
 
 # 豆包 API 配置（火山方舟地址）[citation:1]
 DOUBAO_BASE_URL = "https://ark.cn-beijing.volces.com/api/v3"  # 以官方文档为准
