@@ -33,17 +33,17 @@ device = Config.device
 # ✅ 【修复 1】官方 CLIP4Cir Combiner 结构（RN50x4 640维 完全匹配权重）
 # -------------------------------------------------------------------
 class Combiner(nn.Module):
-    def __init__(self):
+    def __init__(self, input_dim=640):
         super().__init__()
-        # 从你的报错里提取的真实维度
-        self.text_projection_layer = nn.Linear(640, 2560)
-        self.image_projection_layer = nn.Linear(640, 2560)
+        # 从你的报错里提取的真实维度 跟自己的特征维度一致，自定义是512，已有预训练模型是644，使用时需用adapter转换
+        self.text_projection_layer = nn.Linear(input_dim, 2560)
+        self.image_projection_layer = nn.Linear(input_dim, 2560)
 
         # 真实 combiner_layer 维度
         self.combiner_layer = nn.Linear(2560 * 2, 5120)
 
         # 输出层维度
-        self.output_layer = nn.Linear(5120, 640)
+        self.output_layer = nn.Linear(5120, input_dim)
 
         # 动态标量层（你的权重是 4 层：0,1,2,3）
         self.dynamic_scalar = nn.Sequential(
@@ -73,8 +73,10 @@ def train_epoch_clip4cir(clip_model, combiner, train_loader, optimizer, device, 
     combiner.train()
     total_loss = 0
     num_batches = 0
+    # 使用预训练权重时打开
+    # adapter = nn.Linear(512, 640).to(device)
 
-    for ref_imgs, target_imgs, texts, _ in tqdm(train_loader, desc="Training"):
+    for ref_imgs, target_imgs, texts, track_ids in tqdm(train_loader, desc="Training"):
         ref_imgs = ref_imgs.to(device)
         target_imgs = target_imgs.to(device)
         texts = texts.to(device)
@@ -86,12 +88,18 @@ def train_epoch_clip4cir(clip_model, combiner, train_loader, optimizer, device, 
             text_feat = F.normalize(clip_model.encode_text(texts), dim=-1).float()
 
         # Combiner 融合
+        # ref_feat = adapter(ref_feat)      # [batch, 640]
+        # text_feat = adapter(text_feat)
+        # target_feat = adapter(target_feat)
         query_feat = combiner(ref_feat, text_feat)
 
         # 对比损失
-        logits = query_feat @ target_feat.T / temperature
-        labels = torch.arange(batch_size, device=device)
-        loss = (F.cross_entropy(logits, labels) + F.cross_entropy(logits.T, labels)) / 2
+        # logits = query_feat @ target_feat.T / temperature
+        # labels = torch.arange(batch_size, device=device)
+        # loss = (F.cross_entropy(logits, labels) + F.cross_entropy(logits.T, labels)) / 2
+        # 使用多正样本对比损失
+        track_ids = track_ids.to(device)   # 移动标签到 GPU
+        loss = multi_positive_contrastive_loss(query_feat, target_feat, track_ids, temperature)
 
         optimizer.zero_grad()
         loss.backward()
@@ -102,7 +110,116 @@ def train_epoch_clip4cir(clip_model, combiner, train_loader, optimizer, device, 
 
     return total_loss / num_batches
 
-def evaluate_clip4cir(candidate_images, queries, clip_model, combiner, preprocess, device,
+@torch.no_grad()
+def evaluate_clip4cir(combiner, val_dataset, device, temperature=0.07, batch_size=64):
+    """评估CLIP4Cir模型"""
+    combiner.eval()
+    clip_model.eval()
+
+    candidate_feats = val_dataset.load_or_extract_candidate_features(clip_model, device).to(device).float()
+    queries = val_dataset.queries
+    num_queries = len(queries)
+
+    # 由于使用和s原网络一样的ViT-B/32model，输出是512，但模型是640，所以进行转换。或者加载 RN50x4 模型，在开头使用model, preprocess = clip.load("RN50x4", device=device)
+    # adapter = nn.Linear(512, 640).to(device)
+
+    # 先确保 candidate_feats 是 [num_candidates, 512] 格式
+    if candidate_feats.shape[0] == 512:  # 如果第一维是特征维度
+        candidate_feats = candidate_feats.T  # 转置为 [num_candidates, 512]
+    # 可选：从预训练权重的 image_projection_layer 中提取前 512 列作为初始化（略）
+    # candidate_feats = adapter(candidate_feats)  # [num_candidates, 640]
+
+    recalls = {1: 0, 5: 0, 10: 0}
+    ap_sum = 0.0
+    # adapter = nn.Linear(512, 640).to(device)
+
+    for start in tqdm(range(0, num_queries, batch_size), desc="Evaluating"):
+        end = min(start + batch_size, num_queries)
+        batch_queries = queries[start:end]
+
+        ref_imgs = []
+        texts = []
+        target_idxss = []
+
+        for q in batch_queries:
+            ref_img = Image.open(q['ref_img']).convert('RGB')
+            ref_tensor = preprocess(ref_img).unsqueeze(0).to(device)
+            ref_imgs.append(ref_tensor)
+            text_tokens = clip.tokenize(q['caption']).to(device)
+            texts.append(text_tokens)
+            target_idxss.append(q['target_idxs'])
+
+        ref_imgs = torch.cat(ref_imgs, dim=0)
+        texts = torch.cat(texts, dim=0)
+
+        ref_feat = F.normalize(clip_model.encode_image(ref_imgs), dim=-1).float()
+        text_feat = F.normalize(clip_model.encode_text(texts), dim=-1).float()
+        # ref_feat = adapter(ref_feat)      # [batch, 640]
+        # text_feat = adapter(text_feat)
+        query_feat = combiner(ref_feat, text_feat)
+
+        sim = query_feat @ candidate_feats.T / temperature
+
+        for i in range(len(batch_queries)):
+            sim_i = sim[i]
+            sorted_indices = sim_i.argsort(descending=True)
+            pos_idxs = target_idxss[i]
+            P = len(pos_idxs)
+
+            # AP 计算
+            is_relevant = torch.zeros(len(candidate_feats), dtype=torch.bool, device=device)
+            for idx in pos_idxs:
+                is_relevant[idx] = True
+            sorted_relevant = is_relevant[sorted_indices]
+            hits = 0
+            ap = 0.0
+            for rank, rel in enumerate(sorted_relevant):
+                if rel:
+                    hits += 1
+                    ap += hits / (rank + 1)
+            if P > 0:
+                ap /= P
+            ap_sum += ap
+
+            # Recall@K
+            first_rank = None
+            for rank, idx in enumerate(sorted_indices.cpu().tolist()):
+                if idx in pos_idxs:
+                    first_rank = rank
+                    break
+            if first_rank is not None:
+                for k in recalls:
+                    if first_rank < k:
+                        recalls[k] += 1
+
+    num_q = len(queries)
+    print("\n===== CLIP4Cir Evaluation =====")
+    for k in recalls:
+        print(f"Recall@{k}: {recalls[k] / num_q * 100:.2f}%")
+    print(f"mAP: {ap_sum / num_q * 100:.2f}%")
+    return recalls, ap_sum / num_q * 100
+
+
+def multi_positive_contrastive_loss(query_feat, target_feat, track_ids, temperature=0.07):
+    device = query_feat.device
+    # 确保 track_ids 在正确设备上且为整数
+    if not isinstance(track_ids, torch.Tensor):
+        track_ids = torch.tensor(track_ids, device=device)
+    else:
+        track_ids = track_ids.to(device)
+    track_ids = track_ids.long().view(-1)
+
+    sim = query_feat @ target_feat.T / temperature
+    pos_mask = (track_ids[:, None] == track_ids[None, :]).float()
+    # 可选：去除对角线（避免自身匹配）
+    # pos_mask = pos_mask * (1 - torch.eye(track_ids.size(0), device=device))
+    exp_sim = torch.exp(sim)
+    pos_sum = (exp_sim * pos_mask).sum(dim=1)
+    all_sum = exp_sim.sum(dim=1)
+    loss = -torch.log(pos_sum / (all_sum + 1e-8)).mean()
+    return loss
+
+def evaluate_clip4cir_by_pre_train_model(candidate_images, queries, clip_model, combiner, preprocess, device,
                       temperature=0.07, batch_size=64):
     clip_model.eval()
     combiner.eval()
@@ -213,29 +330,45 @@ def define_train():
     train_triplets = pg.build_train_triplets(
         Config.track_ann_file, Config.image_root, allowed_track_ids=train_track_ids
     )
+    all_track_ids = sorted(set([t['track_id'] for t in train_triplets]))  # 排序保证确定性
+    track_to_int = {tid: idx for idx, tid in enumerate(all_track_ids)}
     print(f"Training triplets: {len(train_triplets)}")
 
     # 使用互斥采样器（确保batch内车辆不重复）
-    train_dataset = pg.TripletDataset(train_triplets, preprocess)
-    sampler = TrackMutualSampler(train_triplets, batch_size=Config.batch_size, shuffle=True)
+    # train_dataset = pg.TripletDataset(train_triplets, preprocess)
+    # sampler = TrackMutualSampler(train_triplets, batch_size=Config.batch_size, shuffle=True)
+    # train_loader = DataLoader(
+    #     train_dataset, batch_sampler=sampler,
+    #     num_workers=Config.num_workers, pin_memory=True
+    # )
+    # 创建 Dataset
+    train_dataset = TripletDataset(train_triplets, preprocess, track_to_int)
+
+    # 使用普通的 DataLoader（shuffle=True，不自定义 sampler）
     train_loader = DataLoader(
-        train_dataset, batch_sampler=sampler,
-        num_workers=Config.num_workers, pin_memory=True
+        train_dataset,
+        batch_size=Config.batch_size,
+        shuffle=True,
+        num_workers=Config.num_workers,
+        pin_memory=True,
+        drop_last=True
     )
 
     print("Building validation data...")
+    valid_file = os.path.join(Config.save_dir, 'validation_cache.pkl')
     candidate_images, val_queries = build_validation_data(
-        Config.track_ann_file, Config.image_root, val_track_ids, num_targets=3
+        Config.track_ann_file, Config.image_root, val_track_ids, num_targets=3, cache_file=valid_file
     )
     val_dataset = ValidationDataset(
         candidate_images, val_queries, preprocess,
-        cache_path=os.path.join(Config.save_dir, 'candidate_feats_clip4cir.pt')
+        cache_path=os.path.join(Config.save_dir, 'candidate_feats_clipzeroshort.pt')
     )
     print(f"Validation: {len(candidate_images)} candidates, {len(val_queries)} queries")
 
     # 3. 初始化模型
-    combiner = Combiner(input_dim=clip_dim).to(device)
+    combiner = Combiner(input_dim=512).to(device)
     optimizer = torch.optim.Adam(combiner.parameters(), lr=Config.lr)
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=50)  # 50个epoch
 
     # 4. 训练循环
     best_map = 0.0
@@ -254,6 +387,7 @@ def define_train():
                 torch.save(combiner.state_dict(), os.path.join(Config.save_dir, 'best_clip4cir_combiner.pth'))
                 print("Best model saved.")
 
+        scheduler.step()
     print("Training finished.")
 
 def use_pre_model_val():
@@ -268,8 +402,13 @@ def use_pre_model_val():
     )
 
     print("Building validation data...")
+    valid_file = os.path.join(Config.save_dir, 'validation_cache.pkl')
     candidate_images, val_queries = build_validation_data(
-        Config.track_ann_file, Config.image_root, val_track_ids, num_targets=3, cache_file='path/to/validation_cache.pkl'
+        Config.track_ann_file, Config.image_root, val_track_ids, num_targets=3, cache_file=valid_file
+    )
+    val_dataset = ValidationDataset(
+        candidate_images, val_queries, preprocess,
+        cache_path=os.path.join(Config.save_dir, 'candidate_feats_clipzeroshort.pt')
     )
     print(f"Candidates: {len(candidate_images)}, Queries: {len(val_queries)}")
 
@@ -298,10 +437,11 @@ def use_pre_model_val():
     else:
         print("Warning: 权重文件不存在，使用随机初始化")
 
-    evaluate_clip4cir(
-        candidate_images, val_queries,
-        clip_model, combiner, preprocess, device
-    )
+    evaluate_clip4cir(combiner, val_dataset, device, Config.temperature)
+    #  evaluate_clip4cir_by_pre_train_model(
+    #     candidate_images, val_queries,
+    #     clip_model, combiner, preprocess, device
+    # )
 
 if __name__ == "__main__":
     define_train()
