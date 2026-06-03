@@ -292,15 +292,15 @@ def main():
     )
     val_dataset = ValidationDataset(
         candidate_images, val_queries, preprocess,
-        cache_path=os.path.join(Config.save_dir, 'candidate_feats_clip4cir.pt')
+        cache_path=os.path.join(Config.save_dir, 'candidate_feats_clipzeroshort.pt')
     )
     print(f"Validation set size: {len(val_queries)} queries, {len(candidate_images)} candidates.")
 
     # 纯clip模型零样本检索
-    # prior_recalls, prior_map = evaluate_clip_zeroshot(val_dataset, device, temperature=Config.temperature)
+    evaluate_clip_zeroshot(val_dataset, device, temperature=Config.temperature)
 
     # # 2. 分析 prior 统计信息
-    prior_stats = analyze_prior_stats(val_dataset, sample_size=200)
+    analyze_prior_stats(val_dataset, sample_size=200)
     #
     # # 3. 评估纯先验检索
     # prior_recalls, prior_map = evaluate_prior_only(val_dataset, temperature=Config.temperature)

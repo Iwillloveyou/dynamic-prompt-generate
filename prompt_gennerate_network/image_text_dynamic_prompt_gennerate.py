@@ -798,7 +798,7 @@ def main():
     )
 
     val_dataset = ValidationDataset(candidate_images, val_queries, preprocess,
-                                    cache_path=os.path.join(config.save_dir, 'candidate_feats.pt'))
+                                    cache_path=os.path.join(config.save_dir, 'candidate_feats_clipzeroshort.pt'))
     # 验证时不使用 DataLoader 的 batch，因为需要逐一查询并检索整个候选集，我们直接在 evaluate 中遍历
 
     # 3. 模型和优化器

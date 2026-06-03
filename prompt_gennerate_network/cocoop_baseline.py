@@ -392,7 +392,7 @@ def use_pre_train_model_val():
 
     val_dataset = pg.ValidationDataset(
         candidate_images, val_queries, preprocess,
-        cache_path=os.path.join(Config.save_dir, f'candidate_feats_clip4cir.pt')
+        cache_path=os.path.join(Config.save_dir, f'candidate_feats_clipzeroshort.pt')
     )
 
     # ... 解析参数 ...
