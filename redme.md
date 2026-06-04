@@ -98,8 +98,8 @@ cityflow-nl/
 └── prepare_cityflow_nl.sh           # 预处理脚本
 
 三.基于以上提示库的图文条件式动态提示网络
-1.根据描述检索图像的条件式动态提示网络
-训练网络脚本:dynamic_prompt_gennerate.py，训练完成后，模型存在checkpoints/best_generator.pth下。
+1.根据描述（纯文本）检索图像的条件式动态提示网络
+训练网络脚本:text_dynamic_prompt_gennerate.py，训练完成后，模型存在checkpoints/best_generator.pth下。
 
 2.根据描述与参考图像联合检索的条件式动态提示网络
 训练网络脚本:image_text_dynamic_prompt_gennerate.py

@@ -293,6 +293,7 @@ def build_validation_data(track_ann_file, image_root, val_track_ids, num_targets
     with open(track_ann_file, 'r') as f:
         tracks = json.load(f)
 
+    seen_images = set()
     candidate_images = []
     candidate_track_ids = []
     img_to_idx = {}
@@ -302,10 +303,12 @@ def build_validation_data(track_ann_file, image_root, val_track_ids, num_targets
             continue
         frames = tracks[tid]['frames']
         for frame in frames:
-            img_path = os.path.join(image_root, frame.lstrip('./'))
-            candidate_images.append(img_path)
             candidate_track_ids.append(tid)
-            img_to_idx[img_path] = len(candidate_images) - 1
+            img_path = os.path.join(image_root, frame.lstrip('./'))
+            if img_path not in seen_images:
+                seen_images.add(img_path)
+                candidate_images.append(img_path)
+                img_to_idx[img_path] = len(candidate_images) - 1
 
     queries = []
     for tid in val_track_ids:
@@ -327,6 +330,7 @@ def build_validation_data(track_ann_file, image_root, val_track_ids, num_targets
             if not target_frames:
                 continue
             ref_full = os.path.join(image_root, ref_frame.lstrip('./'))
+            ref_idx = img_to_idx.get(ref_full) # 获取参考图在全库中的索引
             target_idxs = []
             for target_img in target_frames:
                 target_full = os.path.join(image_root, target_img.lstrip('./'))
@@ -336,6 +340,7 @@ def build_validation_data(track_ann_file, image_root, val_track_ids, num_targets
                 continue
             queries.append({
                 'ref_img': ref_full,
+                'ref_idx': ref_idx,       # 新增：把参考图的索引也存进 query
                 'caption': cap,
                 'target_idxs': target_idxs,   # 存储多个索引
                 'track_id': tid
@@ -409,6 +414,10 @@ class ValidationDataset(Dataset):
         if self.cache_path is not None and os.path.exists(self.cache_path):
             print(f"Loading cached candidate features from {self.cache_path}")
             self.candidate_feats = torch.load(self.cache_path)
+            if self.candidate_feats.shape[0] != len(self.candidate_images):
+                print(f"⚠️ 警告: 检测到缓存特征数 ({self.candidate_feats.shape[0]}) 与当前候选图片数 ({len(self.candidate_images)}) 不匹配！")
+                print(f"这极有可能是由于数据集划分改变或使用了旧的 Baseline 缓存导致的。")
+                print(f"系统将无视并自动删除旧缓存，重新提取特征以确保实验正确性...")
             return self.candidate_feats
 
         # 否则提取特征

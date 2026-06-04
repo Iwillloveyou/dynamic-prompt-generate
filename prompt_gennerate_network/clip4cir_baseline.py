@@ -161,7 +161,13 @@ def evaluate_clip4cir(combiner, val_dataset, device, temperature=0.07, batch_siz
         sim = query_feat @ candidate_feats.T / temperature
 
         for i in range(len(batch_queries)):
-            sim_i = sim[i]
+            # sim_i = sim[i]
+            sim_i = sim[i].clone() # 克隆一行相似度，避免原地修改干扰并行计算
+            # 【核心改动】：获取当前 Query 的参考图索引，强制将其相似度降到极低
+            ref_idx = batch_queries[i].get('ref_idx')
+            if ref_idx is not None:
+                sim_i[ref_idx] = -1e9
+
             sorted_indices = sim_i.argsort(descending=True)
             pos_idxs = target_idxss[i]
             P = len(pos_idxs)
@@ -409,7 +415,7 @@ def use_pre_model_val():
     )
     val_dataset = ValidationDataset(
         candidate_images, val_queries, preprocess,
-        cache_path=os.path.join(Config.save_dir, 'candidate_feats_clipzeroshort.pt')
+        cache_path=os.path.join(Config.save_dir, 'candidate_feats_clip4cir.pt')
     )
     print(f"Candidates: {len(candidate_images)}, Queries: {len(val_queries)}")
 
