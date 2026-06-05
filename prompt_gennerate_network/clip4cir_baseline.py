@@ -131,6 +131,7 @@ def evaluate_clip4cir(combiner, val_dataset, device, temperature=0.07, batch_siz
 
     recalls = {1: 0, 5: 0, 10: 0}
     ap_sum = 0.0
+    ndcg_sum = {5: 0.0, 10: 0.0}   # 新增 NDCG@5, NDCG@10
     # adapter = nn.Linear(512, 640).to(device)
 
     for start in tqdm(range(0, num_queries, batch_size), desc="Evaluating"):
@@ -198,12 +199,28 @@ def evaluate_clip4cir(combiner, val_dataset, device, temperature=0.07, batch_siz
                     if first_rank < k:
                         recalls[k] += 1
 
+            # ---- 新增 NDCG 计算 ----
+            # 构建相关性字典
+            is_relevant = {idx: 1 for idx in pos_idxs}
+            # 获取前 K 个结果的相关性得分列表
+            for k in [5, 10]:
+                dcg = 0.0
+                for rank, idx in enumerate(sorted_indices[:k]):
+                    gain = is_relevant.get(idx.item(), 0)
+                    dcg += gain / np.log2(rank + 2)  # rank从0开始，分母log2(rank+2)
+                # 理想 DCG（所有正样本排在最前）
+                ideal_gains = [1] * min(P, k)
+                idcg = sum(g / np.log2(i+2) for i, g in enumerate(ideal_gains))
+                ndcg = dcg / idcg if idcg > 0 else 0
+                ndcg_sum[k] += ndcg
+
     num_q = len(queries)
     print("\n===== CLIP4Cir Evaluation =====")
     for k in recalls:
         print(f"Recall@{k}: {recalls[k] / num_q * 100:.2f}%")
     print(f"mAP: {ap_sum / num_q * 100:.2f}%")
-    return recalls, ap_sum / num_q * 100
+    print(f"NDCG@5: {ndcg_sum[5]:.2f}%, NDCG@10: {ndcg_sum[10]:.2f}%")
+    return recalls, ap_sum / num_q * 100, ndcg_sum
 
 
 def multi_positive_contrastive_loss(query_feat, target_feat, track_ids, temperature=0.07):
@@ -251,6 +268,7 @@ def evaluate_clip4cir_by_pre_train_model(candidate_images, queries, clip_model, 
     recalls = {1: 0, 5: 0, 10: 0}
     mrr = 0.0
     ap_sum = 0.0
+    ndcg_sum = {5: 0.0, 10: 0.0}   # 新增 NDCG@5, NDCG@10
 
     for start in tqdm(range(0, num_queries, batch_size), desc="Evaluating queries (CLIP4Cir)"):
         end = min(start + batch_size, num_queries)
@@ -315,13 +333,30 @@ def evaluate_clip4cir_by_pre_train_model(candidate_images, queries, clip_model, 
                         recalls[k] += 1
                 mrr += 1.0 / (first_rank + 1)
 
+            # ---- 新增 NDCG 计算 ----
+            # 构建相关性字典
+            is_relevant = {idx: 1 for idx in pos_idxs}
+            # 获取前 K 个结果的相关性得分列表
+            for k in [5, 10]:
+                dcg = 0.0
+                for rank, idx in enumerate(sorted_indices[:k]):
+                    gain = is_relevant.get(idx.item(), 0)
+                    dcg += gain / np.log2(rank + 2)  # rank从0开始，分母log2(rank+2)
+                # 理想 DCG（所有正样本排在最前）
+                ideal_gains = [1] * min(P, k)
+                idcg = sum(g / np.log2(i+2) for i, g in enumerate(ideal_gains))
+                ndcg = dcg / idcg if idcg > 0 else 0
+                ndcg_sum[k] += ndcg
+
     num_queries = len(queries)
     print("\n===== CLIP4Cir Evaluation Results =====")
     for k in recalls:
         print(f"Recall@{k}: {recalls[k] / num_queries * 100:.2f}%")
     print(f"MRR: {mrr / num_queries * 100:.2f}%")
     print(f"mAP: {ap_sum / num_queries * 100:.2f}%")
-    return recalls, mrr, ap_sum
+    print(f"NDCG@5: {ndcg_sum[5]:.2f}%, NDCG@10: {ndcg_sum[10]:.2f}%")
+    return recalls, mrr, ap_sum, ndcg_sum
+
 
 def define_train():
     # 1. 划分训练/验证车辆
@@ -378,7 +413,25 @@ def define_train():
 
     # 4. 训练循环
     best_map = 0.0
-    for epoch in range(1, Config.epochs + 1):
+    patience = 5
+    early_stop_count = 0
+    # 断点文件路径
+    ckpt_path = os.path.join(Config.save_dir, "resume_checkpoint.pth")
+    start_epoch = 1
+
+    # ========= 加载断点：存在就恢复所有训练状态 =========
+    if os.path.exists(ckpt_path):
+        # 解决你之前报错weights_only，加weights_only=False
+        checkpoint = torch.load(ckpt_path, map_location=Config.device)
+        combiner.load_state_dict(checkpoint["combiner"])
+        optimizer.load_state_dict(checkpoint["opt"])
+        scheduler.load_state_dict(checkpoint["sch"])
+        start_epoch = checkpoint["epoch"] + 1  # 中断epoch跑完了，下一轮+1开始
+        best_map = checkpoint["best_map"]
+        early_stop_count = checkpoint["stop_cnt"]
+        print(f"✅ 断点加载成功，从Epoch {start_epoch} 继续训练，历史best_mAP={best_map:.4f}")
+
+    for epoch in range(start_epoch, Config.epochs + 1):
         print(f"\nEpoch {epoch}/{Config.epochs}")
         train_loss = train_epoch_clip4cir(
             clip_model, combiner, train_loader, optimizer, device, Config.temperature
@@ -386,13 +439,34 @@ def define_train():
         torch.save(combiner.state_dict(), os.path.join(Config.save_dir, 'train_temp_clip4cir_refine_combiner.pth'))
         print(f"Train Loss: {train_loss:.4f}")
 
-        # 每5个epoch验证一次
-        if epoch % 5 == 0:
-            recalls, mAP = evaluate_clip4cir(combiner, val_dataset, device, Config.temperature)
+        # 每2个epoch验证一次
+        if epoch % 2 == 0:
+            recalls, mAP, ndcg_sum = evaluate_clip4cir(combiner, val_dataset, device, Config.temperature)
+            # mrr是什么指标，如果要计算map，该怎么修改
             if mAP > best_map:
                 best_map = mAP
+                early_stop_count = 0
                 torch.save(combiner.state_dict(), os.path.join(Config.save_dir, 'best_clip4cir_refine_combiner.pth'))
-                print("Best model saved.")
+                print("New Best model saved!")
+            else:
+                early_stop_count += 1
+                print(f"No improve, early_stop count: {early_stop_count}/{patience}")
+
+        # ========= 每轮训练完保存完整断点（断电/手动中断都能续） =========
+        save_dict = {
+            "combiner": combiner.state_dict(),
+            "opt": optimizer.state_dict(),
+            "sch": scheduler.state_dict(),
+            "epoch": epoch,
+            "best_map": best_map,
+            "stop_cnt": early_stop_count
+        }
+        torch.save(save_dict, ckpt_path)
+
+        # 早停判断
+        if early_stop_count >= patience:
+            print(f"Early Stop Trigger! {patience} epochs no mAP improve, exit training.")
+            break
 
         scheduler.step()
     print("Training finished.")
@@ -459,4 +533,4 @@ def use_pre_model_val():
     # )
 
 if __name__ == "__main__":
-    use_pre_model_val()
+    define_train()

@@ -521,7 +521,8 @@ def train_epoch(clip_model, generator, dataloader, optimizer, device, temperatur
             text_feat = F.normalize(text_feat, dim=-1).float()
 
         # 生成查询特征（生成器内部已做类型转换，但再次确保）
-        query_feat, weights = generator(text_feat, ref_feat).float()
+        query_feat, weights = generator(text_feat, ref_feat)
+        query_feat = query_feat.float()
 
         # 计算相似度矩阵
         # logits = query_feat @ target_feat.T / temperature
@@ -539,52 +540,6 @@ def train_epoch(clip_model, generator, dataloader, optimizer, device, temperatur
         num_batches += 1
     return total_loss / num_batches
 
-# -------------------- 验证函数 --------------------
-@torch.no_grad()
-def evaluate(clip_model, generator, val_dataset, device, temperature, k_list=[1,5,10]):
-    """
-    在验证集上进行检索评估
-    """
-    clip_model.eval()
-    generator.eval()
-
-    # 预先提取所有候选图像特征
-    candidate_feats = val_dataset.get_candidate_features(clip_model, device).to(device)  # [C, D]
-
-    queries = val_dataset.queries
-    num_queries = len(queries)
-    recalls = {k: 0 for k in k_list}
-    mrr = 0.0
-
-    for idx in tqdm(range(num_queries), desc="Evaluating"):
-        ref_img, text, target_idx, _ = val_dataset[idx]
-        ref_img = ref_img.unsqueeze(0).to(device)
-        text = text.unsqueeze(0).to(device)
-
-        ref_feat = F.normalize(clip_model.encode_image(ref_img), dim=-1)
-        text_feat = F.normalize(clip_model.encode_text(text), dim=-1)
-        query_feat, weights = generator(text_feat, ref_feat)   # [1, D]
-
-        # 计算与所有候选图像的相似度
-        sim = query_feat @ candidate_feats.T   # [1, C]
-        sim = sim.squeeze(0) / temperature
-        # 按降序排序，得到排序后的索引
-        sorted_indices = sim.argsort(descending=True)
-        # 找到目标图像在排序中的位置（从0开始）
-        rank = (sorted_indices == target_idx).nonzero(as_tuple=True)[0].item()
-
-        # 更新 Recall@K
-        for k in k_list:
-            if rank < k:
-                recalls[k] += 1
-        # 更新 MRR todo:mrr是做什么的 可以计算map吗
-        mrr += 1.0 / (rank + 1)
-
-    for k in k_list:
-        recalls[k] = recalls[k] / num_queries * 100
-    mrr = mrr / num_queries * 100
-    return recalls, mrr
-
 #批次计算验证 效率更高
 @torch.no_grad()
 def evaluate_batched(clip_model, generator, val_dataset, device, temperature, batch_size=64, k_list=[1,5,10]):
@@ -597,6 +552,7 @@ def evaluate_batched(clip_model, generator, val_dataset, device, temperature, ba
 
     recalls = {k: 0 for k in k_list}
     ap_sum = 0.0   # 累积所有查询的 AP
+    ndcg_sum = {5: 0.0, 10: 0.0}   # 新增 NDCG@5, NDCG@10
 
     for start in tqdm(range(0, num_queries, batch_size), desc="Evaluating batches"):
         end = min(start + batch_size, num_queries)
@@ -666,11 +622,26 @@ def evaluate_batched(clip_model, generator, val_dataset, device, temperature, ba
                 for k in k_list:
                     if first_rank < k:
                         recalls[k] += 1
+
+            # ---- 新增 NDCG 计算 ----
+            # 构建相关性字典
+            is_relevant = {idx: 1 for idx in pos_idxs}
+            # 获取前 K 个结果的相关性得分列表
+            for k in [5, 10]:
+                dcg = 0.0
+                for rank, idx in enumerate(sorted_indices[:k]):
+                    gain = is_relevant.get(idx.item(), 0)
+                    dcg += gain / np.log2(rank + 2)  # rank从0开始，分母log2(rank+2)
+                # 理想 DCG（所有正样本排在最前）
+                ideal_gains = [1] * min(P, k)
+                idcg = sum(g / np.log2(i+2) for i, g in enumerate(ideal_gains))
+                ndcg = dcg / idcg if idcg > 0 else 0
+                ndcg_sum[k] += ndcg
     # 平均指标
     for k in k_list:
         recalls[k] = recalls[k] / num_queries * 100
     mAP = ap_sum / num_queries * 100
-    return recalls, mAP
+    return recalls, mAP, ndcg_sum
 
 # -------------------- 推理示例 -------------------- candidate_image_paths是整个数据集的图像吗
 def retrieve(query_text, query_image_path, candidate_image_paths, clip_model, generator, preprocess, device, temperature=0.07, top_k=5):
@@ -869,7 +840,7 @@ def validate_with_model(model_path, config, device, val_track_ids=None, batch_si
 
     # 4. 评估
     print("Starting evaluation...")
-    recalls, mAP = evaluate_batched(
+    recalls, mAP, ndcg_sum = evaluate_batched(
         clip_model, generator, val_dataset, device,
         temperature=config.temperature, batch_size=batch_size, k_list=k_list
     )
@@ -879,6 +850,7 @@ def validate_with_model(model_path, config, device, val_track_ids=None, batch_si
     for k in k_list:
         print(f"Recall@{k}: {recalls[k]:.2f}%")
     print(f"mAP: {mAP:.2f}%")
+    print(f"NDCG@5: {ndcg_sum[5]:.2f}%, NDCG@10: {ndcg_sum[10]:.2f}%")
     print("========================================")
 
     # 返回结果字典
@@ -945,7 +917,7 @@ def main():
         drop_last=True
     )
     val_dataset = ValidationDataset(candidate_images, val_queries, preprocess,
-                                    cache_path=os.path.join(config.save_dir, 'clip4cir_validation_cache.pkl'))
+                                    cache_path=os.path.join(config.save_dir, 'candidate_feats_clip4cir.pt'))
     # 验证时不使用 DataLoader 的 batch，因为需要逐一查询并检索整个候选集，我们直接在 evaluate 中遍历
 
     # 3. 模型和优化器
@@ -965,29 +937,69 @@ def main():
 
     # 4. 训练循环
     best_map = 0.0
-    for epoch in range(1, config.epochs + 1):
+    patience = 5
+    early_stop_count = 0
+    # 断点文件路径
+    ckpt_path = os.path.join(Config.save_dir, "resume_checkpoint.pth")
+    start_epoch = 1
+
+    # ========= 加载断点：存在就恢复所有训练状态 =========
+    if os.path.exists(ckpt_path):
+        # 解决你之前报错weights_only，加weights_only=False
+        checkpoint = torch.load(ckpt_path, map_location=Config.device)
+        generator.load_state_dict(checkpoint["combiner"])
+        optimizer.load_state_dict(checkpoint["opt"])
+        scheduler.load_state_dict(checkpoint["sch"])
+        start_epoch = checkpoint["epoch"] + 1  # 中断epoch跑完了，下一轮+1开始
+        best_map = checkpoint["best_map"]
+        early_stop_count = checkpoint["stop_cnt"]
+        print(f"✅ 断点加载成功，从Epoch {start_epoch} 继续训练，历史best_mAP={best_map:.4f}")
+
+    for epoch in range(start_epoch, config.epochs + 1):
         print(f"\nEpoch {epoch}/{config.epochs}")
         train_loss = train_epoch(clip_model, generator, train_loader, optimizer, config.device, config.temperature)
         print(f"Train Loss: {train_loss:.4f}")
-        torch.save(generator.state_dict(), os.path.join(config.save_dir, 'train_temp_generator.pth'))
+        torch.save(generator.state_dict(), os.path.join(config.save_dir, 'train_generator_enhance_image.pth'))
 
-        # 每 5 个 epoch 验证一次
-        if not test_mode and epoch % 5 == 0:
-            recalls, mAP = evaluate_batched(clip_model, generator, val_dataset, config.device, config.temperature)
+
+        # 每 2 个 epoch 验证一次
+        if not test_mode and epoch % 2 == 0:
+            recalls, mAP, ndcg_sum = evaluate_batched(clip_model, generator, val_dataset, config.device, config.temperature)
             print(f"Validation Results: R@1={recalls[1]:.2f}, R@5={recalls[5]:.2f}, R@10={recalls[10]:.2f}, MRR={mAP:.2f}")
+            print(f"NDCG@5: {ndcg_sum[5]:.2f}%, NDCG@10: {ndcg_sum[10]:.2f}%")
             # mrr是什么指标，如果要计算map，该怎么修改
             if mAP > best_map:
                 best_map = mAP
-                torch.save(generator.state_dict(), os.path.join(config.save_dir, 'best_generator.pth'))
-                print("Best model saved.")
+                early_stop_count = 0
+                torch.save(generator.state_dict(), os.path.join(Config.save_dir, 'best_clip4cir_refine_combiner.pth'))
+                print("New Best model saved!")
+            else:
+                early_stop_count += 1
+                print(f"No improve, early_stop count: {early_stop_count}/{patience}")
+
+        # ========= 每轮训练完保存完整断点（断电/手动中断都能续） =========
+        save_dict = {
+            "combiner": generator.state_dict(),
+            "opt": optimizer.state_dict(),
+            "sch": scheduler.state_dict(),
+            "epoch": epoch,
+            "best_map": best_map,
+            "stop_cnt": early_stop_count
+        }
+        torch.save(save_dict, ckpt_path)
+
+        # 早停判断
+        if early_stop_count >= patience:
+            print(f"Early Stop Trigger! {patience} epochs no mAP improve, exit training.")
+            break
 
         scheduler.step()
-    print("Training finished.")
+        print("Training finished.")
 
 if __name__ == '__main__':
-    # main()
+    main()
     # 假设 config 已经按原代码配置好
-    config = Config()
-    device = torch.device(config.device)
-    model_path = "./checkpoints/best_generator.pth"
-    results = validate_with_model(model_path, config, device)
+    # config = Config()
+    # device = torch.device(config.device)
+    # model_path = "./checkpoints/train_generator_enhance_text.pth"
+    # results = validate_with_model(model_path, config, device)

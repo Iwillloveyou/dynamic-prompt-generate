@@ -251,6 +251,7 @@ def evaluate_retriever(retriever, val_dataset, device, temperature=0.07, batch_s
 
     recalls = {1: 0, 5: 0, 10: 0}
     ap_sum = 0.0
+    ndcg_sum = {5: 0.0, 10: 0.0}   # 新增 NDCG@5, NDCG@10
 
     for start in tqdm(range(0, num_queries, batch_size), desc="Evaluating"):
         end = min(start + batch_size, num_queries)
@@ -321,13 +322,29 @@ def evaluate_retriever(retriever, val_dataset, device, temperature=0.07, batch_s
                     if first_rank < k:
                         recalls[k] += 1
 
+            # ---- 新增 NDCG 计算 ----
+            # 构建相关性字典
+            is_relevant = {idx: 1 for idx in pos_idxs}
+            # 获取前 K 个结果的相关性得分列表
+            for k in [5, 10]:
+                dcg = 0.0
+                for rank, idx in enumerate(sorted_indices[:k]):
+                    gain = is_relevant.get(idx.item(), 0)
+                    dcg += gain / np.log2(rank + 2)  # rank从0开始，分母log2(rank+2)
+                # 理想 DCG（所有正样本排在最前）
+                ideal_gains = [1] * min(P, k)
+                idcg = sum(g / np.log2(i+2) for i, g in enumerate(ideal_gains))
+                ndcg = dcg / idcg if idcg > 0 else 0
+                ndcg_sum[k] += ndcg
+
     num_q = len(queries)
     print("\n=== Evaluation Results ===")
     for k in sorted(recalls.keys()):
         print(f"Recall@{k}: {recalls[k] / num_q * 100:.2f}%")
     real_mAP = (ap_sum / num_q) * 100
     print(f"mAP: {real_mAP:.2f}%")
-    return recalls, real_mAP
+    print(f"NDCG@5: {ndcg_sum[5]:.2f}%, NDCG@10: {ndcg_sum[10]:.2f}%")
+    return recalls, real_mAP, ndcg_sum
 
 def load_pretrained_weights(retriever, weights_path, device, method="coop"):
     """
@@ -506,7 +523,7 @@ def train_cocoop():
 
         # 每 5 个 epoch 验证一次
         if epoch % 5 == 0:
-            recalls, mAP = evaluate_retriever(retriever, val_dataset, device, Config.temperature)
+            recalls, mAP, ndcg_sum = evaluate_retriever(retriever, val_dataset, device, Config.temperature)
             if mAP > best_map:
                 best_map = mAP
                 torch.save(retriever.state_dict(), os.path.join(Config.save_dir, 'best_cocoop_retriever.pth'))
@@ -516,13 +533,13 @@ def train_cocoop():
 
 
 if __name__ == "__main__":
-    train_cocoop()
-    # import sys
-    # # 直接在这里写参数，代替命令行
-    # sys.argv = [
-    #     "coop_cocoop_baseline.py",
-    #     "--method", "cocoop",
-    #     "--n_ctx", "4",
-    #     "--weights", "./checkpoints/best_cocoop_retriever.pth"
-    # ]
-    # use_pre_train_model_val()
+    # train_cocoop()
+    import sys
+    # 直接在这里写参数，代替命令行
+    sys.argv = [
+        "coop_cocoop_baseline.py",
+        "--method", "cocoop",
+        "--n_ctx", "4",
+        "--weights", "./checkpoints/best_cocoop_retriever.pth"
+    ]
+    use_pre_train_model_val()
