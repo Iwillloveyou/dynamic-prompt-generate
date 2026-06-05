@@ -153,21 +153,33 @@ class CoCoOpTextEncoder(nn.Module):
         ctx_cond = self.meta_net(img_feat)               # [B, n_ctx, D]
         ctx = ctx_cond + self.ctx_base.unsqueeze(0)      # [B, n_ctx, D]
 
-        # 替换策略：从索引1开始的 n_ctx 个 token 替换为 ctx
-        x[:, 1:1+self.n_ctx, :] = ctx
+        # 复制一份用于修改
+        x_new = x.clone()  # 保留原始副本（实际不需要，直接修改 x 也可以，但为了清晰）
 
-        # 添加位置编码（现在长度仍是77）
+        # 步骤1：将原始文本（从索引1开始）向右平移 n_ctx 个位置
+        # 原始序列: [SOS, t1, t2, ..., t_{L-2}, EOS, PAD...]  索引: 0..76
+        # 平移后: 前 n_ctx 位置留给 ctx，原始 token 从索引 n_ctx+1 开始
+        x_new[:, 1 + self.n_ctx : 77] = x[:, 1 : 77 - self.n_ctx]
+
+        # 步骤2：将 ctx 放入前面的 n_ctx 个位置（从索引1开始）
+        x_new[:, 1 : 1 + self.n_ctx] = ctx
+
+        # 添加位置编码
         self.clip_model = self.clip_model.float()
-        x = x + self.clip_model.positional_embedding.type(self.dtype)
+        x_new = x_new + self.clip_model.positional_embedding.type(self.dtype)
 
-        x = x.permute(1, 0, 2)
-        x = self.clip_model.transformer(x)
-        x = x.permute(1, 0, 2)
-        x = self.clip_model.ln_final(x).type(self.dtype)
+        # Transformer
+        x_new = x_new.permute(1, 0, 2)   # [L, B, D]
+        x_new = self.clip_model.transformer(x_new)
+        x_new = x_new.permute(1, 0, 2)   # [B, L, D]
+        x_new = self.clip_model.ln_final(x_new).type(self.dtype)
 
-        eos_positions = text_tokens.argmax(dim=-1)       # 位置不变（因为替换没有改变长度）
-        x = x[torch.arange(x.size(0)), eos_positions] @ self.clip_model.text_projection
-        return F.normalize(x, dim=-1)
+        # 取 EOS token（原始 EOS 位置向右平移了 n_ctx）
+        eos_positions = text_tokens.argmax(dim=-1) + self.n_ctx
+        # 边界检查：确保 eos_positions 不超过 76
+        eos_positions = torch.clamp(eos_positions, max=76)
+        x_new = x_new[torch.arange(x_new.size(0)), eos_positions] @ self.clip_model.text_projection
+        return F.normalize(x_new, dim=-1)
 
 
 class CoCoOpRetriever(nn.Module):
@@ -272,7 +284,13 @@ def evaluate_retriever(retriever, val_dataset, device, temperature=0.07, batch_s
         sim = query_feat @ candidate_feats.T / temperature
 
         for i in range(len(batch_queries)):
-            sim_i = sim[i]
+            # sim_i = sim[i]
+            sim_i = sim[i].clone() # 克隆一行相似度，避免原地修改干扰并行计算
+            # 【核心改动】：获取当前 Query 的参考图索引，强制将其相似度降到极低
+            ref_idx = batch_queries[i].get('ref_idx')
+            if ref_idx is not None:
+                sim_i[ref_idx] = -1e9
+
             sorted_indices = sim_i.argsort(descending=True)
             pos_idxs = target_idxss[i]
             P = len(pos_idxs)
@@ -307,8 +325,9 @@ def evaluate_retriever(retriever, val_dataset, device, temperature=0.07, batch_s
     print("\n=== Evaluation Results ===")
     for k in sorted(recalls.keys()):
         print(f"Recall@{k}: {recalls[k] / num_q * 100:.2f}%")
-    print(f"mAP: {ap_sum / num_q * 100:.2f}%")
-    return recalls, ap_sum
+    real_mAP = (ap_sum / num_q) * 100
+    print(f"mAP: {real_mAP:.2f}%")
+    return recalls, real_mAP
 
 def load_pretrained_weights(retriever, weights_path, device, method="coop"):
     """
@@ -382,8 +401,9 @@ def use_pre_train_model_val():
         val_track_ids = set(all_track_ids[split_idx:])
 
     print("Building validation data...")
+    valid_file = os.path.join(Config.save_dir, 'clip4cir_validation_cache.pkl')
     candidate_images, val_queries = pg.build_validation_data(
-        Config.track_ann_file, Config.image_root, val_track_ids, num_targets=Config.num_targets
+        Config.track_ann_file, Config.image_root, val_track_ids, num_targets=Config.num_targets, cache_file=valid_file
     )
     if args.quick:
         candidate_images = candidate_images[:200]
@@ -392,7 +412,7 @@ def use_pre_train_model_val():
 
     val_dataset = pg.ValidationDataset(
         candidate_images, val_queries, preprocess,
-        cache_path=os.path.join(Config.save_dir, f'candidate_feats_clipzeroshort.pt')
+        cache_path=os.path.join(Config.save_dir, f'candidate_feats_clip4cir.pt')
     )
 
     # ... 解析参数 ...
@@ -460,13 +480,13 @@ def train_cocoop():
     )
 
     print("Building validation data...")
-    valid_file = os.path.join(Config.save_dir, 'validation_cache.pkl')
+    valid_file = os.path.join(Config.save_dir, 'clip4cir_validation_cache.pkl')
     candidate_images, val_queries = pg.build_validation_data(
         Config.track_ann_file, Config.image_root, val_track_ids, num_targets=3, cache_file=valid_file
     )
     val_dataset = pg.ValidationDataset(
         candidate_images, val_queries, preprocess,
-        cache_path=os.path.join(Config.save_dir, 'candidate_feats_clipzeroshort.pt')
+        cache_path=os.path.join(Config.save_dir, 'candidate_feats_clip4cir.pt')
     )
     print(f"Candidates: {len(candidate_images)}, Queries: {len(val_queries)}")
 
@@ -497,3 +517,12 @@ def train_cocoop():
 
 if __name__ == "__main__":
     train_cocoop()
+    # import sys
+    # # 直接在这里写参数，代替命令行
+    # sys.argv = [
+    #     "coop_cocoop_baseline.py",
+    #     "--method", "cocoop",
+    #     "--n_ctx", "4",
+    #     "--weights", "./checkpoints/best_cocoop_retriever.pth"
+    # ]
+    # use_pre_train_model_val()
