@@ -288,11 +288,12 @@ def main():
         Config.track_ann_file, split_file, train_ratio=0.8, seed=42
     )
     candidate_images, val_queries = build_validation_data(
-        Config.track_ann_file, Config.image_root, val_track_ids, num_targets=3, sample_print=False
+        Config.track_ann_file, Config.image_root, val_track_ids,
+        num_targets=3, sample_print=True, cache_file=os.path.join(Config.save_dir, 'clip4cir_validation_cache.pkl')
     )
     val_dataset = ValidationDataset(
         candidate_images, val_queries, preprocess,
-        cache_path=os.path.join(Config.save_dir, 'candidate_feats_clipzeroshort.pt')
+        cache_path=os.path.join(Config.save_dir, 'candidate_feats_clip4cir.pt')
     )
     print(f"Validation set size: {len(val_queries)} queries, {len(candidate_images)} candidates.")
 

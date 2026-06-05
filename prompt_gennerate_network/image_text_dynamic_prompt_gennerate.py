@@ -167,7 +167,7 @@ class PromptGenerator(nn.Module):
         # 将动态提示与图像特征融合
         combined = img_feat + self.alpha * dyn_prompt
         combined = F.normalize(combined, dim=-1)
-        return combined
+        return combined, weights
 
 # -------------------- SemanticPromptGenerator --------------------
 class SemanticPromptGenerator(nn.Module):
@@ -521,7 +521,7 @@ def train_epoch(clip_model, generator, dataloader, optimizer, device, temperatur
             text_feat = F.normalize(text_feat, dim=-1).float()
 
         # 生成查询特征（生成器内部已做类型转换，但再次确保）
-        query_feat = generator(text_feat, ref_feat).float()
+        query_feat, weights = generator(text_feat, ref_feat).float()
 
         # 计算相似度矩阵
         # logits = query_feat @ target_feat.T / temperature
@@ -563,7 +563,7 @@ def evaluate(clip_model, generator, val_dataset, device, temperature, k_list=[1,
 
         ref_feat = F.normalize(clip_model.encode_image(ref_img), dim=-1)
         text_feat = F.normalize(clip_model.encode_text(text), dim=-1)
-        query_feat = generator(text_feat, ref_feat)   # [1, D]
+        query_feat, weights = generator(text_feat, ref_feat)   # [1, D]
 
         # 计算与所有候选图像的相似度
         sim = query_feat @ candidate_feats.T   # [1, C]
@@ -618,7 +618,7 @@ def evaluate_batched(clip_model, generator, val_dataset, device, temperature, ba
 
         ref_feat = F.normalize(clip_model.encode_image(ref_imgs), dim=-1)
         text_feat = F.normalize(clip_model.encode_text(texts), dim=-1)
-        query_feat = generator(text_feat, ref_feat)   # [B, D]
+        query_feat, weights = generator(text_feat, ref_feat)   # [B, D]
 
         # 在 evaluate_batched 函数内部，获取候选特征后添加：
         candidate_feats = candidate_feats.float()
@@ -626,8 +626,14 @@ def evaluate_batched(clip_model, generator, val_dataset, device, temperature, ba
         query_feat = query_feat.float()
         sim = query_feat @ candidate_feats.T / temperature   # [B, C]
 
-        for i in range(batch_size_actual):
-            sim_i = sim[i]                      # [C]
+        for i in range(len(batch_queries)):
+            # sim_i = sim[i]
+            sim_i = sim[i].clone() # 克隆一行相似度，避免原地修改干扰并行计算
+            # 【核心改动】：获取当前 Query 的参考图索引，强制将其相似度降到极低
+            ref_idx = batch_queries[i].get('ref_idx')
+            if ref_idx is not None:
+                sim_i[ref_idx] = -1e9
+
             sorted_indices = sim_i.argsort(descending=True)
             pos_idxs = target_idxss[i]          # 该查询的所有正样本索引列表
             P = len(pos_idxs)  # 正样本总数
@@ -686,7 +692,7 @@ def retrieve(query_text, query_image_path, candidate_image_paths, clip_model, ge
     with torch.no_grad():
         ref_feat = F.normalize(clip_model.encode_image(ref_img_tensor), dim=-1)
         text_feat = F.normalize(clip_model.encode_text(text_tokens), dim=-1)
-        query_feat = generator(text_feat, ref_feat)   # [1, D]
+        query_feat, weights = generator(text_feat, ref_feat)   # [1, D]
         cand_feats = F.normalize(clip_model.encode_image(candidate_tensors), dim=-1)
         sim = (query_feat @ cand_feats.T).squeeze(0) / temperature
         top_indices = sim.argsort(descending=True)[:top_k]
@@ -750,6 +756,136 @@ def load_concept_extensions(json_path, npz_path):
     concept_desc_embs = torch.stack(concept_desc_embs, dim=0).to(config.device)  # [C, D]
     return concept_names, concept_name_embs, concept_extend_embs, concept_desc_embs
 
+def visualize_concept_weights(generator, val_dataset, concept_names, device, num_samples=10, top_k=10):
+    """
+    随机抽取 num_samples 个验证集查询，打印每个查询的 caption、ref_img 路径，
+    以及模型预测的权重最高的 top_k 个概念。
+    """
+    generator.eval()
+    queries = val_dataset.queries
+    indices = random.sample(range(len(queries)), min(num_samples, len(queries)))
+
+    for idx in indices:
+        q = queries[idx]
+        caption = q['caption']
+        ref_img_path = q['ref_img']
+
+        # 加载参考图像并预处理
+        ref_img = Image.open(ref_img_path).convert('RGB')
+        ref_tensor = preprocess(ref_img).unsqueeze(0).to(device)
+        text_tokens = clip.tokenize(caption).to(device)
+
+        with torch.no_grad():
+            ref_feat = F.normalize(clip_model.encode_image(ref_tensor), dim=-1).float()
+            text_feat = F.normalize(clip_model.encode_text(text_tokens), dim=-1).float()
+            _, weights = generator(text_feat, ref_feat)   # weights shape: [1, C]
+
+        # 获取权重最高的 top_k 个概念的索引
+        weights_np = weights.squeeze(0).cpu().numpy()
+        top_indices = weights_np.argsort()[-top_k:][::-1]
+
+        print("\n" + "="*60)
+        print(f"Query: {caption}")
+        print(f"Reference Image: {ref_img_path}")
+        print(f"Top-{top_k} activated concepts:")
+        for i, idx_c in enumerate(top_indices):
+            concept_name = concept_names[idx_c]
+            weight_val = weights_np[idx_c]
+            print(f"  {i+1}. {concept_name}: {weight_val:.4f}")
+
+def validate_with_model(model_path, config, device, val_track_ids=None, batch_size=64, k_list=[1,5,10]):
+    """
+    加载已训练好的 PromptGenerator 模型，并在验证集上进行检索评估。
+
+    Args:
+        model_path (str): 保存的模型权重路径（.pth 文件）
+        config (Config): 配置对象，需包含以下属性：
+            - track_ann_file: 轨迹标注文件路径
+            - image_root: 图像根目录
+            - concept_extend_file: 概念扩展 JSON 文件
+            - concept_extend_embeddings: 概念扩展 embedding npz 文件
+            - clip_model_name: CLIP 模型名称
+            - device: 设备（'cuda' 或 'cpu'）
+            - temperature: 损失中使用的温度（用于评估）
+            - save_dir: 保存缓存文件的目录
+        device (torch.device): 推理设备
+        val_track_ids (set or list, optional): 验证集车辆 ID 列表。若不提供，则尝试从缓存划分文件加载
+        batch_size (int): 评估时的批处理大小
+        k_list (list): 要计算的 Recall@K 列表
+
+    Returns:
+        dict: 包含各 Recall 值和 mAP 的字典
+    """
+    # 1. 加载 CLIP 模型（与训练时相同）
+    print("Loading CLIP model...")
+    clip_model, preprocess = clip.load(config.clip_model_name, device=device)
+    for param in clip_model.parameters():
+        param.requires_grad = False
+    clip_model.eval()
+
+    # 2. 加载概念扩展库
+    print("Loading concept extensions...")
+    concept_names, concept_name_embs, concept_extend_embs, concept_desc_embs = load_concept_extensions(
+        config.concept_extend_file, config.concept_extend_embeddings
+    )
+    # 创建生成器（与训练时结构一致）
+    generator = PromptGenerator(
+        concept_name_embs, concept_extend_embs,
+        clip_model.visual.output_dim, len(concept_names), config.hidden_dim
+    ).to(device)
+    # 加载权重
+    print(f"Loading model from {model_path}")
+    state_dict = torch.load(model_path, map_location=device)
+    generator.load_state_dict(state_dict)
+    generator.eval()
+
+    # 3. 构建验证数据集
+    # 若未提供 val_track_ids，尝试从之前保存的划分文件中加载
+    if val_track_ids is None:
+        split_file = os.path.join(config.save_dir, 'track_split.pkl')
+        if os.path.exists(split_file):
+            with open(split_file, 'rb') as f:
+                _, val_track_ids = pickle.load(f)
+            print(f"Loaded val track IDs from {split_file}: {len(val_track_ids)} tracks")
+        else:
+            raise FileNotFoundError(f"Split file {split_file} not found. Please provide val_track_ids manually.")
+
+    # 构建验证查询和候选图像列表
+    print("Building validation data...")
+    candidate_images, val_queries = build_validation_data(
+        config.track_ann_file, config.image_root, val_track_ids,
+        num_targets=3, sample_print=True, cache_file=os.path.join(config.save_dir, 'clip4cir_validation_cache.pkl')
+    )
+    print(f"Validation candidates: {len(candidate_images)}, queries: {len(val_queries)}")
+
+    # 创建 ValidationDataset（会自动缓存候选特征，避免重复提取）
+    val_dataset = ValidationDataset(
+        candidate_images, val_queries, preprocess,
+        cache_path=os.path.join(config.save_dir, 'candidate_feats_clip4cir.pt')
+    )
+
+    # 随机从验证集抽取图像查看解释情况 验证模型时注释，查看解释性分类打开
+    # visualize_concept_weights(generator, val_dataset, concept_names, device, num_samples=3, top_k=10)
+
+    # 4. 评估
+    print("Starting evaluation...")
+    recalls, mAP = evaluate_batched(
+        clip_model, generator, val_dataset, device,
+        temperature=config.temperature, batch_size=batch_size, k_list=k_list
+    )
+
+    # 打印结果
+    print("\n========== Validation Results ==========")
+    for k in k_list:
+        print(f"Recall@{k}: {recalls[k]:.2f}%")
+    print(f"mAP: {mAP:.2f}%")
+    print("========================================")
+
+    # 返回结果字典
+    results = {f"R@{k}": recalls[k] for k in k_list}
+    results["mAP"] = mAP
+    return results
+
 # -------------------- 主函数 --------------------
 def main():
     # 1. 构建训练三元组和验证数据
@@ -779,7 +915,10 @@ def main():
     track_to_int = {tid: idx for idx, tid in enumerate(all_track_ids)}
     print(f"Number of training triplets: {len(train_triplets)}")
     print("Building validation data...")
-    candidate_images, val_queries = build_validation_data(config.track_ann_file, config.image_root, val_track_ids, 3)
+    candidate_images, val_queries = build_validation_data(
+        config.track_ann_file, config.image_root, val_track_ids,
+        num_targets=3, sample_print=True, cache_file=os.path.join(config.save_dir, 'clip4cir_validation_cache.pkl')
+    )
     if test_mode:
         # 限制验证集大小
         candidate_images = candidate_images[:100]
@@ -805,9 +944,8 @@ def main():
         pin_memory=True,
         drop_last=True
     )
-
     val_dataset = ValidationDataset(candidate_images, val_queries, preprocess,
-                                    cache_path=os.path.join(config.save_dir, 'candidate_feats_clipzeroshort.pt'))
+                                    cache_path=os.path.join(config.save_dir, 'clip4cir_validation_cache.pkl'))
     # 验证时不使用 DataLoader 的 batch，因为需要逐一查询并检索整个候选集，我们直接在 evaluate 中遍历
 
     # 3. 模型和优化器
@@ -847,4 +985,9 @@ def main():
     print("Training finished.")
 
 if __name__ == '__main__':
-    main()
+    # main()
+    # 假设 config 已经按原代码配置好
+    config = Config()
+    device = torch.device(config.device)
+    model_path = "./checkpoints/best_generator.pth"
+    results = validate_with_model(model_path, config, device)
