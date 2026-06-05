@@ -361,13 +361,13 @@ def define_train():
     )
 
     print("Building validation data...")
-    valid_file = os.path.join(Config.save_dir, 'validation_cache.pkl')
+    valid_file = os.path.join(Config.save_dir, 'clip4cir_validation_cache.pkl')
     candidate_images, val_queries = build_validation_data(
         Config.track_ann_file, Config.image_root, val_track_ids, num_targets=3, cache_file=valid_file
     )
     val_dataset = ValidationDataset(
         candidate_images, val_queries, preprocess,
-        cache_path=os.path.join(Config.save_dir, 'candidate_feats_clipzeroshort.pt')
+        cache_path=os.path.join(Config.save_dir, 'candidate_feats_clip4cir.pt')
     )
     print(f"Validation: {len(candidate_images)} candidates, {len(val_queries)} queries")
 
@@ -383,7 +383,7 @@ def define_train():
         train_loss = train_epoch_clip4cir(
             clip_model, combiner, train_loader, optimizer, device, Config.temperature
         )
-        torch.save(combiner.state_dict(), os.path.join(Config.save_dir, 'train_temp_clip4cir_combiner.pth'))
+        torch.save(combiner.state_dict(), os.path.join(Config.save_dir, 'train_temp_clip4cir_refine_combiner.pth'))
         print(f"Train Loss: {train_loss:.4f}")
 
         # 每5个epoch验证一次
@@ -391,7 +391,7 @@ def define_train():
             recalls, mAP = evaluate_clip4cir(combiner, val_dataset, device, Config.temperature)
             if mAP > best_map:
                 best_map = mAP
-                torch.save(combiner.state_dict(), os.path.join(Config.save_dir, 'best_clip4cir_combiner.pth'))
+                torch.save(combiner.state_dict(), os.path.join(Config.save_dir, 'best_clip4cir_refine_combiner.pth'))
                 print("Best model saved.")
 
         scheduler.step()
@@ -409,7 +409,7 @@ def use_pre_model_val():
     )
 
     print("Building validation data...")
-    valid_file = os.path.join(Config.save_dir, 'validation_cache.pkl')
+    valid_file = os.path.join(Config.save_dir, 'clip4cir_validation_cache.pkl')
     candidate_images, val_queries = build_validation_data(
         Config.track_ann_file, Config.image_root, val_track_ids, num_targets=3, cache_file=valid_file
     )
@@ -423,12 +423,12 @@ def use_pre_model_val():
     # ✅ 【修复 3】固定官方权重维度：640（RN50x4）
     # -------------------------------------------------------------------
     # combiner = Combiner(clip_dim=640).to(device)
-    combiner = Combiner().to(device)
+    combiner = Combiner(input_dim=512).to(device)
     # -------------------------------------------------------------------
     # ✅ 【修复 4】绝对路径加载权重（永不报错）
     # -------------------------------------------------------------------
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    combiner_weights_path = os.path.join(BASE_DIR, "../../base_model/clip4cir_combiner.pt")
+    combiner_weights_path = os.path.join(Config.save_dir, 'train_temp_clip4cir_refine_combiner.pth')
     combiner_weights_path = os.path.abspath(combiner_weights_path)
 
     print("权重路径：", combiner_weights_path)
@@ -436,7 +436,15 @@ def use_pre_model_val():
     if os.path.exists(combiner_weights_path):
         print("Loading CLIP4Cir Combiner weights...")
         checkpoint = torch.load(combiner_weights_path, map_location=device)
-        model_weights = checkpoint["Combiner"]
+        # 1. 提取模型参数字典（尝试常见 key）
+        if "Combiner" in checkpoint:
+            model_weights = checkpoint["Combiner"]
+        if "state_dict" in checkpoint:
+            model_weights = checkpoint["state_dict"]
+        elif "model" in checkpoint:
+            model_weights = checkpoint["model"]
+        else:
+            model_weights = checkpoint  # 直接就是参数字典
         for key in model_weights.keys():
             print(key)
         combiner.load_state_dict(model_weights, strict=False)
@@ -451,4 +459,4 @@ def use_pre_model_val():
     # )
 
 if __name__ == "__main__":
-    define_train()
+    use_pre_model_val()
