@@ -16,15 +16,15 @@ TEMPERATURE = 0.8  # 控制多样性 (0.0-1.0) [citation:3]
 MAX_TOKENS = 500  # 最大输出token数
 
 # 初始化豆包客户端（兼容OpenAI格式）[citation:1]
-client = openai.OpenAI(
-    api_key=DOUBAO_API_KEY,
-    base_url=DOUBAO_BASE_URL
-)
-# 直接替换这里的 API Key
 # client = openai.OpenAI(
-#     api_key="sk-edcd7fc13efd4d29a54e5976bea4a75a",  # 粘贴你的密钥
-#     base_url="https://api.deepseek.com/v1"
+#     api_key=DOUBAO_API_KEY,
+#     base_url=DOUBAO_BASE_URL
 # )
+# 直接替换这里的 API Key
+client = openai.OpenAI(
+    api_key="sk-edcd7fc13efd4d29a54e5976bea4a75a",  # 粘贴你的密钥
+    base_url="https://api.deepseek.com/v1"
+)
 
 try:
     response = client.chat.completions.create(

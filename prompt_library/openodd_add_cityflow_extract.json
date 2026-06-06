@@ -1,0 +1,1482 @@
+{
+  "OperationalDesignDomain": {
+    "parent": null,
+    "children": [
+      "Environment",
+      "Road",
+      "Traffic",
+      "DrivingDynamics",
+      "Infrastructure",
+      "TemporalConditions",
+      "LegalRegulatoryConditions",
+      "VehicleCapabilities",
+      "Perception",
+      "Map"
+    ],
+    "desc": "The complete set of conditions under which the automated driving system is designed to operate."
+  },
+  "Environment": {
+    "parent": "OperationalDesignDomain",
+    "children": [
+      "Weather",
+      "Illumination",
+      "Precipitation",
+      "Fog",
+      "Temperature",
+      "Wind",
+      "AirQuality",
+      "Color"
+    ],
+    "desc": "Atmospheric and ambient conditions that affect driving and sensing."
+  },
+  "Weather": {
+    "parent": "Environment",
+    "children": [
+      "Clear",
+      "Cloudy",
+      "Rain",
+      "Snow",
+      "Sleet",
+      "Hail",
+      "Storm"
+    ],
+    "desc": "Overall atmospheric conditions at the time of driving."
+  },
+  "Clear": {
+    "parent": "Weather",
+    "children": [],
+    "desc": "Weather condition with no significant clouds or precipitation."
+  },
+  "Cloudy": {
+    "parent": "Weather",
+    "children": [],
+    "desc": "Weather condition with significant cloud cover."
+  },
+  "Rain": {
+    "parent": "Weather",
+    "children": [],
+    "desc": "Liquid water precipitation in various intensities."
+  },
+  "Snow": {
+    "parent": "Weather",
+    "children": [],
+    "desc": "Frozen water precipitation in the form of snowflakes."
+  },
+  "Sleet": {
+    "parent": "Weather",
+    "children": [],
+    "desc": "Mixed precipitation of rain and snow."
+  },
+  "Hail": {
+    "parent": "Weather",
+    "children": [],
+    "desc": "Precipitation in the form of balls or irregular lumps of ice."
+  },
+  "Storm": {
+    "parent": "Weather",
+    "children": [],
+    "desc": "Violent atmospheric disturbance with strong wind and precipitation."
+  },
+  "Illumination": {
+    "parent": "Environment",
+    "children": [
+      "Daylight",
+      "Twilight",
+      "Night",
+      "ArtificialLight"
+    ],
+    "desc": "Lighting conditions affecting visibility and sensor performance."
+  },
+  "Daylight": {
+    "parent": "Illumination",
+    "children": [],
+    "desc": "Natural light during full daytime."
+  },
+  "Twilight": {
+    "parent": "Illumination",
+    "children": [],
+    "desc": "Soft glowing light before sunrise and after sunset."
+  },
+  "Night": {
+    "parent": "Illumination",
+    "children": [],
+    "desc": "Darkness between sunset and sunrise."
+  },
+  "ArtificialLight": {
+    "parent": "Illumination",
+    "children": [],
+    "desc": "Lighting provided by man-made sources such as street lamps."
+  },
+  "Precipitation": {
+    "parent": "Environment",
+    "children": [
+      "NoPrecipitation",
+      "Light",
+      "Moderate",
+      "Heavy"
+    ],
+    "desc": "Intensity level of any moisture falling from the atmosphere."
+  },
+  "NoPrecipitation": {
+    "parent": "Precipitation",
+    "children": [],
+    "desc": "Absence of any precipitation."
+  },
+  "Light": {
+    "parent": "Precipitation",
+    "children": [],
+    "desc": "Low-intensity precipitation."
+  },
+  "Moderate": {
+    "parent": "Precipitation",
+    "children": [],
+    "desc": "Medium-intensity precipitation."
+  },
+  "Heavy": {
+    "parent": "Precipitation",
+    "children": [],
+    "desc": "High-intensity precipitation."
+  },
+  "Fog": {
+    "parent": "Environment",
+    "children": [
+      "NoFog",
+      "LightFog",
+      "MediumFog",
+      "DenseFog"
+    ],
+    "desc": "Visible mass of condensed water vapor in the atmosphere, reducing visibility."
+  },
+  "NoFog": {
+    "parent": "Fog",
+    "children": [],
+    "desc": "Absence of fog."
+  },
+  "LightFog": {
+    "parent": "Fog",
+    "children": [],
+    "desc": "Thin fog with minor visibility reduction."
+  },
+  "MediumFog": {
+    "parent": "Fog",
+    "children": [],
+    "desc": "Moderate fog with significant visibility reduction."
+  },
+  "DenseFog": {
+    "parent": "Fog",
+    "children": [],
+    "desc": "Thick fog with severe visibility reduction."
+  },
+  "Temperature": {
+    "parent": "Environment",
+    "children": [],
+    "desc": "Degree of heat present in the environment and on road surfaces."
+  },
+  "Wind": {
+    "parent": "Environment",
+    "children": [],
+    "desc": "Movement of air, which may affect vehicle stability and sensors."
+  },
+  "AirQuality": {
+    "parent": "Environment",
+    "children": [],
+    "desc": "Chemical and particulate composition of ambient air."
+  },
+  "Color": {
+    "parent": "Environment",
+    "children": [
+      "White",
+      "Black",
+      "Gray",
+      "Silver",
+      "Red",
+      "Blue",
+      "Green",
+      "Yellow",
+      "Brown",
+      "Maroon",
+      "Purple",
+      "Dark",
+      "Light",
+      "Golden",
+      "Taupe",
+      "Orange",
+      "Pink"
+    ],
+    "desc": "Visual color of vehicles, road elements, or environmental features."
+  },
+  "White": {
+    "parent": "Color",
+    "children": [],
+    "desc": "Color of maximum lightness, often used for emergency vehicles or high visibility."
+  },
+  "Black": {
+    "parent": "Color",
+    "children": [],
+    "desc": "Color of minimum lightness, common for vehicles and road surfaces."
+  },
+  "Gray": {
+    "parent": "Color",
+    "children": [],
+    "desc": "Achromatic color between black and white, frequently seen on vehicles and pavement."
+  },
+  "Silver": {
+    "parent": "Color",
+    "children": [],
+    "desc": "Metallic gray color with reflective sheen, popular for automotive paint."
+  },
+  "Red": {
+    "parent": "Color",
+    "children": [],
+    "desc": "Warm color associated with stop signals, brake lights, and emergency vehicles."
+  },
+  "Blue": {
+    "parent": "Color",
+    "children": [],
+    "desc": "Cool color used for some emergency lights and commercial vehicle markings."
+  },
+  "Green": {
+    "parent": "Color",
+    "children": [],
+    "desc": "Color indicating go signals, directional signs, and environmental features."
+  },
+  "Yellow": {
+    "parent": "Color",
+    "children": [],
+    "desc": "High-visibility color for warning signs, school buses, and caution markings."
+  },
+  "Brown": {
+    "parent": "Color",
+    "children": [],
+    "desc": "Earthy color common for cargo vehicles and roadside natural features."
+  },
+  "Maroon": {
+    "parent": "Color",
+    "children": [],
+    "desc": "Dark reddish-brown color, occasionally used for vehicle paint."
+  },
+  "Purple": {
+    "parent": "Color",
+    "children": [],
+    "desc": "Rare vehicle color, sometimes seen on specialized or custom vehicles."
+  },
+  "Dark": {
+    "parent": "Color",
+    "children": [],
+    "desc": "Low-luminance color attribute, often used to describe black, navy, or charcoal tones."
+  },
+  "Light": {
+    "parent": "Color",
+    "children": [],
+    "desc": "High-luminance color attribute, such as light blue or light gray."
+  },
+  "Golden": {
+    "parent": "Color",
+    "children": [],
+    "desc": "Metallic yellow-brown color, sometimes used for luxury or decorative vehicles."
+  },
+  "Taupe": {
+    "parent": "Color",
+    "children": [],
+    "desc": "Brownish-gray color, occasionally seen on vehicles as a neutral tone."
+  },
+  "Orange": {
+    "parent": "Color",
+    "children": [],
+    "desc": "High-visibility color used for construction vehicles and warning equipment."
+  },
+  "Pink": {
+    "parent": "Color",
+    "children": [],
+    "desc": "Uncommon vehicle color, sometimes used for promotional or specialty vehicles."
+  },
+  "Road": {
+    "parent": "OperationalDesignDomain",
+    "children": [
+      "RoadType",
+      "RoadGeometry",
+      "RoadSurface",
+      "LaneMarkings",
+      "RoadConditions",
+      "Shoulder",
+      "Median",
+      "Intersection",
+      "Bridge",
+      "Tunnel",
+      "RoadAttribute"
+    ],
+    "desc": "Physical characteristics and conditions of the roadway."
+  },
+  "RoadType": {
+    "parent": "Road",
+    "children": [
+      "Highway",
+      "UrbanRoad",
+      "RuralRoad",
+      "ResidentialRoad",
+      "ServiceRoad",
+      "Parking"
+    ],
+    "desc": "Functional classification of the roadway."
+  },
+  "Highway": {
+    "parent": "RoadType",
+    "children": [],
+    "desc": "Major road designed for high-speed through traffic."
+  },
+  "UrbanRoad": {
+    "parent": "RoadType",
+    "children": [],
+    "desc": "Road located within a city or urbanized area."
+  },
+  "RuralRoad": {
+    "parent": "RoadType",
+    "children": [],
+    "desc": "Road in countryside or low-density areas."
+  },
+  "ResidentialRoad": {
+    "parent": "RoadType",
+    "children": [],
+    "desc": "Road within a residential zone with low speed limits."
+  },
+  "ServiceRoad": {
+    "parent": "RoadType",
+    "children": [],
+    "desc": "Road providing access to properties or facilities."
+  },
+  "Parking": {
+    "parent": "RoadType",
+    "children": [],
+    "desc": "Area designated for vehicle parking."
+  },
+  "RoadGeometry": {
+    "parent": "Road",
+    "children": [
+      "Straight",
+      "Curved",
+      "Wide",
+      "Narrow",
+      "Slight"
+    ],
+    "desc": "Horizontal and vertical shape of the road, including curves and slopes."
+  },
+  "Straight": {
+    "parent": "RoadGeometry",
+    "children": [],
+    "desc": "Road segment with no curvature or minimal deviation from a straight line."
+  },
+  "Curved": {
+    "parent": "RoadGeometry",
+    "children": [],
+    "desc": "Road segment with a continuous bend or arc."
+  },
+  "Wide": {
+    "parent": "RoadGeometry",
+    "children": [],
+    "desc": "Road with extra lane width or generous shoulder area."
+  },
+  "Narrow": {
+    "parent": "RoadGeometry",
+    "children": [],
+    "desc": "Road with reduced lane width or limited clearance."
+  },
+  "Slight": {
+    "parent": "RoadGeometry",
+    "children": [],
+    "desc": "Road with a gentle curve or shallow slope."
+  },
+  "RoadSurface": {
+    "parent": "Road",
+    "children": [
+      "Dry",
+      "Wet",
+      "Icy",
+      "Snowy",
+      "Muddy",
+      "Potholes"
+    ],
+    "desc": "Physical condition and texture of the road surface."
+  },
+  "Dry": {
+    "parent": "RoadSurface",
+    "children": [],
+    "desc": "Road surface with no moisture."
+  },
+  "Wet": {
+    "parent": "RoadSurface",
+    "children": [],
+    "desc": "Road surface covered with water."
+  },
+  "Icy": {
+    "parent": "RoadSurface",
+    "children": [],
+    "desc": "Road surface covered with ice."
+  },
+  "Snowy": {
+    "parent": "RoadSurface",
+    "children": [],
+    "desc": "Road surface covered with snow."
+  },
+  "Muddy": {
+    "parent": "RoadSurface",
+    "children": [],
+    "desc": "Road surface covered with mud."
+  },
+  "Potholes": {
+    "parent": "RoadSurface",
+    "children": [],
+    "desc": "Road surface with structural defects and holes."
+  },
+  "LaneMarkings": {
+    "parent": "Road",
+    "children": [],
+    "desc": "Paint or physical markings defining lanes and traffic rules."
+  },
+  "RoadConditions": {
+    "parent": "Road",
+    "children": [],
+    "desc": "Overall state of the road including defects, construction, and obstacles."
+  },
+  "Shoulder": {
+    "parent": "Road",
+    "children": [],
+    "desc": "Area beside the main travel lanes for emergency stopping."
+  },
+  "Median": {
+    "parent": "Road",
+    "children": [],
+    "desc": "Divider between opposing traffic directions."
+  },
+  "Intersection": {
+    "parent": "Road",
+    "children": [],
+    "desc": "Point where two or more roads cross or meet."
+  },
+  "Bridge": {
+    "parent": "Road",
+    "children": [],
+    "desc": "Structure carrying road over an obstacle such as water or valley."
+  },
+  "Tunnel": {
+    "parent": "Road",
+    "children": [],
+    "desc": "Enclosed passage for road through a hill or mountain."
+  },
+  "RoadAttribute": {
+    "parent": "Road",
+    "children": [
+      "Main",
+      "Busy",
+      "Empty",
+      "Curvy",
+      "Shadowed"
+    ],
+    "desc": "Adjective attributes describing traffic or environmental state of the road."
+  },
+  "Main": {
+    "parent": "RoadAttribute",
+    "children": [],
+    "desc": "Primary or arterial road that carries significant traffic volume."
+  },
+  "Busy": {
+    "parent": "RoadAttribute",
+    "children": [],
+    "desc": "Road with high traffic density or frequent interruptions."
+  },
+  "Empty": {
+    "parent": "RoadAttribute",
+    "children": [],
+    "desc": "Road with very few or no other road users."
+  },
+  "Curvy": {
+    "parent": "RoadAttribute",
+    "children": [],
+    "desc": "Road characterized by multiple successive curves or winding alignment."
+  },
+  "Shadowed": {
+    "parent": "RoadAttribute",
+    "children": [],
+    "desc": "Road section where sunlight is blocked by buildings, trees, or structures."
+  },
+  "Traffic": {
+    "parent": "OperationalDesignDomain",
+    "children": [
+      "TrafficParticipants",
+      "TrafficFlow",
+      "TrafficDensity",
+      "TrafficRules",
+      "TrafficSigns",
+      "TrafficSignals",
+      "SpatialRelation",
+      "TrafficCondition"
+    ],
+    "desc": "Conditions related to other road users and traffic regulation."
+  },
+  "TrafficParticipants": {
+    "parent": "Traffic",
+    "children": [
+      "Vehicle",
+      "VulnerableRoadUser",
+      "Animal",
+      "Obstacle",
+      "Cargo",
+      "Trailer"
+    ],
+    "desc": "All actors present in the driving environment."
+  },
+  "Vehicle": {
+    "parent": "TrafficParticipants",
+    "children": [
+      "Car",
+      "Truck",
+      "Bus",
+      "Motorcycle",
+      "Bicycle",
+      "EmergencyVehicle",
+      "SUV",
+      "Sedan",
+      "Pickup",
+      "Wagon",
+      "Hatchback",
+      "Coupe",
+      "Minivan",
+      "MPV",
+      "Crossover",
+      "Jeep",
+      "Van",
+      "Taxi",
+      "Brand"
+    ],
+    "desc": "Motorized vehicles on the road."
+  },
+  "Car": {
+    "parent": "Vehicle",
+    "children": [],
+    "desc": "Passenger car."
+  },
+  "Truck": {
+    "parent": "Vehicle",
+    "children": [],
+    "desc": "Heavy goods vehicle or lorry."
+  },
+  "Bus": {
+    "parent": "Vehicle",
+    "children": [],
+    "desc": "Large passenger-carrying vehicle."
+  },
+  "Motorcycle": {
+    "parent": "Vehicle",
+    "children": [],
+    "desc": "Two-wheeled motorized vehicle."
+  },
+  "Bicycle": {
+    "parent": "Vehicle",
+    "children": [],
+    "desc": "Non-motorized two-wheeled vehicle."
+  },
+  "EmergencyVehicle": {
+    "parent": "Vehicle",
+    "children": [
+      "PoliceCar",
+      "Ambulance",
+      "FireTruck",
+      "SchoolBus"
+    ],
+    "desc": "Vehicle used for emergency services such as police, fire, ambulance."
+  },
+  "PoliceCar": {
+    "parent": "EmergencyVehicle",
+    "children": [],
+    "desc": "Law enforcement vehicle with emergency lights and sirens."
+  },
+  "Ambulance": {
+    "parent": "EmergencyVehicle",
+    "children": [],
+    "desc": "Medical emergency vehicle equipped for patient transport."
+  },
+  "FireTruck": {
+    "parent": "EmergencyVehicle",
+    "children": [],
+    "desc": "Firefighting vehicle with water, ladders, and emergency equipment."
+  },
+  "SchoolBus": {
+    "parent": "EmergencyVehicle",
+    "children": [],
+    "desc": "Bus dedicated to transporting students, typically painted yellow."
+  },
+  "SUV": {
+    "parent": "Vehicle",
+    "children": [],
+    "desc": "Sport utility vehicle, a car-like body on a truck chassis."
+  },
+  "Sedan": {
+    "parent": "Vehicle",
+    "children": [],
+    "desc": "Three-box passenger car with separate compartments for engine, passenger, and cargo."
+  },
+  "Pickup": {
+    "parent": "Vehicle",
+    "children": [],
+    "desc": "Light truck with an open cargo bed and enclosed cab."
+  },
+  "Wagon": {
+    "parent": "Vehicle",
+    "children": [],
+    "desc": "Station wagon with extended roofline and rear cargo area."
+  },
+  "Hatchback": {
+    "parent": "Vehicle",
+    "children": [],
+    "desc": "Car with a rear door that swings upward, combining passenger and cargo space."
+  },
+  "Coupe": {
+    "parent": "Vehicle",
+    "children": [],
+    "desc": "Two-door passenger car with a sporty or sleek profile."
+  },
+  "Minivan": {
+    "parent": "Vehicle",
+    "children": [],
+    "desc": "Multi-purpose vehicle designed for passenger transport with sliding doors."
+  },
+  "MPV": {
+    "parent": "Vehicle",
+    "children": [],
+    "desc": "Multi-purpose vehicle, similar to a minivan, for flexible passenger/cargo use."
+  },
+  "Crossover": {
+    "parent": "Vehicle",
+    "children": [],
+    "desc": "Vehicle built on a car platform with SUV-like styling and height."
+  },
+  "Jeep": {
+    "parent": "Vehicle",
+    "children": [],
+    "desc": "Off-road capable vehicle, often with four-wheel drive and rugged design."
+  },
+  "Van": {
+    "parent": "Vehicle",
+    "children": [],
+    "desc": "Boxy vehicle designed for cargo or passenger transport, often commercial."
+  },
+  "Taxi": {
+    "parent": "Vehicle",
+    "children": [],
+    "desc": "Licensed vehicle for hire, typically with distinctive markings."
+  },
+  "Brand": {
+    "parent": "Vehicle",
+    "children": [
+      "Ford",
+      "Dodge",
+      "BMW",
+      "Audi",
+      "Toyota",
+      "Suburu",
+      "Forester",
+      "Mustang",
+      "Journey",
+      "Chevvy",
+      "Chevy"
+    ],
+    "desc": "Manufacturer or model brand of a vehicle."
+  },
+  "Ford": {
+    "parent": "Brand",
+    "children": [],
+    "desc": "American automaker producing a wide range of vehicles."
+  },
+  "Dodge": {
+    "parent": "Brand",
+    "children": [],
+    "desc": "American brand known for trucks, muscle cars, and SUVs."
+  },
+  "BMW": {
+    "parent": "Brand",
+    "children": [],
+    "desc": "German luxury vehicle manufacturer."
+  },
+  "Audi": {
+    "parent": "Brand",
+    "children": [],
+    "desc": "German premium automaker under the Volkswagen Group."
+  },
+  "Toyota": {
+    "parent": "Brand",
+    "children": [],
+    "desc": "Japanese automaker, one of the largest in the world."
+  },
+  "Suburu": {
+    "parent": "Brand",
+    "children": [],
+    "desc": "Japanese automaker known for all-wheel-drive vehicles."
+  },
+  "Forester": {
+    "parent": "Brand",
+    "children": [],
+    "desc": "Subaru model, a compact crossover SUV."
+  },
+  "Mustang": {
+    "parent": "Brand",
+    "children": [],
+    "desc": "Ford model, a iconic American muscle car."
+  },
+  "Journey": {
+    "parent": "Brand",
+    "children": [],
+    "desc": "Dodge model, a mid-size crossover SUV."
+  },
+  "Chevvy": {
+    "parent": "Brand",
+    "children": [],
+    "desc": "Informal name for Chevrolet, an American brand."
+  },
+  "Chevy": {
+    "parent": "Brand",
+    "children": [],
+    "desc": "Abbreviation for Chevrolet."
+  },
+  "VulnerableRoadUser": {
+    "parent": "TrafficParticipants",
+    "children": [
+      "Pedestrian",
+      "Cyclist",
+      "Motorcyclist",
+      "WheelchairUser"
+    ],
+    "desc": "Road users with little or no protection, at high risk in collisions."
+  },
+  "Pedestrian": {
+    "parent": "VulnerableRoadUser",
+    "children": [],
+    "desc": "Person traveling on foot."
+  },
+  "Cyclist": {
+    "parent": "VulnerableRoadUser",
+    "children": [],
+    "desc": "Person riding a bicycle."
+  },
+  "Motorcyclist": {
+    "parent": "VulnerableRoadUser",
+    "children": [],
+    "desc": "Person riding a motorcycle."
+  },
+  "WheelchairUser": {
+    "parent": "VulnerableRoadUser",
+    "children": [],
+    "desc": "Person using a wheelchair."
+  },
+  "Animal": {
+    "parent": "TrafficParticipants",
+    "children": [],
+    "desc": "Domestic or wild animals on or near the road."
+  },
+  "Obstacle": {
+    "parent": "TrafficParticipants",
+    "children": [],
+    "desc": "Any non-living object that may obstruct the path of a vehicle, such as debris or construction equipment."
+  },
+  "Cargo": {
+    "parent": "TrafficParticipants",
+    "children": [],
+    "desc": "Goods or freight being transported, either inside or attached to a vehicle."
+  },
+  "Trailer": {
+    "parent": "TrafficParticipants",
+    "children": [],
+    "desc": "Unpowered vehicle towed by a powered vehicle, used for hauling cargo."
+  },
+  "TrafficFlow": {
+    "parent": "Traffic",
+    "children": [],
+    "desc": "Movement characteristics of traffic over time."
+  },
+  "TrafficDensity": {
+    "parent": "Traffic",
+    "children": [],
+    "desc": "Concentration of vehicles per unit length of road."
+  },
+  "TrafficRules": {
+    "parent": "Traffic",
+    "children": [],
+    "desc": "Formal rules governing right-of-way, overtaking, turning, etc."
+  },
+  "TrafficSigns": {
+    "parent": "Traffic",
+    "children": [],
+    "desc": "Visual signs providing regulatory, warning, or guidance information."
+  },
+  "TrafficSignals": {
+    "parent": "Traffic",
+    "children": [],
+    "desc": "Electric signals controlling right-of-way at intersections."
+  },
+  "SpatialRelation": {
+    "parent": "Traffic",
+    "children": [
+      "Behind",
+      "Ahead",
+      "Left",
+      "Right",
+      "Front",
+      "Side",
+      "Opposite",
+      "Along",
+      "Past",
+      "Across",
+      "Onto",
+      "Towards",
+      "Around",
+      "Beside",
+      "Nearby",
+      "Next",
+      "Back",
+      "Forward",
+      "Aside",
+      "Alongside"
+    ],
+    "desc": "Relative positions and orientations between traffic participants or between vehicle and road elements."
+  },
+  "Behind": {
+    "parent": "SpatialRelation",
+    "children": [],
+    "desc": "Located at the rear of a reference object."
+  },
+  "Ahead": {
+    "parent": "SpatialRelation",
+    "children": [],
+    "desc": "Located in front of the reference vehicle along its direction of travel."
+  },
+  "Left": {
+    "parent": "SpatialRelation",
+    "children": [],
+    "desc": "Located on the left-hand side of a reference point."
+  },
+  "Right": {
+    "parent": "SpatialRelation",
+    "children": [],
+    "desc": "Located on the right-hand side of a reference point."
+  },
+  "Front": {
+    "parent": "SpatialRelation",
+    "children": [],
+    "desc": "Located in front of a reference object, often the forward-facing side."
+  },
+  "Side": {
+    "parent": "SpatialRelation",
+    "children": [],
+    "desc": "Lateral region adjacent to a vehicle or object."
+  },
+  "Opposite": {
+    "parent": "SpatialRelation",
+    "children": [],
+    "desc": "Facing directly towards or positioned on the other side of the road."
+  },
+  "Along": {
+    "parent": "SpatialRelation",
+    "children": [],
+    "desc": "Moving or positioned parallel to a line or road."
+  },
+  "Past": {
+    "parent": "SpatialRelation",
+    "children": [],
+    "desc": "Position beyond a reference point after passing it."
+  },
+  "Across": {
+    "parent": "SpatialRelation",
+    "children": [],
+    "desc": "From one side to the other, traversing a road or intersection."
+  },
+  "Onto": {
+    "parent": "SpatialRelation",
+    "children": [],
+    "desc": "Moving to a position on a road or surface."
+  },
+  "Towards": {
+    "parent": "SpatialRelation",
+    "children": [],
+    "desc": "In the direction of a target or object."
+  },
+  "Around": {
+    "parent": "SpatialRelation",
+    "children": [],
+    "desc": "Surrounding or encircling an object or area."
+  },
+  "Beside": {
+    "parent": "SpatialRelation",
+    "children": [],
+    "desc": "Next to or alongside a reference object."
+  },
+  "Nearby": {
+    "parent": "SpatialRelation",
+    "children": [],
+    "desc": "Within a short distance of a reference point."
+  },
+  "Next": {
+    "parent": "SpatialRelation",
+    "children": [],
+    "desc": "Immediately adjacent or following in sequence."
+  },
+  "Back": {
+    "parent": "SpatialRelation",
+    "children": [],
+    "desc": "Rearward direction or position."
+  },
+  "Forward": {
+    "parent": "SpatialRelation",
+    "children": [],
+    "desc": "Ahead direction, along the vehicle's heading."
+  },
+  "Aside": {
+    "parent": "SpatialRelation",
+    "children": [],
+    "desc": "To the side; out of the main path."
+  },
+  "Alongside": {
+    "parent": "SpatialRelation",
+    "children": [],
+    "desc": "Parallel and adjacent to a vehicle or road feature."
+  },
+  "TrafficCondition": {
+    "parent": "Traffic",
+    "children": [
+      "Congestion",
+      "Flow",
+      "Group",
+      "Row",
+      "Accident",
+      "Construction",
+      "IllegalParking"
+    ],
+    "desc": "State of traffic including density, disruptions, and special events."
+  },
+  "Congestion": {
+    "parent": "TrafficCondition",
+    "children": [],
+    "desc": "Heavy traffic with low speeds and stop-and-go conditions."
+  },
+  "Flow": {
+    "parent": "TrafficCondition",
+    "children": [],
+    "desc": "Smooth, uninterrupted movement of vehicles at optimal speeds."
+  },
+  "Group": {
+    "parent": "TrafficCondition",
+    "children": [],
+    "desc": "A cluster of vehicles traveling closely together."
+  },
+  "Row": {
+    "parent": "TrafficCondition",
+    "children": [],
+    "desc": "A line of vehicles, often waiting at a signal or in a queue."
+  },
+  "Accident": {
+    "parent": "TrafficCondition",
+    "children": [],
+    "desc": "Collision or incident involving vehicles, requiring response and causing disruption."
+  },
+  "Construction": {
+    "parent": "TrafficCondition",
+    "children": [],
+    "desc": "Road work zone with temporary lane closures, equipment, and workers."
+  },
+  "IllegalParking": {
+    "parent": "TrafficCondition",
+    "children": [],
+    "desc": "Vehicles parked in prohibited areas, obstructing traffic or safety."
+  },
+  "DrivingDynamics": {
+    "parent": "OperationalDesignDomain",
+    "children": [
+      "Speed",
+      "Acceleration",
+      "Deceleration",
+      "LateralMovement",
+      "Stopping",
+      "VehicleState"
+    ],
+    "desc": "Dynamic behavior of the vehicle during operation."
+  },
+  "Speed": {
+    "parent": "DrivingDynamics",
+    "children": [],
+    "desc": "Rate of motion of the vehicle."
+  },
+  "Acceleration": {
+    "parent": "DrivingDynamics",
+    "children": [],
+    "desc": "Rate of increase in speed."
+  },
+  "Deceleration": {
+    "parent": "DrivingDynamics",
+    "children": [],
+    "desc": "Rate of decrease in speed (braking)."
+  },
+  "LateralMovement": {
+    "parent": "DrivingDynamics",
+    "children": [],
+    "desc": "Side-to-side motion including lane changes and steering."
+  },
+  "Stopping": {
+    "parent": "DrivingDynamics",
+    "children": [],
+    "desc": "Conditions and events related to vehicle stopping."
+  },
+  "VehicleState": {
+    "parent": "DrivingDynamics",
+    "children": [
+      "Parked",
+      "Stopped",
+      "Moving",
+      "Speeding",
+      "Waiting",
+      "Yielding",
+      "Slowing",
+      "Pulling",
+      "Backing",
+      "Overtaking",
+      "Passing",
+      "Merging",
+      "Switching",
+      "Changing",
+      "Crossing",
+      "Turning",
+      "Going",
+      "Driving",
+      "Running",
+      "Following",
+      "Keeping",
+      "Proceeding",
+      "Continuing",
+      "Traveling",
+      "Entering",
+      "Exiting",
+      "Taking",
+      "Making",
+      "Rounding",
+      "Coming",
+      "Beginning",
+      "Halting",
+      "Disappearing"
+    ],
+    "desc": "Temporal states and maneuvers of a vehicle during operation."
+  },
+  "Parked": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle stationary in a designated parking space or off-road."
+  },
+  "Stopped": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle at a standstill, e.g., at a traffic light or stop sign."
+  },
+  "Moving": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle in motion at any speed above zero."
+  },
+  "Speeding": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle exceeding the posted speed limit."
+  },
+  "Waiting": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle paused, typically for a traffic signal, pedestrian, or gap."
+  },
+  "Yielding": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle giving right-of-way to other traffic or pedestrians."
+  },
+  "Slowing": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle reducing speed, not necessarily to a full stop."
+  },
+  "Pulling": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle moving away from a stop or curb, often pulling out."
+  },
+  "Backing": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle moving in reverse direction."
+  },
+  "Overtaking": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle passing another vehicle in the same direction."
+  },
+  "Passing": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle moving past another road user or obstacle."
+  },
+  "Merging": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle entering a stream of traffic from a ramp or lane."
+  },
+  "Switching": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle changing lanes or turning direction."
+  },
+  "Changing": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle performing a lane change or direction change."
+  },
+  "Crossing": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle traversing an intersection or railroad crossing."
+  },
+  "Turning": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle changing direction at an intersection or junction."
+  },
+  "Going": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle proceeding in a general direction without specific maneuver."
+  },
+  "Driving": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle operating under normal forward motion."
+  },
+  "Running": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle actively moving, often at a steady pace."
+  },
+  "Following": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle traveling behind another vehicle, maintaining distance."
+  },
+  "Keeping": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle maintaining a steady speed or lane position."
+  },
+  "Proceeding": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle moving forward after a stop or hesitation."
+  },
+  "Continuing": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle persisting in its current path without change."
+  },
+  "Traveling": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle on a journey, covering distance along a route."
+  },
+  "Entering": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle moving into a new road, lane, or intersection."
+  },
+  "Exiting": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle leaving a road, roundabout, or parking area."
+  },
+  "Taking": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle executing a specific action, such as a turn or lane."
+  },
+  "Making": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle performing a maneuver, e.g., making a turn."
+  },
+  "Rounding": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle navigating a curve or roundabout."
+  },
+  "Coming": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle approaching from a distance."
+  },
+  "Beginning": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle starting a new movement or maneuver."
+  },
+  "Halting": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle ceasing motion, often abruptly."
+  },
+  "Disappearing": {
+    "parent": "VehicleState",
+    "children": [],
+    "desc": "Vehicle leaving the sensor field of view or occluded."
+  },
+  "Infrastructure": {
+    "parent": "OperationalDesignDomain",
+    "children": [
+      "TrafficLight",
+      "TrafficSign",
+      "GuardRail",
+      "Barrier",
+      "Crosswalk",
+      "RailroadCrossing",
+      "Streetlight",
+      "BikeRack"
+    ],
+    "desc": "Fixed physical structures supporting road safety and control."
+  },
+  "TrafficLight": {
+    "parent": "Infrastructure",
+    "children": [],
+    "desc": "Signal device controlling vehicle and pedestrian flow."
+  },
+  "TrafficSign": {
+    "parent": "Infrastructure",
+    "children": [],
+    "desc": "Permanent or temporary sign conveying traffic information."
+  },
+  "GuardRail": {
+    "parent": "Infrastructure",
+    "children": [],
+    "desc": "Barrier preventing vehicles from leaving the roadway."
+  },
+  "Barrier": {
+    "parent": "Infrastructure",
+    "children": [],
+    "desc": "Physical obstacle restricting vehicle movement."
+  },
+  "Crosswalk": {
+    "parent": "Infrastructure",
+    "children": [],
+    "desc": "Designated area for pedestrians to cross the road."
+  },
+  "RailroadCrossing": {
+    "parent": "Infrastructure",
+    "children": [],
+    "desc": "Point where road and railway intersect."
+  },
+  "Streetlight": {
+    "parent": "Infrastructure",
+    "children": [],
+    "desc": "Pole-mounted lamp providing illumination on roads and sidewalks."
+  },
+  "BikeRack": {
+    "parent": "Infrastructure",
+    "children": [],
+    "desc": "Fixed structure for securing parked bicycles."
+  },
+  "TemporalConditions": {
+    "parent": "OperationalDesignDomain",
+    "children": [
+      "TimeOfDay",
+      "Season",
+      "Holiday",
+      "SpecialEvent"
+    ],
+    "desc": "Time-related factors affecting traffic and environment."
+  },
+  "TimeOfDay": {
+    "parent": "TemporalConditions",
+    "children": [],
+    "desc": "Time segment during the day (e.g., morning, evening)."
+  },
+  "Season": {
+    "parent": "TemporalConditions",
+    "children": [],
+    "desc": "Period of the year (spring, summer, autumn, winter)."
+  },
+  "Holiday": {
+    "parent": "TemporalConditions",
+    "children": [],
+    "desc": "Public or local holiday affecting traffic patterns."
+  },
+  "SpecialEvent": {
+    "parent": "TemporalConditions",
+    "children": [],
+    "desc": "Planned event causing abnormal traffic or environment."
+  },
+  "LegalRegulatoryConditions": {
+    "parent": "OperationalDesignDomain",
+    "children": [
+      "SpeedLimits",
+      "RightOfWayRules",
+      "OvertakingRules",
+      "ParkingRules",
+      "RegionalLegislation"
+    ],
+    "desc": "Laws and regulations governing driving in the region."
+  },
+  "SpeedLimits": {
+    "parent": "LegalRegulatoryConditions",
+    "children": [],
+    "desc": "Legally imposed maximum and minimum speeds."
+  },
+  "RightOfWayRules": {
+    "parent": "LegalRegulatoryConditions",
+    "children": [],
+    "desc": "Rules determining which traffic has priority."
+  },
+  "OvertakingRules": {
+    "parent": "LegalRegulatoryConditions",
+    "children": [],
+    "desc": "Rules governing overtaking and passing maneuvers."
+  },
+  "ParkingRules": {
+    "parent": "LegalRegulatoryConditions",
+    "children": [],
+    "desc": "Rules about where and how parking is permitted."
+  },
+  "RegionalLegislation": {
+    "parent": "LegalRegulatoryConditions",
+    "children": [],
+    "desc": "Local or national laws specific to the operating region."
+  },
+  "VehicleCapabilities": {
+    "parent": "OperationalDesignDomain",
+    "children": [
+      "AutonomyLevel",
+      "SensorSuite",
+      "ActuatorPerformance",
+      "Communication",
+      "VehicleSize"
+    ],
+    "desc": "Performance and functional limits of the subject vehicle."
+  },
+  "AutonomyLevel": {
+    "parent": "VehicleCapabilities",
+    "children": [],
+    "desc": "Level of driving automation according to standards."
+  },
+  "SensorSuite": {
+    "parent": "VehicleCapabilities",
+    "children": [],
+    "desc": "Set of sensors installed on the vehicle."
+  },
+  "ActuatorPerformance": {
+    "parent": "VehicleCapabilities",
+    "children": [],
+    "desc": "Performance limits of steering, throttle, and braking systems."
+  },
+  "Communication": {
+    "parent": "VehicleCapabilities",
+    "children": [],
+    "desc": "Vehicle-to-everything (V2X) and external communication capabilities."
+  },
+  "VehicleSize": {
+    "parent": "VehicleCapabilities",
+    "children": [
+      "Small",
+      "Large",
+      "Midsize",
+      "Big",
+      "Tiny",
+      "Huge"
+    ],
+    "desc": "Physical dimensions and mass category of the vehicle."
+  },
+  "Small": {
+    "parent": "VehicleSize",
+    "children": [],
+    "desc": "Compact vehicle with small footprint, easy to maneuver."
+  },
+  "Large": {
+    "parent": "VehicleSize",
+    "children": [],
+    "desc": "Full-size vehicle with extended dimensions and mass."
+  },
+  "Midsize": {
+    "parent": "VehicleSize",
+    "children": [],
+    "desc": "Intermediate vehicle size between compact and full-size."
+  },
+  "Big": {
+    "parent": "VehicleSize",
+    "children": [],
+    "desc": "Large vehicle, often used for SUVs and trucks."
+  },
+  "Tiny": {
+    "parent": "VehicleSize",
+    "children": [],
+    "desc": "Very small vehicle such as microcar or urban quadricycle."
+  },
+  "Huge": {
+    "parent": "VehicleSize",
+    "children": [],
+    "desc": "Extra-large vehicle, e.g., heavy-duty truck or bus."
+  },
+  "Perception": {
+    "parent": "OperationalDesignDomain",
+    "children": [
+      "VisibilityRange",
+      "ObstacleDetection",
+      "LaneRecognition",
+      "SignRecognition"
+    ],
+    "desc": "System ability to detect and recognize objects and features."
+  },
+  "VisibilityRange": {
+    "parent": "Perception",
+    "children": [],
+    "desc": "Maximum distance at which objects can be detected."
+  },
+  "ObstacleDetection": {
+    "parent": "Perception",
+    "children": [],
+    "desc": "Ability to detect obstacles of various types and sizes."
+  },
+  "LaneRecognition": {
+    "parent": "Perception",
+    "children": [],
+    "desc": "Ability to recognize lane boundaries and markings."
+  },
+  "SignRecognition": {
+    "parent": "Perception",
+    "children": [],
+    "desc": "Ability to detect and interpret traffic signs."
+  },
+  "Map": {
+    "parent": "OperationalDesignDomain",
+    "children": [
+      "MapAccuracy",
+      "MapCoverage",
+      "MapType",
+      "LaneLevelMap"
+    ],
+    "desc": "Digital map characteristics used by the automated system."
+  },
+  "MapAccuracy": {
+    "parent": "Map",
+    "children": [],
+    "desc": "Positional precision of map data."
+  },
+  "MapCoverage": {
+    "parent": "Map",
+    "children": [],
+    "desc": "Geographic area covered by the map."
+  },
+  "MapType": {
+    "parent": "Map",
+    "children": [],
+    "desc": "Format and representation type of the map."
+  },
+  "LaneLevelMap": {
+    "parent": "Map",
+    "children": [],
+    "desc": "Map containing detailed lane-level geometry and attributes."
+  }
+}
