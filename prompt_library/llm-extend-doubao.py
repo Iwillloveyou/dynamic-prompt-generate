@@ -8,6 +8,7 @@
 import json
 import numpy as np
 import torch
+import clip
 from transformers import CLIPModel, CLIPTokenizer
 from tqdm import tqdm
 import openai
@@ -25,19 +26,19 @@ DOUBAO_API_KEY = os.getenv("DOUBAO_API_KEY", "xxx")  # 替换为你的豆包API 
 # 豆包 API 配置（火山方舟地址）[citation:1]
 DOUBAO_BASE_URL = "https://ark.cn-beijing.volces.com/api/v3"  # 以官方文档为准
 # 推荐模型 [citation:2]
-MODEL_NAME = "deepseek-v3-2-251201"  # 深度思考模型
+MODEL_NAME = "deepseek-v4-pro"  # 深度思考模型
 # 备选模型: "doubao-1.5-pro-32k" (通用文本生成)
 
 # CLIP 模型配置
 CLIP_MODEL_NAME = "openai/clip-vit-base-patch32"
 
 # 文件路径
-JSON_PATH = "openodd_desc.json"
+JSON_PATH = "openodd_add_cityflow_extract.json"
 RESULT_SAVE_DIR = "./result/"
-OUTPUT_VECTORS = RESULT_SAVE_DIR + "concept_vectors.npy"
-CONCEPT_OUTPUT_NAMES = RESULT_SAVE_DIR + "concept.json"
-CONCEPT_EXTEND_OUTPUT_NAMES = RESULT_SAVE_DIR + "concept_extend.json"
-CONCEPT_EXTEND_EMBEDDING_OUTPUT_NAMES= RESULT_SAVE_DIR + "concept_extend.embeddings.npz"
+OUTPUT_VECTORS = RESULT_SAVE_DIR + "concept_vectors_expand.npy"
+CONCEPT_OUTPUT_NAMES = RESULT_SAVE_DIR + "concept_expand.json"
+CONCEPT_EXTEND_OUTPUT_NAMES = RESULT_SAVE_DIR + "concept_extend_expand.json"
+CONCEPT_EXTEND_EMBEDDING_OUTPUT_NAMES= RESULT_SAVE_DIR + "concept_extend_expand.embeddings.npz"
 
 # 生成参数
 NUM_DESCRIPTIONS_PER_CONCEPT = 8  # 每个概念生成多少条描述
@@ -75,17 +76,23 @@ SPECIAL_RULES = load_json_config(SPECIAL_RULES_PATH)
 # =================================================
 
 # 初始化豆包客户端（兼容OpenAI格式）[citation:1]
+# client = openai.OpenAI(
+#     api_key=DOUBAO_API_KEY,
+#     base_url=DOUBAO_BASE_URL
+# )
 client = openai.OpenAI(
-    api_key=DOUBAO_API_KEY,
-    base_url=DOUBAO_BASE_URL
+    api_key="xxx",  # 粘贴你的密钥
+    base_url="https://api.deepseek.com/v1"
 )
 print(f"doubao-client模型加载完成")
 
 # 加载 CLIP 模型
 device = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"使用设备: {device}")
-clip_model = CLIPModel.from_pretrained(CLIP_MODEL_NAME).to(device)
-clip_tokenizer = CLIPTokenizer.from_pretrained(CLIP_MODEL_NAME)
+clip_model, preprocess = clip.load("ViT-B/32", device=device)
+clip_tokenizer = clip.tokenize  # 官方 CLIP 的 tokenizer 就是这个
+# 把模型设为 eval（非常重要）
+clip_model.eval()
 print(f"clip模型加载完成")
 
 def extract_concepts_two_pass(concept_data):
@@ -236,7 +243,6 @@ def call_llm(prompt: str) -> List[str]:
                 {"role": "user", "content": prompt}
             ],
             temperature=TEMPERATURE,
-            max_tokens=MAX_TOKENS,
             n=1,
             stop=None
         )
@@ -271,16 +277,18 @@ def call_llm(prompt: str) -> List[str]:
 def encode_texts(texts: List[str]) -> np.ndarray:
     """
     使用 CLIP 模型编码文本列表，返回归一化后的向量数组 (n, dim)。
+    适配 openai/clip 官方库，兼容原逻辑。
     """
     if not texts:
-        return np.array([])  # 修复空值
-    inputs = clip_tokenizer(texts, padding=True, truncation=True, return_tensors="pt").to(device)
+        return np.array([])
+    # 1. 官方 CLIP 的 tokenize（自动padding+truncate）
+    text_tokens = clip.tokenize(texts, truncate=True).to(device)
     with torch.no_grad():
-        outputs = clip_model.text_model(**inputs)  # ✅ 强制走 text_model
-        embeddings = outputs.pooler_output  # ✅ 取出真正的 tensor！
-        embeddings = embeddings / embeddings.norm(dim=-1, keepdim=True)  # L2 归一化
+        # 2. 官方 CLIP 直接用 encode_text（等价原 transformers 的 text_model+pooler_output）
+        embeddings = clip_model.encode_text(text_tokens)
+        # 3. 归一化（和原来完全一样）
+        embeddings = embeddings / embeddings.norm(dim=-1, keepdim=True)
     return embeddings.cpu().numpy()
-
 
 # ==================== 主流程 ====================
 def main():

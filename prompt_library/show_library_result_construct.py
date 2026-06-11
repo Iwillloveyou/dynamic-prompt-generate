@@ -3,8 +3,8 @@ import numpy as np
 
 RESULT_SAVE_DIR = "./result/"
 OUTPUT_VECTORS = RESULT_SAVE_DIR + "concept_vectors.npy"
-CONCEPT_EXTEND_OUTPUT_NAMES = RESULT_SAVE_DIR + "concept_extend.json"
-CONCEPT_EXTEND_EMBEDDING_OUTPUT_NAMES= RESULT_SAVE_DIR + "concept_extend.embeddings.npz"
+CONCEPT_EXTEND_OUTPUT_NAMES = RESULT_SAVE_DIR + "concept_extend_expand.json"
+CONCEPT_EXTEND_EMBEDDING_OUTPUT_NAMES= RESULT_SAVE_DIR + "concept_extend_expand.embeddings.npz"
 
 # 1. 读取文本数据
 with open(CONCEPT_EXTEND_OUTPUT_NAMES, "r", encoding="utf-8") as f:
@@ -30,6 +30,7 @@ for item in text_data:
         "extend_desc_embdding": extend_desc_embs,
         "desc_mean_emb": emb_data[item["desc_mean_emb_key"]],
     })
+    break
 
 # 打印结果
 print("重组后的完整数据：")

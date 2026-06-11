@@ -7,7 +7,7 @@ DOUBAO_API_KEY = os.getenv("DOUBAO_API_KEY", "3f948467-3cc4-4d7c-8697-eed5c97f8e
 # 豆包 API 配置（火山方舟地址）[citation:1]
 DOUBAO_BASE_URL = "https://ark.cn-beijing.volces.com/api/v3"  # 以官方文档为准
 # 推荐模型 [citation:2]
-MODEL_NAME = "deepseek-v3-2-251201"  # 深度思考模型
+MODEL_NAME = "deepseek-v4-pro"  # 深度思考模型
 # 备选模型: "doubao-1.5-pro-32k" (通用文本生成)
 
 # 生成参数
@@ -22,7 +22,7 @@ MAX_TOKENS = 500  # 最大输出token数
 # )
 # 直接替换这里的 API Key
 client = openai.OpenAI(
-    api_key="sk-edcd7fc13efd4d29a54e5976bea4a75a",  # 粘贴你的密钥
+    api_key="xx",  # 粘贴你的密钥
     base_url="https://api.deepseek.com/v1"
 )
 
