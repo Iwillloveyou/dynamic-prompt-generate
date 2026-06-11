@@ -1,0 +1,3335 @@
+[
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/002966.jpg",
+    "ref_idx": 466,
+    "caption": "A black pickup turning right on the intersection.",
+    "target_idxs": [
+      485,
+      500,
+      387
+    ],
+    "track_id": "eb4d7de0-2e0f-43b9-824c-16aa0483a18f"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c006/img1/000979.jpg",
+    "ref_idx": 1423,
+    "caption": "A blue van turn left.",
+    "target_idxs": [
+      1392,
+      1072,
+      1505
+    ],
+    "track_id": "4bd94692-80b9-4650-ab1e-d528fefbd425"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c006/img1/001076.jpg",
+    "ref_idx": 1520,
+    "caption": "A blue van stops at an intersection then runs across the street.",
+    "target_idxs": [
+      1465,
+      1174,
+      1325
+    ],
+    "track_id": "4bd94692-80b9-4650-ab1e-d528fefbd425"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/002966.jpg",
+    "ref_idx": 466,
+    "caption": "A grey truck turns left across traffic to pull into a parking lot.",
+    "target_idxs": [
+      461,
+      460,
+      456
+    ],
+    "track_id": "c9fcf4c7-f9f9-4482-b0b7-5c68af2b0373"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c008/img1/001088.jpg",
+    "ref_idx": 1588,
+    "caption": "A black SUV crosses an intersection.",
+    "target_idxs": [
+      1596,
+      1587,
+      1590
+    ],
+    "track_id": "d41aad5d-00b9-4231-966c-03c89a7aeabc"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c036/img1/001951.jpg",
+    "ref_idx": 1725,
+    "caption": "A white sedan is keeping straight at a busy intersection.",
+    "target_idxs": [
+      1716,
+      1671,
+      1610
+    ],
+    "track_id": "f8928046-d6cd-4040-8a84-b21b58259c0f"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c036/img1/001874.jpg",
+    "ref_idx": 1657,
+    "caption": "A silver sedan turns left at an intersection then keeps straight.",
+    "target_idxs": [
+      1639,
+      1695,
+      1630
+    ],
+    "track_id": "f8928046-d6cd-4040-8a84-b21b58259c0f"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c024/img1/000574.jpg",
+    "ref_idx": 1737,
+    "caption": "A black SUV enters an intersection without stopping and turns right.",
+    "target_idxs": [
+      1739,
+      1736,
+      1742
+    ],
+    "track_id": "2d303fee-11a9-4498-b328-6bd4f5e3a231"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c006/img1/001276.jpg",
+    "ref_idx": 1753,
+    "caption": "A small SUV goes straight passing the intersection.",
+    "target_idxs": [
+      1744,
+      1773,
+      1752
+    ],
+    "track_id": "2ae7bcb9-35f1-49fc-9994-1722888ed7bd"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c006/img1/001285.jpg",
+    "ref_idx": 1762,
+    "caption": "A gray SUV drives straight through the intersection in the right lane.",
+    "target_idxs": [
+      1760,
+      1756,
+      1747
+    ],
+    "track_id": "2ae7bcb9-35f1-49fc-9994-1722888ed7bd"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c006/img1/000023.jpg",
+    "ref_idx": 1798,
+    "caption": "Green van goes straight through an intersection.",
+    "target_idxs": [
+      1788,
+      1778,
+      1802
+    ],
+    "track_id": "ce5f7126-74ff-4c12-9ff0-9005f447d888"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c006/img1/000028.jpg",
+    "ref_idx": 1803,
+    "caption": "A green wagon crossing the intersection.",
+    "target_idxs": [
+      1788,
+      1797,
+      1795
+    ],
+    "track_id": "ce5f7126-74ff-4c12-9ff0-9005f447d888"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c028/img1/001697.jpg",
+    "ref_idx": 1948,
+    "caption": "A white SUV stops at an intersection before continuing straight.",
+    "target_idxs": [
+      1928,
+      1811,
+      1891
+    ],
+    "track_id": "1b3a26c0-a03f-44f5-ae52-6ca801f643ee"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c028/img1/001636.jpg",
+    "ref_idx": 1887,
+    "caption": "A white SUV stops at an intersection.",
+    "target_idxs": [
+      1965,
+      1907,
+      1905
+    ],
+    "track_id": "1b3a26c0-a03f-44f5-ae52-6ca801f643ee"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c028/img1/001577.jpg",
+    "ref_idx": 1828,
+    "caption": "A white SUV slows down at the intersection and goes straight after that.",
+    "target_idxs": [
+      1854,
+      1880,
+      1849
+    ],
+    "track_id": "1b3a26c0-a03f-44f5-ae52-6ca801f643ee"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/002782.jpg",
+    "ref_idx": 2026,
+    "caption": "A white van drives straight through an intersection.",
+    "target_idxs": [
+      2055,
+      2063,
+      2039
+    ],
+    "track_id": "1aaa197f-22ce-4c2d-a079-b9901bac6d6e"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c006/img1/000649.jpg",
+    "ref_idx": 1094,
+    "caption": "A blue SUV stops at the intersection behind a blue wagon.",
+    "target_idxs": [
+      1089,
+      1539,
+      2549
+    ],
+    "track_id": "ac7fb9ed-f88c-433e-bade-f013fd0b7bdf"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c008/img1/001902.jpg",
+    "ref_idx": 2927,
+    "caption": "A black sedan crossing an intersection.",
+    "target_idxs": [
+      2938,
+      2934,
+      2947
+    ],
+    "track_id": "9e7879cd-dd77-4bc1-908d-821c69a776be"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c008/img1/001903.jpg",
+    "ref_idx": 2928,
+    "caption": "A midsize black sedan goes straight through the intersection.",
+    "target_idxs": [
+      2941,
+      2940,
+      2927
+    ],
+    "track_id": "9e7879cd-dd77-4bc1-908d-821c69a776be"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c024/img1/002746.jpg",
+    "ref_idx": 2950,
+    "caption": "A light gray SUV turns right at an intersection and then runs down the street followed by another vehicle.",
+    "target_idxs": [
+      2954,
+      2953,
+      2957
+    ],
+    "track_id": "b687c949-1064-4181-9c75-5bc81c0912bd"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c024/img1/002753.jpg",
+    "ref_idx": 2957,
+    "caption": "A gray wagon turns right at the intersection and runs down the road.",
+    "target_idxs": [
+      2950,
+      2953,
+      2956
+    ],
+    "track_id": "b687c949-1064-4181-9c75-5bc81c0912bd"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/003204.jpg",
+    "ref_idx": 2959,
+    "caption": "A white pick up truck makes a right turn.",
+    "target_idxs": [
+      2968,
+      2967,
+      2969
+    ],
+    "track_id": "a587384b-bf1d-4207-9618-5463e1c7c35b"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c028/img1/002311.jpg",
+    "ref_idx": 3455,
+    "caption": "A gray SUV going straight down the street passing an intersection.",
+    "target_idxs": [
+      3440,
+      3449,
+      3451
+    ],
+    "track_id": "6204a0dc-ccec-4884-9c8c-648d1f4f4d4d"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c028/img1/002297.jpg",
+    "ref_idx": 3448,
+    "caption": "A gray SUV crossing an intersection with a white truck crossing it in the opposite direction.",
+    "target_idxs": [
+      3437,
+      3441,
+      3446
+    ],
+    "track_id": "6204a0dc-ccec-4884-9c8c-648d1f4f4d4d"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c021/img1/001615.jpg",
+    "ref_idx": 3621,
+    "caption": "Blue SUV stopped on the intersection.",
+    "target_idxs": [
+      3598,
+      3633,
+      3647
+    ],
+    "track_id": "6c713118-da1f-4d71-843c-41ae952d93f2"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/002255.jpg",
+    "ref_idx": 3653,
+    "caption": "A black SUV stops at an intersection.",
+    "target_idxs": [
+      3664,
+      3713,
+      3776
+    ],
+    "track_id": "d42ebe0a-fa55-463d-96c2-457990b9179c"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c028/img1/002761.jpg",
+    "ref_idx": 4478,
+    "caption": "A silver turns left onto a street where 3 cars are parking there.",
+    "target_idxs": [
+      4548,
+      4556,
+      4501
+    ],
+    "track_id": "688108b1-c87f-4bda-8362-a6b3b0483160"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c028/img1/002828.jpg",
+    "ref_idx": 4545,
+    "caption": "A silver wagon turns left at an intersection.",
+    "target_idxs": [
+      4562,
+      4529,
+      4568
+    ],
+    "track_id": "688108b1-c87f-4bda-8362-a6b3b0483160"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c028/img1/002833.jpg",
+    "ref_idx": 4550,
+    "caption": "A silver SUV turns left at the intersection.",
+    "target_idxs": [
+      4532,
+      4521,
+      4525
+    ],
+    "track_id": "688108b1-c87f-4bda-8362-a6b3b0483160"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/003460.jpg",
+    "ref_idx": 4612,
+    "caption": "A black sedan goes straight at an intersection.",
+    "target_idxs": [
+      4607,
+      4599,
+      4614
+    ],
+    "track_id": "c8cfdf84-56af-4535-a0fd-6b3e8a1268b1"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/003448.jpg",
+    "ref_idx": 4600,
+    "caption": "A black sedan drives through an intersection.",
+    "target_idxs": [
+      4617,
+      4605,
+      4618
+    ],
+    "track_id": "c8cfdf84-56af-4535-a0fd-6b3e8a1268b1"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c023/img1/001791.jpg",
+    "ref_idx": 4661,
+    "caption": "A black cross overturns right at the intersection.",
+    "target_idxs": [
+      4625,
+      4640,
+      4658
+    ],
+    "track_id": "bb4ceab7-b64e-4395-982b-81a34ad77414"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c025/img1/002511.jpg",
+    "ref_idx": 4868,
+    "caption": "A black pickup truck keeps straight and pauses at an intersection.",
+    "target_idxs": [
+      4700,
+      4727,
+      4779
+    ],
+    "track_id": "c5218a13-b29b-43ee-a608-d6d914f57112"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c025/img1/002520.jpg",
+    "ref_idx": 4877,
+    "caption": "A black pickup truck stops at the intersection for a while and keeps straight afterward.",
+    "target_idxs": [
+      4836,
+      4719,
+      4758
+    ],
+    "track_id": "c5218a13-b29b-43ee-a608-d6d914f57112"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c025/img1/002446.jpg",
+    "ref_idx": 4803,
+    "caption": "A gray pickup truck stops at the intersection.",
+    "target_idxs": [
+      4700,
+      4872,
+      4710
+    ],
+    "track_id": "c5218a13-b29b-43ee-a608-d6d914f57112"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/002845.jpg",
+    "ref_idx": 4913,
+    "caption": "A gray minivan turns left onto a street and then keeps straight.",
+    "target_idxs": [
+      4992,
+      4972,
+      4917
+    ],
+    "track_id": "088e7284-d922-4f13-8308-e511f93b4cf1"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c027/img1/001702.jpg",
+    "ref_idx": 5559,
+    "caption": "A black cross over merges right.",
+    "target_idxs": [
+      5484,
+      5435,
+      5429
+    ],
+    "track_id": "46988ee5-0c80-4e70-8ddc-7926ad29d091"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c026/img1/002328.jpg",
+    "ref_idx": 5744,
+    "caption": "A white truck turns left onto the street.",
+    "target_idxs": [
+      5634,
+      5590,
+      5662
+    ],
+    "track_id": "3c700408-bdde-4998-a47f-2cea52e717d5"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c006/img1/001215.jpg",
+    "ref_idx": 5800,
+    "caption": "A red van going straight down the street passing an intersection.",
+    "target_idxs": [
+      5824,
+      5830,
+      5829
+    ],
+    "track_id": "b7c19f0b-5861-4b92-b8c3-3a4e963d22a4"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/002413.jpg",
+    "ref_idx": 3760,
+    "caption": "A white truck pulls up to an intersection.",
+    "target_idxs": [
+      3730,
+      5899,
+      3745
+    ],
+    "track_id": "81bfbdeb-9507-4ec0-83cc-d5053400e943"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/002495.jpg",
+    "ref_idx": 5916,
+    "caption": "A large red SUV turns left at an intersection.",
+    "target_idxs": [
+      5933,
+      5920,
+      5904
+    ],
+    "track_id": "d866417d-ec56-4303-a4f0-3853598d26c7"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c007/img1/000658.jpg",
+    "ref_idx": 5954,
+    "caption": "A white wagon turns around at the intersection.",
+    "target_idxs": [
+      5957,
+      5964,
+      5947
+    ],
+    "track_id": "1769b06c-026f-40d5-98a6-670072704f6c"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c016/img1/003620.jpg",
+    "ref_idx": 5985,
+    "caption": "A gray sedan keeps straight at an intersection and is followed by another vehicle.",
+    "target_idxs": [
+      6032,
+      6016,
+      6098
+    ],
+    "track_id": "1d485d15-52bf-49f7-83a5-72e1bc4670bb"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c017/img1/000343.jpg",
+    "ref_idx": 6100,
+    "caption": "A white SUV switch lane to right and crossing a lot of vehicles.",
+    "target_idxs": [
+      6157,
+      6217,
+      6152
+    ],
+    "track_id": "c475458c-35dd-44fd-b3e5-5940f02f2267"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/000522.jpg",
+    "ref_idx": 6474,
+    "caption": "A black SUV making a left turn at intersection.",
+    "target_idxs": [
+      6445,
+      6491,
+      6438
+    ],
+    "track_id": "6155930d-6c63-4944-8068-8c5c5d734d2b"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/000524.jpg",
+    "ref_idx": 6476,
+    "caption": "Small blue suv makes right onto intersection.",
+    "target_idxs": [
+      6424,
+      6487,
+      6437
+    ],
+    "track_id": "6155930d-6c63-4944-8068-8c5c5d734d2b"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/003174.jpg",
+    "ref_idx": 6555,
+    "caption": "Black jeep turns right onto main road and joins line of traffic.",
+    "target_idxs": [
+      6575,
+      6563,
+      6562
+    ],
+    "track_id": "1dd28a47-f246-4438-b575-9ce8f804b978"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c009/img1/000463.jpg",
+    "ref_idx": 6855,
+    "caption": "A small SUV turns left on the intersection.",
+    "target_idxs": [
+      6896,
+      6885,
+      6871
+    ],
+    "track_id": "92066a00-8b7e-4a2f-9041-b249d6409f4e"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c009/img1/000443.jpg",
+    "ref_idx": 6835,
+    "caption": "A white van turn left following a blue vehicle.",
+    "target_idxs": [
+      6841,
+      6888,
+      6902
+    ],
+    "track_id": "92066a00-8b7e-4a2f-9041-b249d6409f4e"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/000374.jpg",
+    "ref_idx": 7035,
+    "caption": "A black SUV drives past a green bus through an intersection.",
+    "target_idxs": [
+      7096,
+      6922,
+      7006
+    ],
+    "track_id": "3f0df609-de68-44ed-a1d7-aa257622849d"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/000375.jpg",
+    "ref_idx": 7036,
+    "caption": "A black SUV stops at the intersection and then turns right.",
+    "target_idxs": [
+      7100,
+      6967,
+      6945
+    ],
+    "track_id": "3f0df609-de68-44ed-a1d7-aa257622849d"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c028/img1/003313.jpg",
+    "ref_idx": 7245,
+    "caption": "A maroon pickup truck keeps straight at an intersection.",
+    "target_idxs": [
+      7207,
+      7242,
+      7230
+    ],
+    "track_id": "e0fc1312-cc98-4587-aeb3-c26001267b62"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c028/img1/003190.jpg",
+    "ref_idx": 7130,
+    "caption": "A maroon truck crosses the intersection.",
+    "target_idxs": [
+      7133,
+      7248,
+      7192
+    ],
+    "track_id": "e0fc1312-cc98-4587-aeb3-c26001267b62"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c028/img1/003283.jpg",
+    "ref_idx": 7215,
+    "caption": "A black pickup stops at the intersection and than keeps straight.",
+    "target_idxs": [
+      7209,
+      7217,
+      7228
+    ],
+    "track_id": "e0fc1312-cc98-4587-aeb3-c26001267b62"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c021/img1/001696.jpg",
+    "ref_idx": 7258,
+    "caption": "A gray SUV runs down the street across several stopped vehicles.",
+    "target_idxs": [
+      7260,
+      7291,
+      7328
+    ],
+    "track_id": "d25307ff-7ae2-4051-81d4-77e380e1621d"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c021/img1/001715.jpg",
+    "ref_idx": 7277,
+    "caption": "A silver hatchback turns right onto the road.",
+    "target_idxs": [
+      7353,
+      7363,
+      7279
+    ],
+    "track_id": "d25307ff-7ae2-4051-81d4-77e380e1621d"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c023/img1/003390.jpg",
+    "ref_idx": 7511,
+    "caption": "A gray SUV runs down the street and crosses straight through an intersection.",
+    "target_idxs": [
+      7495,
+      7502,
+      7483
+    ],
+    "track_id": "7a71cd33-2c49-4759-85bf-1477cc1612a3"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c029/img1/003002.jpg",
+    "ref_idx": 7520,
+    "caption": "A black SUV first goes straight and makes a left turn at intersection.",
+    "target_idxs": [
+      7673,
+      7631,
+      7633
+    ],
+    "track_id": "c86ea133-e33f-4006-9140-7f9d60eb6a5b"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/003281.jpg",
+    "ref_idx": 7806,
+    "caption": "A white SUV turns right at a intersection.",
+    "target_idxs": [
+      7797,
+      7801,
+      7800
+    ],
+    "track_id": "d0f71942-dc64-4cf4-a9bd-da912ba3a8e3"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/003278.jpg",
+    "ref_idx": 7803,
+    "caption": "A white SUV making a left right at intersection.",
+    "target_idxs": [
+      7804,
+      7802,
+      7806
+    ],
+    "track_id": "d0f71942-dc64-4cf4-a9bd-da912ba3a8e3"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/000365.jpg",
+    "ref_idx": 7026,
+    "caption": "A white pickup truck turns right at an intersection and proceeds straight.",
+    "target_idxs": [
+      7005,
+      7030,
+      6986
+    ],
+    "track_id": "97da9e79-ca22-465d-ba53-24901d459c26"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c021/img1/000192.jpg",
+    "ref_idx": 8219,
+    "caption": "A black SUV enters an intersection without stopping and turns right.",
+    "target_idxs": [
+      8235,
+      8187,
+      8188
+    ],
+    "track_id": "dd6e9491-10df-497e-8d15-16fea6a79eea"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c008/img1/000192.jpg",
+    "ref_idx": 8339,
+    "caption": "A white sedan drives straight through an intersection.",
+    "target_idxs": [
+      8336,
+      8341,
+      8335
+    ],
+    "track_id": "77f64d2c-4497-476d-b005-eaebda9af2c8"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c028/img1/000358.jpg",
+    "ref_idx": 8552,
+    "caption": "A black SUV stops at the intersection followed by three other cars.",
+    "target_idxs": [
+      8659,
+      8547,
+      8667
+    ],
+    "track_id": "6057a6cc-9bf7-4822-87d4-5bbe1704a6f7"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c028/img1/000433.jpg",
+    "ref_idx": 8627,
+    "caption": "A black SUV stops at intersection. Then turns left.",
+    "target_idxs": [
+      8415,
+      8351,
+      8516
+    ],
+    "track_id": "6057a6cc-9bf7-4822-87d4-5bbe1704a6f7"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c019/img1/002450.jpg",
+    "ref_idx": 8773,
+    "caption": "A green SUV turns left at the intersection with all cars parked.",
+    "target_idxs": [
+      8781,
+      8753,
+      8717
+    ],
+    "track_id": "696c9a38-a9b1-4012-8505-d89a6c8f99ec"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c019/img1/002425.jpg",
+    "ref_idx": 8748,
+    "caption": "A green wagon turns left on the intersection.",
+    "target_idxs": [
+      8736,
+      8751,
+      8759
+    ],
+    "track_id": "696c9a38-a9b1-4012-8505-d89a6c8f99ec"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/001577.jpg",
+    "ref_idx": 9027,
+    "caption": "A white SUV turns left at an intersection before driving straight in the right lane.",
+    "target_idxs": [
+      9016,
+      9023,
+      9017
+    ],
+    "track_id": "66abc570-d201-43ff-930f-6307544b985a"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c007/img1/001725.jpg",
+    "ref_idx": 9036,
+    "caption": "SUV turn right followed by a white car.",
+    "target_idxs": [
+      9042,
+      9040,
+      9041
+    ],
+    "track_id": "1635545d-acdc-43f1-bb92-ef9a08e71996"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/000777.jpg",
+    "ref_idx": 9087,
+    "caption": "A blue SUV drives and slows to stop at intersection.",
+    "target_idxs": [
+      9053,
+      9067,
+      9094
+    ],
+    "track_id": "6d39c973-bec6-4ca8-8c5e-f859a809bbe1"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/000767.jpg",
+    "ref_idx": 9077,
+    "caption": "Blue SUV turns right onto street then goes straight followed by a white vehicle.",
+    "target_idxs": [
+      9088,
+      9103,
+      9056
+    ],
+    "track_id": "6d39c973-bec6-4ca8-8c5e-f859a809bbe1"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c007/img1/001026.jpg",
+    "ref_idx": 9191,
+    "caption": "A white van turn left following a blue vehicle.",
+    "target_idxs": [
+      9146,
+      9171,
+      9181
+    ],
+    "track_id": "dea3270c-4bc9-4253-a381-e16b67494c4d"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c036/img1/001635.jpg",
+    "ref_idx": 9443,
+    "caption": "A green bus runs down the street and stops at an intersection.",
+    "target_idxs": [
+      9373,
+      9446,
+      9445
+    ],
+    "track_id": "93fdc2b3-71eb-40eb-bc40-e7efc7adb110"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/003358.jpg",
+    "ref_idx": 9601,
+    "caption": "A white van stops at an intersection.",
+    "target_idxs": [
+      9655,
+      9659,
+      9637
+    ],
+    "track_id": "9d472a7c-31d6-45ec-b982-4a8269bdd073"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c029/img1/001631.jpg",
+    "ref_idx": 9808,
+    "caption": "A black SUV enters an intersection without stopping and turns right.",
+    "target_idxs": [
+      9792,
+      9809,
+      9798
+    ],
+    "track_id": "e5503d65-cc74-4103-bd6b-be6988f7c3d2"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c006/img1/000695.jpg",
+    "ref_idx": 1140,
+    "caption": "A red sedan turns right at the intersection after the traffic light.",
+    "target_idxs": [
+      1148,
+      1131,
+      1116
+    ],
+    "track_id": "8b86556e-71fb-4ca4-8c4c-71738475c372"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c006/img1/000644.jpg",
+    "ref_idx": 1089,
+    "caption": "Red crossover turns left from intersection.",
+    "target_idxs": [
+      1120,
+      1090,
+      1084
+    ],
+    "track_id": "8b86556e-71fb-4ca4-8c4c-71738475c372"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/000228.jpg",
+    "ref_idx": 10140,
+    "caption": "A green MPV stops for a passenger then turns right at an intersection.",
+    "target_idxs": [
+      10070,
+      10088,
+      6982
+    ],
+    "track_id": "75f37ec4-2ff3-42ef-9545-ffc76154c91e"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/000279.jpg",
+    "ref_idx": 6940,
+    "caption": "Green bus stops at intersection then makes a right.",
+    "target_idxs": [
+      7449,
+      6934,
+      10030
+    ],
+    "track_id": "75f37ec4-2ff3-42ef-9545-ffc76154c91e"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c024/img1/000483.jpg",
+    "ref_idx": 10176,
+    "caption": "A gray pickup truck runs straight through the intersection.",
+    "target_idxs": [
+      10184,
+      10162,
+      10175
+    ],
+    "track_id": "8b8d3633-4887-4bbe-a3a1-b0b40751c707"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/002103.jpg",
+    "ref_idx": 10233,
+    "caption": "A red van stops at a intersection.",
+    "target_idxs": [
+      10242,
+      10243,
+      10201
+    ],
+    "track_id": "191087a6-c00d-46fa-a759-92a8979eaea1"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c036/img1/002757.jpg",
+    "ref_idx": 10659,
+    "caption": "A white sedan turns right onto a busy road.",
+    "target_idxs": [
+      10636,
+      10637,
+      10552
+    ],
+    "track_id": "ec27af97-f612-49f2-aa42-c0bcb21eb8d6"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c036/img1/002583.jpg",
+    "ref_idx": 10597,
+    "caption": "A white sedan turns right at an intersection and then switches lane to the right.",
+    "target_idxs": [
+      10583,
+      10563,
+      10620
+    ],
+    "track_id": "ec27af97-f612-49f2-aa42-c0bcb21eb8d6"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c018/img1/002557.jpg",
+    "ref_idx": 10999,
+    "caption": "White SUV/crossover traveling down the right side of the street with no traffic.",
+    "target_idxs": [
+      10994,
+      11011,
+      10993
+    ],
+    "track_id": "7fdb90c9-6ee9-4465-8077-59ff5c6868e9"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c036/img1/001198.jpg",
+    "ref_idx": 10871,
+    "caption": "A white wagon making a left turn at intersection.",
+    "target_idxs": [
+      629,
+      534,
+      11075
+    ],
+    "track_id": "013f4f7b-7089-4ad3-9bcf-3f2cb98f7403"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/002132.jpg",
+    "ref_idx": 11290,
+    "caption": "A gray SUV makes a left turn.",
+    "target_idxs": [
+      11271,
+      11284,
+      11305
+    ],
+    "track_id": "6496318a-9d4f-426a-bd4d-bfca40bb1057"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c007/img1/001666.jpg",
+    "ref_idx": 11504,
+    "caption": "Red pick up truck turns left on the intersection.",
+    "target_idxs": [
+      11421,
+      11478,
+      11501
+    ],
+    "track_id": "548dbf87-dcd9-4842-aebf-efee94725012"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c007/img1/001625.jpg",
+    "ref_idx": 11463,
+    "caption": "A red pickup turns left on the intersection following another pickup.",
+    "target_idxs": [
+      11411,
+      11512,
+      11528
+    ],
+    "track_id": "548dbf87-dcd9-4842-aebf-efee94725012"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c009/img1/002073.jpg",
+    "ref_idx": 11635,
+    "caption": "A black SUV approaches an intersection with several cars in front of it.",
+    "target_idxs": [
+      11636,
+      11663,
+      11633
+    ],
+    "track_id": "5a3b90ad-d47a-42c2-b1dc-2b066218118b"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c007/img1/001955.jpg",
+    "ref_idx": 11832,
+    "caption": "A green pickup turns left on the intersection.",
+    "target_idxs": [
+      11833,
+      11830,
+      11836
+    ],
+    "track_id": "fbb8d000-11af-499e-8338-282684a09d23"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c007/img1/001958.jpg",
+    "ref_idx": 11835,
+    "caption": "A green-black pickup truck tuns left at an intersection.",
+    "target_idxs": [
+      11840,
+      11836,
+      11837
+    ],
+    "track_id": "fbb8d000-11af-499e-8338-282684a09d23"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/000543.jpg",
+    "ref_idx": 11918,
+    "caption": "A black Pick up moving down the road. Two cameras show the truck moving. 1 shows the truck stopping at intersection.",
+    "target_idxs": [
+      7110,
+      7103,
+      7128
+    ],
+    "track_id": "9716bf6c-3cf5-4712-991b-b8245e8a95d2"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/000481.jpg",
+    "ref_idx": 11856,
+    "caption": "A black pickup turns left at the intersection.",
+    "target_idxs": [
+      11916,
+      11942,
+      11933
+    ],
+    "track_id": "9716bf6c-3cf5-4712-991b-b8245e8a95d2"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/000527.jpg",
+    "ref_idx": 11902,
+    "caption": "A black pickup turns left after stopping at intersection.",
+    "target_idxs": [
+      11939,
+      11877,
+      11884
+    ],
+    "track_id": "9716bf6c-3cf5-4712-991b-b8245e8a95d2"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c007/img1/000839.jpg",
+    "ref_idx": 12023,
+    "caption": "A white van runs through an intersection.",
+    "target_idxs": [
+      11999,
+      12002,
+      12037
+    ],
+    "track_id": "0adb3d49-930b-4dff-9386-29723f06d539"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c007/img1/000819.jpg",
+    "ref_idx": 12003,
+    "caption": "A white SUV crossing an intersection going straight.",
+    "target_idxs": [
+      12036,
+      12061,
+      12068
+    ],
+    "track_id": "0adb3d49-930b-4dff-9386-29723f06d539"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c007/img1/000845.jpg",
+    "ref_idx": 12029,
+    "caption": "A white SUV first makes a right turn.",
+    "target_idxs": [
+      12063,
+      12040,
+      12033
+    ],
+    "track_id": "0adb3d49-930b-4dff-9386-29723f06d539"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/002246.jpg",
+    "ref_idx": 12119,
+    "caption": "A gray pickup turning left on the intersection.",
+    "target_idxs": [
+      12079,
+      12076,
+      12118
+    ],
+    "track_id": "19d9348a-1dc9-47c9-9f5a-adad57270a68"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c007/img1/000252.jpg",
+    "ref_idx": 12365,
+    "caption": "A gray Toyota Prius crosses the intersection.",
+    "target_idxs": [
+      12723,
+      12294,
+      12566
+    ],
+    "track_id": "31e16346-0e99-4825-874b-415773a64b5b"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c007/img1/000696.jpg",
+    "ref_idx": 12740,
+    "caption": "A gray sedan stops at an intersection.",
+    "target_idxs": [
+      12467,
+      12607,
+      12300
+    ],
+    "track_id": "31e16346-0e99-4825-874b-415773a64b5b"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c008/img1/001164.jpg",
+    "ref_idx": 13177,
+    "caption": "A black sedan is crossing an intersection and going straight.",
+    "target_idxs": [
+      13185,
+      13183,
+      13179
+    ],
+    "track_id": "32a12e38-d184-47e7-a2f3-69815e1c490b"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/000856.jpg",
+    "ref_idx": 13288,
+    "caption": "A white wagon making a left turn at intersection.",
+    "target_idxs": [
+      13268,
+      13278,
+      13302
+    ],
+    "track_id": "0e3343fa-c572-4779-8bb7-caf0e8652a0d"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/002219.jpg",
+    "ref_idx": 8291,
+    "caption": "A gray sedan stops at the intersection and than turns left.",
+    "target_idxs": [
+      13360,
+      8284,
+      13342
+    ],
+    "track_id": "a6874447-1fa5-40b0-b0fc-9f32443d4215"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/002147.jpg",
+    "ref_idx": 13324,
+    "caption": "A blue sedan making a left turn.",
+    "target_idxs": [
+      13356,
+      13332,
+      13360
+    ],
+    "track_id": "a6874447-1fa5-40b0-b0fc-9f32443d4215"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/001243.jpg",
+    "ref_idx": 13418,
+    "caption": "A white sedan runs down the road and stops at an intersection.",
+    "target_idxs": [
+      13432,
+      13403,
+      13396
+    ],
+    "track_id": "9b552794-447c-42c3-a30c-8792968328e4"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/001133.jpg",
+    "ref_idx": 13400,
+    "caption": "A white sedan waits in line to pass the intersection followed by a white pickup truck.",
+    "target_idxs": [
+      13398,
+      13433,
+      13405
+    ],
+    "track_id": "9b552794-447c-42c3-a30c-8792968328e4"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c036/img1/001603.jpg",
+    "ref_idx": 9411,
+    "caption": "A black suv is stopped at an intersection for a little bit.",
+    "target_idxs": [
+      1652,
+      1629,
+      1622
+    ],
+    "track_id": "112576f7-dfbe-48a9-bea8-16b4af21df4a"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/003232.jpg",
+    "ref_idx": 13783,
+    "caption": "White SUV turns left onto street.",
+    "target_idxs": [
+      13790,
+      13778,
+      13768
+    ],
+    "track_id": "8caa259f-c4be-4c47-99d5-dc1c3a4ad63a"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/003259.jpg",
+    "ref_idx": 13810,
+    "caption": "A white SUV turns left at an intersection and then proceeds to continue straight down the road.",
+    "target_idxs": [
+      13785,
+      13855,
+      13770
+    ],
+    "track_id": "8caa259f-c4be-4c47-99d5-dc1c3a4ad63a"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/001943.jpg",
+    "ref_idx": 14219,
+    "caption": "Large white van makes right at intersection.",
+    "target_idxs": [
+      14225,
+      14240,
+      14232
+    ],
+    "track_id": "797f426a-3993-434d-bdad-f64f33a18988"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/001956.jpg",
+    "ref_idx": 14232,
+    "caption": "A white van goes straight through an intersection.",
+    "target_idxs": [
+      14241,
+      14212,
+      14236
+    ],
+    "track_id": "797f426a-3993-434d-bdad-f64f33a18988"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c027/img1/003124.jpg",
+    "ref_idx": 2733,
+    "caption": "A red pickup stops at an intersection followed by another black vehicle.",
+    "target_idxs": [
+      2685,
+      2693,
+      2690
+    ],
+    "track_id": "04d097e0-d9ce-4f88-bb42-2349c6408b70"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c027/img1/002668.jpg",
+    "ref_idx": 14296,
+    "caption": "A red pickup truck making a left turn.",
+    "target_idxs": [
+      2739,
+      14321,
+      14251
+    ],
+    "track_id": "04d097e0-d9ce-4f88-bb42-2349c6408b70"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c027/img1/002630.jpg",
+    "ref_idx": 14288,
+    "caption": "A black pickup stops at the intersection and than keeps straight.",
+    "target_idxs": [
+      2717,
+      2674,
+      14269
+    ],
+    "track_id": "04d097e0-d9ce-4f88-bb42-2349c6408b70"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c008/img1/001889.jpg",
+    "ref_idx": 14343,
+    "caption": "A blue van turns right on an intersection.",
+    "target_idxs": [
+      14339,
+      14331,
+      2940
+    ],
+    "track_id": "94f852f0-4818-4527-abd2-330b1a07e807"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c008/img1/001898.jpg",
+    "ref_idx": 14352,
+    "caption": "A blue SUV making a right turn.",
+    "target_idxs": [
+      2949,
+      2947,
+      14341
+    ],
+    "track_id": "94f852f0-4818-4527-abd2-330b1a07e807"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/000323.jpg",
+    "ref_idx": 14376,
+    "caption": "White suv stops at intersection then proceeds straight.",
+    "target_idxs": [
+      14366,
+      14403,
+      14416
+    ],
+    "track_id": "1ba5f798-2681-4882-b24d-b5808aef8c74"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/000370.jpg",
+    "ref_idx": 14423,
+    "caption": "A white suv turns right at the intersection.",
+    "target_idxs": [
+      14447,
+      14470,
+      14390
+    ],
+    "track_id": "1ba5f798-2681-4882-b24d-b5808aef8c74"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/000760.jpg",
+    "ref_idx": 9070,
+    "caption": "A black sedan is turning right onto a bust street.",
+    "target_idxs": [
+      9072,
+      14793,
+      14803
+    ],
+    "track_id": "3aea117c-d10c-4155-9241-d542da307135"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c023/img1/003368.jpg",
+    "ref_idx": 7489,
+    "caption": "A white sedan runs the road and turn right side.",
+    "target_idxs": [
+      7487,
+      14830,
+      14840
+    ],
+    "track_id": "b6a16b33-d1a0-4972-b07b-c298e803d9b9"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c007/img1/001201.jpg",
+    "ref_idx": 14885,
+    "caption": "A blue pickup truck is passing through an intersection.",
+    "target_idxs": [
+      14881,
+      14879,
+      14882
+    ],
+    "track_id": "3ece5534-4718-4410-8c9e-42c2785e82cc"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/002560.jpg",
+    "ref_idx": 14909,
+    "caption": "Jeep suv makes a left turn.",
+    "target_idxs": [
+      14903,
+      14904,
+      14890
+    ],
+    "track_id": "245c1cb5-412d-4efa-86d8-18b62fc785b8"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/002591.jpg",
+    "ref_idx": 15262,
+    "caption": "Jeep suv makes a left turn.",
+    "target_idxs": [
+      15284,
+      15189,
+      15207
+    ],
+    "track_id": "a206eb12-a4db-46f7-b4f4-cf5b853c511c"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c028/img1/003443.jpg",
+    "ref_idx": 15384,
+    "caption": "A white SUV slowly crosses the intersection.",
+    "target_idxs": [
+      15397,
+      15395,
+      15334
+    ],
+    "track_id": "c7262922-04e3-4b58-b11a-92234a51e7a3"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c028/img1/003368.jpg",
+    "ref_idx": 15309,
+    "caption": "A white SUV stops at the intersection followed by another car.",
+    "target_idxs": [
+      15382,
+      15334,
+      15342
+    ],
+    "track_id": "c7262922-04e3-4b58-b11a-92234a51e7a3"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c029/img1/002461.jpg",
+    "ref_idx": 15439,
+    "caption": "A white pickup truck switches to the right lane to turn at an intersection.",
+    "target_idxs": [
+      15607,
+      15595,
+      15575
+    ],
+    "track_id": "43e9dbb6-6b4a-4d85-ae96-ef4abe0a0953"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/001734.jpg",
+    "ref_idx": 15731,
+    "caption": "A sedan briefly stops at the intersection before continuing straight.",
+    "target_idxs": [
+      15743,
+      15791,
+      2627
+    ],
+    "track_id": "7c148962-ec36-404d-951f-5de8e037f05b"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/001744.jpg",
+    "ref_idx": 15741,
+    "caption": "A grey sedan making a right turn and then keeping straight.",
+    "target_idxs": [
+      2618,
+      2612,
+      15785
+    ],
+    "track_id": "7c148962-ec36-404d-951f-5de8e037f05b"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/001164.jpg",
+    "ref_idx": 15843,
+    "caption": "A white pickup truck turns left on the intersection.",
+    "target_idxs": [
+      10438,
+      15859,
+      15917
+    ],
+    "track_id": "028a33ee-a6f3-4b09-add7-b42c2abe3e5d"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/001210.jpg",
+    "ref_idx": 15889,
+    "caption": "A white pickup truck going straight down the street passing an intersection.",
+    "target_idxs": [
+      10458,
+      10449,
+      15908
+    ],
+    "track_id": "028a33ee-a6f3-4b09-add7-b42c2abe3e5d"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/001228.jpg",
+    "ref_idx": 15907,
+    "caption": "A white pickup turns left at an intersection.",
+    "target_idxs": [
+      10431,
+      15847,
+      15880
+    ],
+    "track_id": "028a33ee-a6f3-4b09-add7-b42c2abe3e5d"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c008/img1/000303.jpg",
+    "ref_idx": 15956,
+    "caption": "A grey SUV crosses an intersection followed by another grey car.",
+    "target_idxs": [
+      15949,
+      15957,
+      15951
+    ],
+    "track_id": "0b3182a7-d933-4bf9-9537-5774f27258c9"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/001957.jpg",
+    "ref_idx": 15968,
+    "caption": "A large SUV stops at the intersection before turning right.",
+    "target_idxs": [
+      16010,
+      13366,
+      13369
+    ],
+    "track_id": "d3287cd4-2f9e-4051-9bb2-892f5cdfee0e"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/001945.jpg",
+    "ref_idx": 15832,
+    "caption": "A blue SUV making a right turn at intersection.",
+    "target_idxs": [
+      15830,
+      13372,
+      15961
+    ],
+    "track_id": "d3287cd4-2f9e-4051-9bb2-892f5cdfee0e"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/002194.jpg",
+    "ref_idx": 13371,
+    "caption": "A blue SUV stops at the intersection after another red vehicle.",
+    "target_idxs": [
+      15992,
+      2670,
+      13329
+    ],
+    "track_id": "d3287cd4-2f9e-4051-9bb2-892f5cdfee0e"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c008/img1/001095.jpg",
+    "ref_idx": 1595,
+    "caption": "A white sedan turn right to join another road.",
+    "target_idxs": [
+      16113,
+      16114,
+      16094
+    ],
+    "track_id": "b4e55016-b1e7-4ff3-bd2e-b3a68a77f2d8"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c008/img1/001079.jpg",
+    "ref_idx": 16074,
+    "caption": "A white mid-sized coup crosses an intersection and turns left.",
+    "target_idxs": [
+      16114,
+      16094,
+      16119
+    ],
+    "track_id": "b4e55016-b1e7-4ff3-bd2e-b3a68a77f2d8"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/001414.jpg",
+    "ref_idx": 16202,
+    "caption": "A green bus runs down the street and stops at an intersection.",
+    "target_idxs": [
+      16124,
+      16186,
+      16130
+    ],
+    "track_id": "eab5c04d-0edc-4aa9-8214-7dd668885ff3"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/002547.jpg",
+    "ref_idx": 19302,
+    "caption": "A red sedan stopped at he intersection behind a gray SUV.",
+    "target_idxs": [
+      19320,
+      19315,
+      19306
+    ],
+    "track_id": "5c7d02b0-e75a-4d8d-90bf-0858fb9dd60f"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c009/img1/001816.jpg",
+    "ref_idx": 19412,
+    "caption": "A white sedan turns left at an intersection.",
+    "target_idxs": [
+      19388,
+      19400,
+      19383
+    ],
+    "track_id": "feb8dba7-1758-4b34-ae52-6048d623c4d1"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c009/img1/001861.jpg",
+    "ref_idx": 19453,
+    "caption": "A white sedan turns left on a wide intersection.",
+    "target_idxs": [
+      19420,
+      19409,
+      19428
+    ],
+    "track_id": "feb8dba7-1758-4b34-ae52-6048d623c4d1"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c027/img1/002610.jpg",
+    "ref_idx": 14268,
+    "caption": "A blue SUV is stopped at an intersection followed by another white vehicle.",
+    "target_idxs": [
+      19491,
+      19629,
+      19468
+    ],
+    "track_id": "78f071cf-b103-40ac-bef6-4f7480b66c0e"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c008/img1/000937.jpg",
+    "ref_idx": 19745,
+    "caption": "A white cargo van is crossing an intersection.",
+    "target_idxs": [
+      19747,
+      19746,
+      19744
+    ],
+    "track_id": "e0787cfc-0a7c-4574-95c0-33200f68a3fc"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c008/img1/000938.jpg",
+    "ref_idx": 19746,
+    "caption": "A white van moves straight passing the intersection.",
+    "target_idxs": [
+      19745,
+      19740,
+      19744
+    ],
+    "track_id": "e0787cfc-0a7c-4574-95c0-33200f68a3fc"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/001707.jpg",
+    "ref_idx": 19785,
+    "caption": "A gray sedan makes a left turn at an intersection following a black vehicle.",
+    "target_idxs": [
+      19815,
+      19786,
+      19775
+    ],
+    "track_id": "3d682086-b5a2-4040-bb45-db58df25fa13"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c009/img1/000166.jpg",
+    "ref_idx": 19855,
+    "caption": "Red vehicle goes straight through the intersection and continues with other traffic.",
+    "target_idxs": [
+      19844,
+      19845,
+      19852
+    ],
+    "track_id": "f116a68c-c1c8-4894-b4df-bd6ab78eaa66"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c024/img1/002929.jpg",
+    "ref_idx": 19868,
+    "caption": "A gray sedan stopped at the intersection and kept straight afterward.",
+    "target_idxs": [
+      19867,
+      19866,
+      19869
+    ],
+    "track_id": "74a6b794-aed2-40ef-8021-9b0b8e2a98db"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c027/img1/002116.jpg",
+    "ref_idx": 20077,
+    "caption": "A white pickup stops at the intersection.",
+    "target_idxs": [
+      20035,
+      20097,
+      20081
+    ],
+    "track_id": "19404e4b-88f7-4354-8c6a-ff8816e0135c"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c027/img1/002138.jpg",
+    "ref_idx": 20099,
+    "caption": "A white Pickup truck crosses the intersection keeping straight.",
+    "target_idxs": [
+      19936,
+      19902,
+      19985
+    ],
+    "track_id": "19404e4b-88f7-4354-8c6a-ff8816e0135c"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c009/img1/000164.jpg",
+    "ref_idx": 19853,
+    "caption": "Yellow coupe goes straight over intersection behind blue SUV.",
+    "target_idxs": [
+      20286,
+      19855,
+      20289
+    ],
+    "track_id": "e0bd226a-63b7-4d8e-8c91-0de547a0cac3"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/000614.jpg",
+    "ref_idx": 20475,
+    "caption": "A silver midsize sedan slows down at an intersection.",
+    "target_idxs": [
+      20630,
+      20564,
+      20581
+    ],
+    "track_id": "4de2ad61-7968-4c18-a433-0b54aac55ef4"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/002621.jpg",
+    "ref_idx": 20676,
+    "caption": "A white SUV stops at the intersection.",
+    "target_idxs": [
+      20741,
+      20711,
+      19294
+    ],
+    "track_id": "7ca6ec93-d7de-481a-ad71-03337c953ba2"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/002610.jpg",
+    "ref_idx": 20665,
+    "caption": "A white suv car go to the turn left.",
+    "target_idxs": [
+      20718,
+      20726,
+      19295
+    ],
+    "track_id": "7ca6ec93-d7de-481a-ad71-03337c953ba2"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/002680.jpg",
+    "ref_idx": 20727,
+    "caption": "A gray pickup truck stops at the intersection behind another white behicle.",
+    "target_idxs": [
+      20706,
+      20741,
+      19278
+    ],
+    "track_id": "7ca6ec93-d7de-481a-ad71-03337c953ba2"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/003130.jpg",
+    "ref_idx": 20826,
+    "caption": "A green wagon turns right at the intersection.",
+    "target_idxs": [
+      20805,
+      20816,
+      6534
+    ],
+    "track_id": "1ef06d1d-c0b8-4be5-8ade-8180766d63a8"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/003116.jpg",
+    "ref_idx": 20812,
+    "caption": "Suburu forester wagon making a right turn.",
+    "target_idxs": [
+      20806,
+      20813,
+      6526
+    ],
+    "track_id": "1ef06d1d-c0b8-4be5-8ade-8180766d63a8"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/003107.jpg",
+    "ref_idx": 20803,
+    "caption": "A green wagon turns first turns left at an intersection then turns right at a parking lot.",
+    "target_idxs": [
+      20822,
+      6529,
+      20814
+    ],
+    "track_id": "1ef06d1d-c0b8-4be5-8ade-8180766d63a8"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c006/img1/000290.jpg",
+    "ref_idx": 20882,
+    "caption": "A red pick up truck towing storage drives straight through an intersection in the right lane behind an empty cargo truck.",
+    "target_idxs": [
+      20867,
+      20848,
+      20870
+    ],
+    "track_id": "686b0ae9-d604-40e1-a8fc-56a457a56801"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c028/img1/003123.jpg",
+    "ref_idx": 20946,
+    "caption": "A maroon SUV goes straight at an intersection.",
+    "target_idxs": [
+      20918,
+      20941,
+      20969
+    ],
+    "track_id": "f83d0cd0-f0ee-4733-a3c8-ee87697a0d60"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c028/img1/003095.jpg",
+    "ref_idx": 20918,
+    "caption": "A red SUV stops at the intersection and continues to move forward.",
+    "target_idxs": [
+      20907,
+      20890,
+      20891
+    ],
+    "track_id": "f83d0cd0-f0ee-4733-a3c8-ee87697a0d60"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c007/img1/000302.jpg",
+    "ref_idx": 21232,
+    "caption": "A red pick up truck towing storage drives straight through an intersection in the right lane behind an empty cargo truck.",
+    "target_idxs": [
+      12403,
+      21234,
+      21235
+    ],
+    "track_id": "7e6b319f-892d-4fd7-b428-f71306f9eca1"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/001508.jpg",
+    "ref_idx": 21287,
+    "caption": "A red SUV stops at the intersection for a while and turns left afterwards.",
+    "target_idxs": [
+      21331,
+      21316,
+      21291
+    ],
+    "track_id": "9533891c-ee23-41ea-b5d8-a9ad9b01a47f"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/001577.jpg",
+    "ref_idx": 21331,
+    "caption": "A maroon SUV makes a left turn.",
+    "target_idxs": [
+      21327,
+      21290,
+      21300
+    ],
+    "track_id": "9533891c-ee23-41ea-b5d8-a9ad9b01a47f"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c036/img1/000729.jpg",
+    "ref_idx": 21402,
+    "caption": "A red sedan makes a left turn.",
+    "target_idxs": [
+      21343,
+      21368,
+      21412
+    ],
+    "track_id": "c8952ecb-a885-4dfa-8b8f-ff5555b4257c"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c036/img1/000682.jpg",
+    "ref_idx": 21355,
+    "caption": "Small red couple makes a right at intersection.",
+    "target_idxs": [
+      21341,
+      21412,
+      21391
+    ],
+    "track_id": "c8952ecb-a885-4dfa-8b8f-ff5555b4257c"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c036/img1/000686.jpg",
+    "ref_idx": 21359,
+    "caption": "A red sedan stops at an intersection.",
+    "target_idxs": [
+      21413,
+      21365,
+      21374
+    ],
+    "track_id": "c8952ecb-a885-4dfa-8b8f-ff5555b4257c"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/001278.jpg",
+    "ref_idx": 21461,
+    "caption": "A white SUV stops and then turns right at an intersection.",
+    "target_idxs": [
+      21464,
+      21457,
+      21039
+    ],
+    "track_id": "6f7c3684-a695-4411-9970-fc7d30649487"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/001253.jpg",
+    "ref_idx": 21029,
+    "caption": "A white suv makes a right turn at an intersection.",
+    "target_idxs": [
+      21037,
+      21443,
+      21032
+    ],
+    "track_id": "6f7c3684-a695-4411-9970-fc7d30649487"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c007/img1/000774.jpg",
+    "ref_idx": 12818,
+    "caption": "A gray SUV goes straight across the traffic light and turns left.",
+    "target_idxs": [
+      12683,
+      12669,
+      12356
+    ],
+    "track_id": "e76a1f1c-60a6-4b8c-9c48-ddb26d795ece"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c007/img1/000438.jpg",
+    "ref_idx": 12521,
+    "caption": "A deep grey cross-over crosses the street when the light turns green.",
+    "target_idxs": [
+      12373,
+      12335,
+      12839
+    ],
+    "track_id": "e76a1f1c-60a6-4b8c-9c48-ddb26d795ece"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c007/img1/000820.jpg",
+    "ref_idx": 12004,
+    "caption": "A grey SUV drives through the intersection before turning left.",
+    "target_idxs": [
+      12492,
+      12569,
+      12343
+    ],
+    "track_id": "e76a1f1c-60a6-4b8c-9c48-ddb26d795ece"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/003281.jpg",
+    "ref_idx": 21551,
+    "caption": "A black Sedan stopped at the intersection.",
+    "target_idxs": [
+      21553,
+      21533,
+      21528
+    ],
+    "track_id": "2231d81d-4175-435c-a5d2-3d15db1edb35"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/001668.jpg",
+    "ref_idx": 21652,
+    "caption": "A gray sedan makes a left turn at an intersection following a black vehicle.",
+    "target_idxs": [
+      21688,
+      21646,
+      21602
+    ],
+    "track_id": "fb1df3d9-802c-4ef9-aeb7-fe4f13d1ea33"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c025/img1/001595.jpg",
+    "ref_idx": 21816,
+    "caption": "A white SUV stops at the intersection followed by another car.",
+    "target_idxs": [
+      21811,
+      21806,
+      21824
+    ],
+    "track_id": "93219365-d884-48ab-90f0-c0b3e93a6eda"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/003228.jpg",
+    "ref_idx": 21853,
+    "caption": "A white hatchback follows a white SUV in the right lane before driving straight through an intersection.",
+    "target_idxs": [
+      21842,
+      21829,
+      21872
+    ],
+    "track_id": "1c077622-d15d-4491-a4b3-2cf63c355336"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/001268.jpg",
+    "ref_idx": 10454,
+    "caption": "A white suv makes a right turn at an intersection.",
+    "target_idxs": [
+      21946,
+      21943,
+      21947
+    ],
+    "track_id": "2366e9bf-cf51-4d5b-9031-5dc6322accf2"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/000951.jpg",
+    "ref_idx": 21912,
+    "caption": "A white SUV stops and then turns right at an intersection.",
+    "target_idxs": [
+      21947,
+      21900,
+      21935
+    ],
+    "track_id": "2366e9bf-cf51-4d5b-9031-5dc6322accf2"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/002021.jpg",
+    "ref_idx": 21968,
+    "caption": "A red SUV does a left turn then runs down the street.",
+    "target_idxs": [
+      21997,
+      21983,
+      8249
+    ],
+    "track_id": "a5338f2c-9a46-4b23-a25d-6962528dc48b"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/001897.jpg",
+    "ref_idx": 2649,
+    "caption": "An orange minivan in traffic makes a right turn.",
+    "target_idxs": [
+      2639,
+      22051,
+      22054
+    ],
+    "track_id": "94e836f6-fee5-418f-9b97-bad086194709"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/001902.jpg",
+    "ref_idx": 2654,
+    "caption": "A red hatckback turns right at an intersection.",
+    "target_idxs": [
+      22050,
+      2640,
+      2660
+    ],
+    "track_id": "94e836f6-fee5-418f-9b97-bad086194709"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/002270.jpg",
+    "ref_idx": 22053,
+    "caption": "A red wagon turns right on the intersection.",
+    "target_idxs": [
+      2638,
+      2636,
+      2647
+    ],
+    "track_id": "94e836f6-fee5-418f-9b97-bad086194709"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/002446.jpg",
+    "ref_idx": 22087,
+    "caption": "A white luxury car stopped at intersection followed by a bus.",
+    "target_idxs": [
+      22094,
+      22103,
+      22090
+    ],
+    "track_id": "ce63cd2c-7355-4744-bfc4-99223f67f85e"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/002300.jpg",
+    "ref_idx": 22132,
+    "caption": "A black sedan turn left an street.",
+    "target_idxs": [
+      22140,
+      8331,
+      8304
+    ],
+    "track_id": "738a0f37-28fd-4533-b44b-ffe308e3b6a2"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/003017.jpg",
+    "ref_idx": 20342,
+    "caption": "A gray minivan takes a right at a busy intersection.",
+    "target_idxs": [
+      20337,
+      20437,
+      4962
+    ],
+    "track_id": "e9b84477-52b2-4daa-897e-ead7900ee051"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/002972.jpg",
+    "ref_idx": 5018,
+    "caption": "A gray wagon turns right on the intersection.",
+    "target_idxs": [
+      4965,
+      20440,
+      4979
+    ],
+    "track_id": "e9b84477-52b2-4daa-897e-ead7900ee051"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c029/img1/002980.jpg",
+    "ref_idx": 22166,
+    "caption": "A black SUV makes a right turn.",
+    "target_idxs": [
+      22169,
+      22172,
+      22167
+    ],
+    "track_id": "a6b24bfe-ce46-487e-b01d-fad03c25da03"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c029/img1/003065.jpg",
+    "ref_idx": 7583,
+    "caption": "A black SUV runs down the street and takes a right turn at an intersection.",
+    "target_idxs": [
+      22181,
+      7587,
+      22184
+    ],
+    "track_id": "a6b24bfe-ce46-487e-b01d-fad03c25da03"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/000586.jpg",
+    "ref_idx": 20447,
+    "caption": "Gray sedan hesitates then turn left.",
+    "target_idxs": [
+      20455,
+      20459,
+      22217
+    ],
+    "track_id": "a4b5b433-e326-4a7c-899f-2d244bcf8865"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/003353.jpg",
+    "ref_idx": 22279,
+    "caption": "A black sedan travels down the road and stops at an intersection.",
+    "target_idxs": [
+      22229,
+      9625,
+      9626
+    ],
+    "track_id": "8b9e4408-9587-4df4-bef0-e96f662fb549"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c022/img1/001188.jpg",
+    "ref_idx": 16849,
+    "caption": "A white MPV turns right at the intersection.",
+    "target_idxs": [
+      16860,
+      16899,
+      16862
+    ],
+    "track_id": "fb4c8228-9c59-4496-b2c1-c3975e75b27d"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c007/img1/001479.jpg",
+    "ref_idx": 22285,
+    "caption": "A Blue-Gray Jeep SUV drives through an intersection.",
+    "target_idxs": [
+      22281,
+      22280,
+      22284
+    ],
+    "track_id": "e61c0e37-31f4-4c6b-ad03-a759dd2be3bd"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c028/img1/000819.jpg",
+    "ref_idx": 22378,
+    "caption": "A white sedan slowing down and turning right on an intersection.",
+    "target_idxs": [
+      22368,
+      22316,
+      22322
+    ],
+    "track_id": "e79564fb-bd0f-4088-95b1-ec43ad3e7eb1"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/002706.jpg",
+    "ref_idx": 22389,
+    "caption": "A silver sedan makes a slight right turn.",
+    "target_idxs": [
+      22384,
+      22380,
+      20735
+    ],
+    "track_id": "82b88eec-d325-44ad-8587-54dd9be6bb41"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/002726.jpg",
+    "ref_idx": 22409,
+    "caption": "A white car approaches an intersection.",
+    "target_idxs": [
+      22403,
+      22418,
+      22392
+    ],
+    "track_id": "82b88eec-d325-44ad-8587-54dd9be6bb41"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c010/img1/000269.jpg",
+    "ref_idx": 22668,
+    "caption": "A blue SUV turns right at an intersection and continues down the street.",
+    "target_idxs": [
+      22590,
+      22583,
+      22740
+    ],
+    "track_id": "c052a710-497c-4fbb-92d4-2b5026959ddc"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c010/img1/000262.jpg",
+    "ref_idx": 22661,
+    "caption": "Blue SUV turns right onto the street.",
+    "target_idxs": [
+      22607,
+      22708,
+      22569
+    ],
+    "track_id": "c052a710-497c-4fbb-92d4-2b5026959ddc"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c023/img1/002364.jpg",
+    "ref_idx": 22752,
+    "caption": "A blue sedan drives across an intersection.",
+    "target_idxs": [
+      22769,
+      22754,
+      22749
+    ],
+    "track_id": "aea191b3-849c-427f-b74d-0e159b153751"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/003338.jpg",
+    "ref_idx": 13878,
+    "caption": "A black Hatchback stopped at the intersection followed by a white vehicle.",
+    "target_idxs": [
+      13846,
+      13831,
+      13832
+    ],
+    "track_id": "ea7cb55f-fe45-4705-af4d-9b9b2b8fc894"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c017/img1/000527.jpg",
+    "ref_idx": 7832,
+    "caption": "A blue SUV does a right turn.",
+    "target_idxs": [
+      22809,
+      7841,
+      6199
+    ],
+    "track_id": "8221af11-379c-4ef4-b55c-d6e814e4601c"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c017/img1/000443.jpg",
+    "ref_idx": 6200,
+    "caption": "A blue SUV runs down the street followed by another gray vehicle and then turns right at an intersection.",
+    "target_idxs": [
+      22799,
+      7842,
+      22789
+    ],
+    "track_id": "8221af11-379c-4ef4-b55c-d6e814e4601c"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c027/img1/002975.jpg",
+    "ref_idx": 23181,
+    "caption": "A light hatchback stops at an intersection between two red vehicles.",
+    "target_idxs": [
+      23196,
+      14313,
+      23222
+    ],
+    "track_id": "5f115b89-1598-4efa-8ab3-c1581e52f6ad"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/000930.jpg",
+    "ref_idx": 23375,
+    "caption": "A black sedan is stopped at an intersection.",
+    "target_idxs": [
+      23380,
+      13298,
+      23394
+    ],
+    "track_id": "1cde2adb-a11a-42fc-ad51-5c72329b8d2b"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c009/img1/001058.jpg",
+    "ref_idx": 23487,
+    "caption": "A gray car crosses the intersection.",
+    "target_idxs": [
+      23486,
+      23518,
+      23516
+    ],
+    "track_id": "7dc50dcb-18c8-4b1c-8eb9-3002d40555ae"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c028/img1/002944.jpg",
+    "ref_idx": 23678,
+    "caption": "Blue toyota rav-4 prepares to turn left.",
+    "target_idxs": [
+      23672,
+      23664,
+      23684
+    ],
+    "track_id": "8f007dcb-2c26-4ffb-964e-22ed0d3a7155"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c028/img1/002956.jpg",
+    "ref_idx": 23690,
+    "caption": "A blue wagon turns left at the intersection.",
+    "target_idxs": [
+      23704,
+      23684,
+      23687
+    ],
+    "track_id": "8f007dcb-2c26-4ffb-964e-22ed0d3a7155"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c008/img1/001027.jpg",
+    "ref_idx": 833,
+    "caption": "A white coupe is crossing an intersection in the highway.",
+    "target_idxs": [
+      830,
+      831,
+      823
+    ],
+    "track_id": "8d19d30c-c5d6-4781-9191-6bd73d84d665"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c008/img1/001019.jpg",
+    "ref_idx": 825,
+    "caption": "White mini car keeps straight through an intersection.",
+    "target_idxs": [
+      832,
+      835,
+      831
+    ],
+    "track_id": "8d19d30c-c5d6-4781-9191-6bd73d84d665"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c008/img1/001020.jpg",
+    "ref_idx": 826,
+    "caption": "A white mini-cooper drives straight through the intersection.",
+    "target_idxs": [
+      829,
+      825,
+      824
+    ],
+    "track_id": "8d19d30c-c5d6-4781-9191-6bd73d84d665"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c022/img1/001184.jpg",
+    "ref_idx": 16845,
+    "caption": "A black SUV crossing straight on the intersection.",
+    "target_idxs": [
+      16832,
+      16782,
+      16846
+    ],
+    "track_id": "5b5e6ffd-47ca-48cb-8b89-d96372bd2cd2"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c022/img1/001134.jpg",
+    "ref_idx": 16798,
+    "caption": "A black SUV goes straight at the intersection.",
+    "target_idxs": [
+      16858,
+      16828,
+      16692
+    ],
+    "track_id": "5b5e6ffd-47ca-48cb-8b89-d96372bd2cd2"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/002795.jpg",
+    "ref_idx": 24172,
+    "caption": "A black pickup crossing straigt at the intersection.",
+    "target_idxs": [
+      324,
+      24160,
+      318
+    ],
+    "track_id": "2e9244bf-4f14-435d-8932-afddd4038493"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/002833.jpg",
+    "ref_idx": 333,
+    "caption": "A black pickup truck turns left at the intersection and then goes straight down the street.",
+    "target_idxs": [
+      24144,
+      24174,
+      24153
+    ],
+    "track_id": "2e9244bf-4f14-435d-8932-afddd4038493"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c029/img1/002997.jpg",
+    "ref_idx": 22183,
+    "caption": "A black SUV right turns left at the intersection behind another black vehicle.",
+    "target_idxs": [
+      22167,
+      24200,
+      22186
+    ],
+    "track_id": "0e1733d9-fd70-42f9-a1ef-33d1be8e3b6d"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c006/img1/000968.jpg",
+    "ref_idx": 1412,
+    "caption": "A blue pickup turned left at the intersection.",
+    "target_idxs": [
+      1419,
+      1411,
+      1418
+    ],
+    "track_id": "094ed625-f7d2-4b4a-8a76-629540a9df6c"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/003331.jpg",
+    "ref_idx": 22257,
+    "caption": "Grey car goes straight through an intersection.",
+    "target_idxs": [
+      22244,
+      22274,
+      9599
+    ],
+    "track_id": "aeabb767-9fe2-43db-b090-43a6e0200e56"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/003341.jpg",
+    "ref_idx": 22267,
+    "caption": "A gray sedan goes straight at an intersection ahead of a black vehicle which goes right.",
+    "target_idxs": [
+      22238,
+      22275,
+      22270
+    ],
+    "track_id": "aeabb767-9fe2-43db-b090-43a6e0200e56"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/001394.jpg",
+    "ref_idx": 21157,
+    "caption": "A red wagon turns left onto a busy road.",
+    "target_idxs": [
+      21144,
+      21128,
+      21149
+    ],
+    "track_id": "df5206da-f2bc-4f70-8f77-f56f604f1648"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/001391.jpg",
+    "ref_idx": 21154,
+    "caption": "A red van turns left onto the main street and turns right shortly after keeping straight.",
+    "target_idxs": [
+      21144,
+      21151,
+      21122
+    ],
+    "track_id": "df5206da-f2bc-4f70-8f77-f56f604f1648"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/001762.jpg",
+    "ref_idx": 19840,
+    "caption": "A purple SUV turns left at the intersections.",
+    "target_idxs": [
+      19838,
+      19841,
+      19834
+    ],
+    "track_id": "6fa6ab61-7590-4a54-9ada-4a62ccee87e6"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/001762.jpg",
+    "ref_idx": 19840,
+    "caption": "A red sedan making a left turn.",
+    "target_idxs": [
+      19839,
+      19843,
+      19835
+    ],
+    "track_id": "6fa6ab61-7590-4a54-9ada-4a62ccee87e6"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c028/img1/003582.jpg",
+    "ref_idx": 24569,
+    "caption": "A gray pickup turning left on the intersection.",
+    "target_idxs": [
+      24603,
+      24590,
+      24570
+    ],
+    "track_id": "8ba749e1-09c6-4413-b927-6b3f4a6d9cf2"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c028/img1/003587.jpg",
+    "ref_idx": 24574,
+    "caption": "A gray SUV makes a left turn.",
+    "target_idxs": [
+      24593,
+      24599,
+      24573
+    ],
+    "track_id": "8ba749e1-09c6-4413-b927-6b3f4a6d9cf2"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c036/img1/003431.jpg",
+    "ref_idx": 24896,
+    "caption": "A black cross overruns down the street near the parking.",
+    "target_idxs": [
+      24845,
+      24890,
+      24864
+    ],
+    "track_id": "7bdc47a0-a01f-4a99-ab82-7e4b4855b61b"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c036/img1/002980.jpg",
+    "ref_idx": 25160,
+    "caption": "Silver midsize SUV drives straight down the road and stops at an intersection.",
+    "target_idxs": [
+      25284,
+      25083,
+      25219
+    ],
+    "track_id": "0476a85f-e948-480c-afcf-3aa5b87d8c9c"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/001051.jpg",
+    "ref_idx": 25381,
+    "caption": "A black sedan stops at the intersection.",
+    "target_idxs": [
+      25346,
+      25323,
+      25429
+    ],
+    "track_id": "ad28c07d-e1d2-4b71-bc78-4ccbde9e041f"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c023/img1/003154.jpg",
+    "ref_idx": 25744,
+    "caption": "A gray sedan turns left at an intersection.",
+    "target_idxs": [
+      25757,
+      25741,
+      25753
+    ],
+    "track_id": "a4467432-2030-4e46-ab28-f8ac876933d6"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c023/img1/003126.jpg",
+    "ref_idx": 25718,
+    "caption": "A gray small sedan is driving straight through an intersection.",
+    "target_idxs": [
+      25749,
+      25737,
+      25725
+    ],
+    "track_id": "a4467432-2030-4e46-ab28-f8ac876933d6"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/002976.jpg",
+    "ref_idx": 5022,
+    "caption": "A grey suv turns left onto a busy thoroughfare.",
+    "target_idxs": [
+      12869,
+      20345,
+      4990
+    ],
+    "track_id": "6482647b-1f30-436e-8e42-c1311db3abc0"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c036/img1/002734.jpg",
+    "ref_idx": 10636,
+    "caption": "Black jeep turns right onto main road and joins line of traffic.",
+    "target_idxs": [
+      10639,
+      10634,
+      10635
+    ],
+    "track_id": "5c418bfa-9c43-4b7f-bd60-ed41a4b482ff"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/000870.jpg",
+    "ref_idx": 25963,
+    "caption": "Small red couple makes a right at intersection.",
+    "target_idxs": [
+      25893,
+      25977,
+      25923
+    ],
+    "track_id": "122b072c-3a59-46e9-bee0-ddcfbffdd44d"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/000811.jpg",
+    "ref_idx": 25908,
+    "caption": "A red sedan makes a left turn.",
+    "target_idxs": [
+      25938,
+      25906,
+      25954
+    ],
+    "track_id": "122b072c-3a59-46e9-bee0-ddcfbffdd44d"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/000813.jpg",
+    "ref_idx": 25910,
+    "caption": "A red sedan stops at an intersection.",
+    "target_idxs": [
+      25954,
+      25914,
+      25912
+    ],
+    "track_id": "122b072c-3a59-46e9-bee0-ddcfbffdd44d"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/001451.jpg",
+    "ref_idx": 26017,
+    "caption": "A blue pickup truck going straight down the street with right turn signal on.",
+    "target_idxs": [
+      26008,
+      16192,
+      16190
+    ],
+    "track_id": "41fe33a6-cbf9-4741-9d50-96f6d402bfb0"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/001311.jpg",
+    "ref_idx": 21074,
+    "caption": "A blue pickup truck going straight down the street with right turn signal on.",
+    "target_idxs": [
+      21101,
+      21452,
+      21053
+    ],
+    "track_id": "878d3af2-5600-4d5d-9a9d-d6675121f4e7"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/001290.jpg",
+    "ref_idx": 21053,
+    "caption": "A blue pickup truck with a bed cover takes a slight right turn.",
+    "target_idxs": [
+      21452,
+      21040,
+      21060
+    ],
+    "track_id": "878d3af2-5600-4d5d-9a9d-d6675121f4e7"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c007/img1/001294.jpg",
+    "ref_idx": 26064,
+    "caption": "A gray SUV drives straight through the intersection in the right lane.",
+    "target_idxs": [
+      26073,
+      26072,
+      26070
+    ],
+    "track_id": "08c76c71-62e6-4b47-a399-cd2bc2e6ccaf"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/001694.jpg",
+    "ref_idx": 21676,
+    "caption": "A gray van making a right turn at intersection.",
+    "target_idxs": [
+      21658,
+      21647,
+      21682
+    ],
+    "track_id": "f2a05557-3fae-4a4f-9836-2d9b36f9ed70"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c024/img1/003083.jpg",
+    "ref_idx": 26127,
+    "caption": "A gray SUV stops at the intersection in busy traffic.",
+    "target_idxs": [
+      26126,
+      26128,
+      26129
+    ],
+    "track_id": "259f52c1-af28-4126-9e44-d978567e3ef1"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c023/img1/000119.jpg",
+    "ref_idx": 26440,
+    "caption": "A red pickup truck keeps straight following a white vehicle and passes through a fork intersection.",
+    "target_idxs": [
+      26409,
+      26457,
+      26422
+    ],
+    "track_id": "c428bde9-b1a0-44b3-ae60-75c834dc03c3"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/001751.jpg",
+    "ref_idx": 15748,
+    "caption": "A black SUV turns left at an intersection.",
+    "target_idxs": [
+      2573,
+      16001,
+      15745
+    ],
+    "track_id": "4fbd08a6-896c-44b0-a7f9-cc427fb162ea"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c020/img1/000072.jpg",
+    "ref_idx": 26519,
+    "caption": "A silver sedan stops and then crosses an intersection.",
+    "target_idxs": [
+      26514,
+      26502,
+      26503
+    ],
+    "track_id": "8277b006-a840-4cbd-adbe-4dc022795286"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/003272.jpg",
+    "ref_idx": 7797,
+    "caption": "A white SUV  waiting at the intersection followed by another white car before it starts moving again.",
+    "target_idxs": [
+      7798,
+      13837,
+      13815
+    ],
+    "track_id": "b97dc19a-c020-4718-8888-955f28639496"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/003257.jpg",
+    "ref_idx": 13808,
+    "caption": "A white SUV stops in a y-cross after another red vehicle.",
+    "target_idxs": [
+      13828,
+      13835,
+      7802
+    ],
+    "track_id": "b97dc19a-c020-4718-8888-955f28639496"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/003298.jpg",
+    "ref_idx": 13838,
+    "caption": "A silver cross-over takes a left turn.",
+    "target_idxs": [
+      13864,
+      13798,
+      13813
+    ],
+    "track_id": "b97dc19a-c020-4718-8888-955f28639496"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/001984.jpg",
+    "ref_idx": 26537,
+    "caption": "A black SUV stops at the intersection than keeps straight.",
+    "target_idxs": [
+      26543,
+      26545,
+      26541
+    ],
+    "track_id": "63f5fe33-daaa-4960-9cc4-35140c81acdd"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c024/img1/004266.jpg",
+    "ref_idx": 26656,
+    "caption": "Black suv takes a left turn.",
+    "target_idxs": [
+      26655,
+      26654,
+      26660
+    ],
+    "track_id": "7167de95-788d-4abc-84f3-cdb7f9f91a7c"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c024/img1/004268.jpg",
+    "ref_idx": 26658,
+    "caption": "A black van turns left onto a street.",
+    "target_idxs": [
+      26657,
+      26653,
+      26659
+    ],
+    "track_id": "7167de95-788d-4abc-84f3-cdb7f9f91a7c"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/002420.jpg",
+    "ref_idx": 22923,
+    "caption": "A white SUV stops at an intersection.",
+    "target_idxs": [
+      22966,
+      22121,
+      22140
+    ],
+    "track_id": "01292ac8-8d7d-4bc2-b91a-7e480a14baa9"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/000558.jpg",
+    "ref_idx": 26771,
+    "caption": "A maroon van turns left at an intersection.",
+    "target_idxs": [
+      26785,
+      26790,
+      26803
+    ],
+    "track_id": "2e7e45b2-e963-471c-82d2-09a2b4bc98aa"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/000543.jpg",
+    "ref_idx": 6495,
+    "caption": "A maroon van turns right at an intersection.",
+    "target_idxs": [
+      6501,
+      1,
+      26806
+    ],
+    "track_id": "2e7e45b2-e963-471c-82d2-09a2b4bc98aa"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c008/img1/001307.jpg",
+    "ref_idx": 27264,
+    "caption": "A white sedan turns right before stopping at an intersection and turning left.",
+    "target_idxs": [
+      27513,
+      27003,
+      27514
+    ],
+    "track_id": "e6cf691d-456f-4d02-b8ab-0d7b6e469af2"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c008/img1/001128.jpg",
+    "ref_idx": 27102,
+    "caption": "A white hatchback crosses intersection.",
+    "target_idxs": [
+      27407,
+      27241,
+      26979
+    ],
+    "track_id": "e6cf691d-456f-4d02-b8ab-0d7b6e469af2"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c025/img1/000492.jpg",
+    "ref_idx": 19360,
+    "caption": "A gray pickup truck runs straight through the intersection.",
+    "target_idxs": [
+      19343,
+      19342,
+      19352
+    ],
+    "track_id": "0e07639f-9995-4daf-8d43-9147689338ef"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c027/img1/003319.jpg",
+    "ref_idx": 27625,
+    "caption": "A white SUV stops at the intersection followed by another blue vehicle.",
+    "target_idxs": [
+      27681,
+      2902,
+      2851
+    ],
+    "track_id": "b7441934-b5a8-4ba0-8663-3bbe90adb57f"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c036/img1/003021.jpg",
+    "ref_idx": 27756,
+    "caption": "A white sedan turns left onto a busy street and slows down.",
+    "target_idxs": [
+      27747,
+      25175,
+      25173
+    ],
+    "track_id": "0ca47165-9ee9-45a4-b6d2-8b55f10f991a"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/003310.jpg",
+    "ref_idx": 22236,
+    "caption": "A white hatchback follows a white SUV in the right lane before driving straight through an intersection.",
+    "target_idxs": [
+      22257,
+      22254,
+      22277
+    ],
+    "track_id": "266aeeb8-be8e-4370-80aa-989e71e21b88"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/002331.jpg",
+    "ref_idx": 3678,
+    "caption": "A black sedan turns right on the intersection.",
+    "target_idxs": [
+      3673,
+      3681,
+      3692
+    ],
+    "track_id": "9b6cbf3d-9ae0-4cc5-ac7a-16ea8e9d86e3"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/002335.jpg",
+    "ref_idx": 3682,
+    "caption": "A black sedan making a right turn at intersection.",
+    "target_idxs": [
+      3695,
+      3690,
+      3691
+    ],
+    "track_id": "9b6cbf3d-9ae0-4cc5-ac7a-16ea8e9d86e3"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c036/img1/002219.jpg",
+    "ref_idx": 28020,
+    "caption": "A gray SUV runs stop at the intersection followed by another black vehicle.",
+    "target_idxs": [
+      28032,
+      28043,
+      28030
+    ],
+    "track_id": "12331e1f-42bf-4886-ac42-a709fb0d202a"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c006/img1/000220.jpg",
+    "ref_idx": 28084,
+    "caption": "A black SUV moves straight through an intersection.",
+    "target_idxs": [
+      28089,
+      28072,
+      28091
+    ],
+    "track_id": "0732f9d7-a443-46ed-8ad4-d69f5eee075c"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/000936.jpg",
+    "ref_idx": 21897,
+    "caption": "A gray sedan turns right at an intersection and then switches to the left lane.",
+    "target_idxs": [
+      21930,
+      26000,
+      25998
+    ],
+    "track_id": "ea8a003e-f84e-42e1-90ae-21afe15085ce"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c008/img1/001296.jpg",
+    "ref_idx": 27256,
+    "caption": "A maroon SUV runs across an intersection.",
+    "target_idxs": [
+      27261,
+      27257,
+      27254
+    ],
+    "track_id": "1b059343-b0dd-4c5c-9d9d-1652096dcff2"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/000818.jpg",
+    "ref_idx": 28261,
+    "caption": "A red sedan turns slightly left at an intersection.",
+    "target_idxs": [
+      28264,
+      28280,
+      28292
+    ],
+    "track_id": "870e5570-4c79-42ba-bd97-a862d86004f0"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/001980.jpg",
+    "ref_idx": 28348,
+    "caption": "A white SUV stops at an intersection and then turns right.",
+    "target_idxs": [
+      28300,
+      28302,
+      28317
+    ],
+    "track_id": "efa1b2de-4699-46f8-bdfb-2a60fa02568a"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/001327.jpg",
+    "ref_idx": 21090,
+    "caption": "A black SUV stops at intersection. Then turns left.",
+    "target_idxs": [
+      21085,
+      21072,
+      21077
+    ],
+    "track_id": "55e9faba-d6e5-4844-a982-2bd1ef5bd514"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/000656.jpg",
+    "ref_idx": 20517,
+    "caption": "A small white sedan is trailing behind a line of cars waiting to turn right.",
+    "target_idxs": [
+      8078,
+      8098,
+      28549
+    ],
+    "track_id": "f6b8685c-9eb1-47f4-bd22-3c517ec56767"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/003470.jpg",
+    "ref_idx": 4622,
+    "caption": "A gray SUV stops at the intersection.",
+    "target_idxs": [
+      4615,
+      4618,
+      4614
+    ],
+    "track_id": "a3b55866-1ec7-42a0-bbac-7c6f98ec14bc"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/003464.jpg",
+    "ref_idx": 4616,
+    "caption": "A gray hatchback making a left turn at intersection.",
+    "target_idxs": [
+      4620,
+      4623,
+      4619
+    ],
+    "track_id": "a3b55866-1ec7-42a0-bbac-7c6f98ec14bc"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/002135.jpg",
+    "ref_idx": 16005,
+    "caption": "A white truck pulls up to an intersection.",
+    "target_idxs": [
+      13348,
+      13326,
+      8308
+    ],
+    "track_id": "fb3e06cc-690a-4526-8037-28a7737ab3ea"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c036/img1/001358.jpg",
+    "ref_idx": 28948,
+    "caption": "A white SUV is stopped at the intersection waiting to turn left.",
+    "target_idxs": [
+      28919,
+      28938,
+      28934
+    ],
+    "track_id": "071da5e3-346a-4038-9747-b6889362e84a"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c026/img1/002979.jpg",
+    "ref_idx": 29075,
+    "caption": "A light gray SUV crosses an intersection and keeps straight.",
+    "target_idxs": [
+      29126,
+      2143,
+      2137
+    ],
+    "track_id": "93639271-f0f0-4875-9c15-f2029aa3c752"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c016/img1/003377.jpg",
+    "ref_idx": 25864,
+    "caption": "A gray SUV turns right at the intersection.",
+    "target_idxs": [
+      25819,
+      25823,
+      25863
+    ],
+    "track_id": "f71e81fb-1bcb-4d37-97c2-6151fb0a02c0"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c023/img1/004156.jpg",
+    "ref_idx": 15064,
+    "caption": "A silver cross over that turns left past a grey van.",
+    "target_idxs": [
+      15072,
+      29305,
+      15068
+    ],
+    "track_id": "c0157f0f-966f-4b47-a995-d788c315479c"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/002203.jpg",
+    "ref_idx": 29572,
+    "caption": "A black sedan turn left an street.",
+    "target_idxs": [
+      29602,
+      29559,
+      29563
+    ],
+    "track_id": "de81e2ea-2af7-4918-b988-373c6a5917e7"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c023/img1/001742.jpg",
+    "ref_idx": 29939,
+    "caption": "A purple SUV slows down before the intersection.",
+    "target_idxs": [
+      29937,
+      29934,
+      4633
+    ],
+    "track_id": "120a3a18-cad6-4a57-98bf-47c86af74484"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c023/img1/001749.jpg",
+    "ref_idx": 29946,
+    "caption": "SUV black stopping in the intersection.",
+    "target_idxs": [
+      4632,
+      29945,
+      4629
+    ],
+    "track_id": "120a3a18-cad6-4a57-98bf-47c86af74484"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c018/img1/001338.jpg",
+    "ref_idx": 29974,
+    "caption": "A black crossover SUV drives down a residential street.",
+    "target_idxs": [
+      29984,
+      29994,
+      29968
+    ],
+    "track_id": "74c93bfc-eaf0-4f33-82a9-1dd0046b15ac"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c007/img1/001362.jpg",
+    "ref_idx": 30034,
+    "caption": "A white sedan stops at the intersection.",
+    "target_idxs": [
+      30133,
+      30144,
+      30081
+    ],
+    "track_id": "b9fb4870-5e02-40f6-800f-040bd12dfc11"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c007/img1/001344.jpg",
+    "ref_idx": 30016,
+    "caption": "It is a white car that stops at an intersection waiting for the traffic to pass before pulling out into the traffic.",
+    "target_idxs": [
+      30141,
+      30153,
+      11401
+    ],
+    "track_id": "b9fb4870-5e02-40f6-800f-040bd12dfc11"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c007/img1/001399.jpg",
+    "ref_idx": 30062,
+    "caption": "A white sedan stops at the intersection before turning right.",
+    "target_idxs": [
+      30114,
+      30042,
+      30156
+    ],
+    "track_id": "b9fb4870-5e02-40f6-800f-040bd12dfc11"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/001451.jpg",
+    "ref_idx": 26017,
+    "caption": "A white sedan slowing down and turning right on an intersection.",
+    "target_idxs": [
+      26014,
+      16211,
+      29921
+    ],
+    "track_id": "dd708f31-85b8-48cf-922f-982eb8d0073f"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/001447.jpg",
+    "ref_idx": 26013,
+    "caption": "White sedan midsize stops at street intersection than keeps straight.",
+    "target_idxs": [
+      30188,
+      30182,
+      16172
+    ],
+    "track_id": "dd708f31-85b8-48cf-922f-982eb8d0073f"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/001747.jpg",
+    "ref_idx": 15744,
+    "caption": "A white sedan stopped at the intersection and turning left in the street on the Camera 1 and 2 and keeping straight on the Camera 3.",
+    "target_idxs": [
+      21694,
+      21679,
+      15737
+    ],
+    "track_id": "123d3773-6ae3-4cf8-9be5-fda2ccbd77b3"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c036/img1/003259.jpg",
+    "ref_idx": 30301,
+    "caption": "A white pick up truck makes a right turn.",
+    "target_idxs": [
+      30305,
+      30327,
+      30316
+    ],
+    "track_id": "f1c9ed50-5ca4-46bb-956d-59234a75f8d6"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/002079.jpg",
+    "ref_idx": 10209,
+    "caption": "A red minivan is stopping slowly at an intersection behind a bigger silver minivan.",
+    "target_idxs": [
+      30501,
+      26536,
+      10242
+    ],
+    "track_id": "59edb086-3e95-4012-85b5-7cace2d53e71"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c028/img1/002716.jpg",
+    "ref_idx": 31075,
+    "caption": "A purple SUV turns right at intersection.",
+    "target_idxs": [
+      31063,
+      31089,
+      31083
+    ],
+    "track_id": "73312659-e37b-4d54-8243-29d4e1ce58e4"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c028/img1/002729.jpg",
+    "ref_idx": 31088,
+    "caption": "A large black SUV turns right at an intersection.",
+    "target_idxs": [
+      31077,
+      31064,
+      31070
+    ],
+    "track_id": "73312659-e37b-4d54-8243-29d4e1ce58e4"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c006/img1/001403.jpg",
+    "ref_idx": 31150,
+    "caption": "A brown Cross-over goes straight on the road.",
+    "target_idxs": [
+      31151,
+      31138,
+      31134
+    ],
+    "track_id": "a5f54305-7ab3-49e5-a6af-2641311c72f6"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c036/img1/001983.jpg",
+    "ref_idx": 31223,
+    "caption": "A black SUV pulls up to an intersection.",
+    "target_idxs": [
+      31224,
+      31235,
+      31237
+    ],
+    "track_id": "f52ecae0-11a5-452c-b2ba-a41d9b859858"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/003091.jpg",
+    "ref_idx": 12893,
+    "caption": "A gray SUV first stops at the intersection then makes a left turn.",
+    "target_idxs": [
+      20373,
+      12897,
+      20379
+    ],
+    "track_id": "f73db156-9452-43cf-a1c6-38f64d0b9c5a"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c006/img1/001345.jpg",
+    "ref_idx": 31357,
+    "caption": "A blue pickup truck drives straight through an intersection.",
+    "target_idxs": [
+      31345,
+      31338,
+      31341
+    ],
+    "track_id": "56b69322-75cd-473a-b596-785a4262559b"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c006/img1/001340.jpg",
+    "ref_idx": 31352,
+    "caption": "A blue pickup truck going straight down the street passing an intersection.",
+    "target_idxs": [
+      31355,
+      31350,
+      31329
+    ],
+    "track_id": "56b69322-75cd-473a-b596-785a4262559b"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c028/img1/002936.jpg",
+    "ref_idx": 23670,
+    "caption": "A blue Sedan stops at an intersection.",
+    "target_idxs": [
+      31540,
+      31563,
+      23708
+    ],
+    "track_id": "11859d63-b9e3-48bd-809c-22c08cdc8c2f"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c028/img1/002862.jpg",
+    "ref_idx": 4579,
+    "caption": "Blue SUV stopped on the intersection.",
+    "target_idxs": [
+      4561,
+      31588,
+      31557
+    ],
+    "track_id": "11859d63-b9e3-48bd-809c-22c08cdc8c2f"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c007/img1/000065.jpg",
+    "ref_idx": 12229,
+    "caption": "A black hatchback slowly crosses an intersection.",
+    "target_idxs": [
+      12234,
+      12227,
+      12233
+    ],
+    "track_id": "419b89d3-26ec-49b2-b67c-e9c4a7018a8c"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/002960.jpg",
+    "ref_idx": 31662,
+    "caption": "A white midsize crossover takes a left after light turns green at intersection.",
+    "target_idxs": [
+      31636,
+      31751,
+      31664
+    ],
+    "track_id": "c0491f93-bdab-460d-b05a-36b8b942be76"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/003066.jpg",
+    "ref_idx": 31760,
+    "caption": "A white suv is waiting to turn left.",
+    "target_idxs": [
+      31686,
+      31748,
+      31721
+    ],
+    "track_id": "c0491f93-bdab-460d-b05a-36b8b942be76"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c026/img1/000612.jpg",
+    "ref_idx": 760,
+    "caption": "A white wagon turns right at the intersection followed by another gray vehicle.",
+    "target_idxs": [
+      31843,
+      31863,
+      736
+    ],
+    "track_id": "56d7a9da-5996-4a6d-b769-c91c88a91ca4"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/000524.jpg",
+    "ref_idx": 11899,
+    "caption": "A blue SUV drives and slows to stop at intersection.",
+    "target_idxs": [
+      11903,
+      11909,
+      11870
+    ],
+    "track_id": "2f6c6104-324a-4e03-a3c9-dd102e76d6a9"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c024/img1/001628.jpg",
+    "ref_idx": 31936,
+    "caption": "A white car goes straight pass through the junction.",
+    "target_idxs": [
+      31933,
+      31932,
+      31931
+    ],
+    "track_id": "4045e7cd-a2e5-43f0-9522-f2ca6bba245a"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/003420.jpg",
+    "ref_idx": 9663,
+    "caption": "A black minivan slows down at an intersection.",
+    "target_idxs": [
+      9632,
+      9627,
+      9629
+    ],
+    "track_id": "a72c550e-5fb3-4ba8-8868-7dbb57726caf"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/003408.jpg",
+    "ref_idx": 9651,
+    "caption": "A black SUV stops at the intersection a few seconds and turns left.",
+    "target_idxs": [
+      9656,
+      9629,
+      9657
+    ],
+    "track_id": "a72c550e-5fb3-4ba8-8868-7dbb57726caf"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/002210.jpg",
+    "ref_idx": 8283,
+    "caption": "Pickup truck turn right.",
+    "target_idxs": [
+      13387,
+      13385,
+      13384
+    ],
+    "track_id": "b6529118-2a80-4428-a07f-1c9290ac9883"
+  }
+]

@@ -1,0 +1,651 @@
+[
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c009/img1/001307.jpg",
+    "ref_idx": 99,
+    "caption": "Gray coupe with a dark-colored car behind it.",
+    "target_idxs": [
+      94,
+      93,
+      91
+    ],
+    "track_id": "46591646-367b-4f9a-bd3e-df475f22567b"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c025/img1/001987.jpg",
+    "ref_idx": 307,
+    "caption": "A dark blue wagon pulls a U turn in the middle of the street.",
+    "target_idxs": [
+      290,
+      304,
+      292
+    ],
+    "track_id": "04043560-9bf6-49f0-b849-902a9269d1c4"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c008/img1/000224.jpg",
+    "ref_idx": 693,
+    "caption": "A dirty gray pickup truck runs down the road followed by another vehicle.",
+    "target_idxs": [
+      695,
+      696,
+      699
+    ],
+    "track_id": "f1fc9923-8744-43d8-a71c-b94aef396cf0"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c006/img1/000321.jpg",
+    "ref_idx": 782,
+    "caption": "A dark blue SUV runs down the street followed by a grey pickup truck.",
+    "target_idxs": [
+      797,
+      794,
+      780
+    ],
+    "track_id": "47645ef2-654c-4578-91ef-47487d4696a5"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c006/img1/000324.jpg",
+    "ref_idx": 785,
+    "caption": "A dark grey SUV drives down the road.",
+    "target_idxs": [
+      793,
+      797,
+      788
+    ],
+    "track_id": "47645ef2-654c-4578-91ef-47487d4696a5"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c008/img1/001090.jpg",
+    "ref_idx": 1590,
+    "caption": "A large dark blue SUV drive through an intersection going straight.",
+    "target_idxs": [
+      1588,
+      1592,
+      1597
+    ],
+    "track_id": "d41aad5d-00b9-4231-966c-03c89a7aeabc"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c026/img1/003143.jpg",
+    "ref_idx": 2166,
+    "caption": "A dark red sedan passes parked cars and follows a silver vehicle.",
+    "target_idxs": [
+      2146,
+      2204,
+      2192
+    ],
+    "track_id": "68904271-487f-4dd0-9392-2526b3fa77b5"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c006/img1/000700.jpg",
+    "ref_idx": 1145,
+    "caption": "A dark grey cart with a large trunk behind a blue car.",
+    "target_idxs": [
+      2560,
+      2546,
+      1118
+    ],
+    "track_id": "ac7fb9ed-f88c-433e-bade-f013fd0b7bdf"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/002439.jpg",
+    "ref_idx": 3779,
+    "caption": "A dark SUV stops at an intersection next to a green bus before turning left.",
+    "target_idxs": [
+      3682,
+      3700,
+      3713
+    ],
+    "track_id": "d42ebe0a-fa55-463d-96c2-457990b9179c"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c020/img1/001877.jpg",
+    "ref_idx": 4375,
+    "caption": "A dark red SUV drives straight past parked cars followed by a gray SUV.",
+    "target_idxs": [
+      4365,
+      4371,
+      4378
+    ],
+    "track_id": "8187ec0d-8f6d-4391-a60b-a3e467fb6e77"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c017/img1/003692.jpg",
+    "ref_idx": 5181,
+    "caption": "A blue SUV drives straight in the left lane following a dark vehicle.",
+    "target_idxs": [
+      5216,
+      5179,
+      5233
+    ],
+    "track_id": "7b55a7fa-e685-4d7a-b276-e85df2c9718f"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c006/img1/001215.jpg",
+    "ref_idx": 5800,
+    "caption": "A red van drives straight through an intersection between two dark vehicles.",
+    "target_idxs": [
+      5809,
+      5826,
+      5825
+    ],
+    "track_id": "b7c19f0b-5861-4b92-b8c3-3a4e963d22a4"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/002483.jpg",
+    "ref_idx": 5904,
+    "caption": "A dark red SUV turns right and then drives straight.",
+    "target_idxs": [
+      5917,
+      5910,
+      5912
+    ],
+    "track_id": "d866417d-ec56-4303-a4f0-3853598d26c7"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/002504.jpg",
+    "ref_idx": 5925,
+    "caption": "A dark-red SUV is going straight slowly.",
+    "target_idxs": [
+      5909,
+      5916,
+      5922
+    ],
+    "track_id": "d866417d-ec56-4303-a4f0-3853598d26c7"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c036/img1/001748.jpg",
+    "ref_idx": 6301,
+    "caption": "Dark blue sedan stopped and then keep straight.",
+    "target_idxs": [
+      6278,
+      6294,
+      6317
+    ],
+    "track_id": "ce786c56-3d59-4ee8-8305-aee28d437864"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c024/img1/000514.jpg",
+    "ref_idx": 6520,
+    "caption": "A dirty red truck runs down the street followed by another white vehicle.",
+    "target_idxs": [
+      6514,
+      6519,
+      6522
+    ],
+    "track_id": "b6b3977a-7f9f-4c1a-82d0-120bc802f014"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c024/img1/000509.jpg",
+    "ref_idx": 6515,
+    "caption": "A dirty red SUV crosses the intersection keeping straight.",
+    "target_idxs": [
+      6516,
+      6519,
+      6518
+    ],
+    "track_id": "b6b3977a-7f9f-4c1a-82d0-120bc802f014"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c029/img1/001577.jpg",
+    "ref_idx": 9754,
+    "caption": "A dark SUV drives down the road followed by a silver van.",
+    "target_idxs": [
+      9799,
+      9766,
+      9781
+    ],
+    "track_id": "e5503d65-cc74-4103-bd6b-be6988f7c3d2"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c016/img1/000255.jpg",
+    "ref_idx": 9828,
+    "caption": "A white SUV drives straight in the left lane followed by a dark vehicle.",
+    "target_idxs": [
+      9866,
+      9837,
+      9916
+    ],
+    "track_id": "17282457-0745-4dc7-bf0b-d95592479f14"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c006/img1/000687.jpg",
+    "ref_idx": 1132,
+    "caption": "A dark-red SUV is turning left.",
+    "target_idxs": [
+      1073,
+      1079,
+      1141
+    ],
+    "track_id": "8b86556e-71fb-4ca4-8c4c-71738475c372"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c009/img1/002072.jpg",
+    "ref_idx": 11634,
+    "caption": "A dark SUV drives through an intersection.",
+    "target_idxs": [
+      11638,
+      11633,
+      11610
+    ],
+    "track_id": "5a3b90ad-d47a-42c2-b1dc-2b066218118b"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c006/img1/000047.jpg",
+    "ref_idx": 5854,
+    "caption": "A dark red van drives straight up a hill in the left lane.",
+    "target_idxs": [
+      5863,
+      5869,
+      5866
+    ],
+    "track_id": "d50bd14e-a922-46e9-973b-daa737e2a33c"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c036/img1/002868.jpg",
+    "ref_idx": 12173,
+    "caption": "A dark blue sedan turns left at an intersection and then continues straight.",
+    "target_idxs": [
+      12172,
+      12174,
+      12170
+    ],
+    "track_id": "85aeff33-93b1-4b6e-961d-fe4372f41382"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c020/img1/001912.jpg",
+    "ref_idx": 13194,
+    "caption": "A dark gray SUV tailgates a red SUV down the street.",
+    "target_idxs": [
+      13221,
+      13210,
+      13216
+    ],
+    "track_id": "4a69ce0d-2810-4a29-9a5b-5a220516757e"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c027/img1/001105.jpg",
+    "ref_idx": 13577,
+    "caption": "A dark SUV follows a white vehicle to an intersection.",
+    "target_idxs": [
+      13501,
+      13502,
+      13546
+    ],
+    "track_id": "f7dab833-0536-495f-b68a-356cedd31cc7"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c017/img1/000846.jpg",
+    "ref_idx": 13638,
+    "caption": "A red pickup truck drives straight preceded by a dark SUV and followed by white hatchback.",
+    "target_idxs": [
+      13632,
+      13627,
+      13613
+    ],
+    "track_id": "6f7d8745-0629-4721-9293-7d73334db889"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c036/img1/001870.jpg",
+    "ref_idx": 1653,
+    "caption": "A dark blue mid-sized SUV is driving straight after waiting at the light.",
+    "target_idxs": [
+      9366,
+      9391,
+      1647
+    ],
+    "track_id": "112576f7-dfbe-48a9-bea8-16b4af21df4a"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c027/img1/003690.jpg",
+    "ref_idx": 14059,
+    "caption": "A dark gray SUV drives down the road behind a black sedan.",
+    "target_idxs": [
+      14049,
+      14133,
+      14081
+    ],
+    "track_id": "2f4c157b-4d6c-4b11-87a2-686c069272d5"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c009/img1/000203.jpg",
+    "ref_idx": 14644,
+    "caption": "A dark truck drives up a hill in the right lane.",
+    "target_idxs": [
+      14642,
+      14622,
+      14618
+    ],
+    "track_id": "f07db588-4a76-41de-beb0-67eed06001fe"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/000757.jpg",
+    "ref_idx": 9067,
+    "caption": "A dark green sedan slows down and turns left.",
+    "target_idxs": [
+      9062,
+      14802,
+      14790
+    ],
+    "track_id": "3aea117c-d10c-4155-9241-d542da307135"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c023/img1/004200.jpg",
+    "ref_idx": 15105,
+    "caption": "An extremely dirty hatchback drives up a hill.",
+    "target_idxs": [
+      15091,
+      15073,
+      15064
+    ],
+    "track_id": "a23465b9-0226-4137-bedb-432c8a6a8d8a"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c008/img1/000296.jpg",
+    "ref_idx": 15949,
+    "caption": "A dark gray SUV drives in the left lane next to cargo trucks.",
+    "target_idxs": [
+      15952,
+      15954,
+      15959
+    ],
+    "track_id": "0b3182a7-d933-4bf9-9537-5774f27258c9"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/002562.jpg",
+    "ref_idx": 19317,
+    "caption": "A dark red sedan dribes and curves to the left.",
+    "target_idxs": [
+      19246,
+      19303,
+      19300
+    ],
+    "track_id": "5c7d02b0-e75a-4d8d-90bf-0858fb9dd60f"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c024/img1/003899.jpg",
+    "ref_idx": 19457,
+    "caption": "A dark pickup truck drives down the street.",
+    "target_idxs": [
+      19456,
+      19460,
+      19459
+    ],
+    "track_id": "bd0025c7-275b-45d8-9727-7caf9f240714"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c006/img1/000069.jpg",
+    "ref_idx": 5876,
+    "caption": "A silver sedan drives in the right lane next to a dark vehicle.",
+    "target_idxs": [
+      5879,
+      5886,
+      5887
+    ],
+    "track_id": "e4ab30fc-6a7d-4a43-bece-90725cc32f06"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c035/img1/003230.jpg",
+    "ref_idx": 21855,
+    "caption": "A white Jeep drives down the street followed by a dark SUV.",
+    "target_idxs": [
+      21871,
+      6559,
+      6561
+    ],
+    "track_id": "1c077622-d15d-4491-a4b3-2cf63c355336"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c024/img1/003439.jpg",
+    "ref_idx": 21890,
+    "caption": "A dark gray SUV drives down the road behind a black sedan.",
+    "target_idxs": [
+      21889,
+      21893,
+      21892
+    ],
+    "track_id": "fbc5de30-5e64-4ee7-b565-651a6464b1ec"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/002145.jpg",
+    "ref_idx": 16015,
+    "caption": "A dark red SUV does a left turn then runs straight down the road.",
+    "target_idxs": [
+      8246,
+      21989,
+      8272
+    ],
+    "track_id": "a5338f2c-9a46-4b23-a25d-6962528dc48b"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c029/img1/003067.jpg",
+    "ref_idx": 7585,
+    "caption": "A dark SUV go with the traffic flow and then turn right.",
+    "target_idxs": [
+      7581,
+      22187,
+      7592
+    ],
+    "track_id": "a6b24bfe-ce46-487e-b01d-fad03c25da03"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/002362.jpg",
+    "ref_idx": 22865,
+    "caption": "A dark red sedan turns right.",
+    "target_idxs": [
+      22889,
+      22962,
+      22861
+    ],
+    "track_id": "234a4c15-f3d0-492d-b815-bb1c7cd7e90d"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c025/img1/000200.jpg",
+    "ref_idx": 23097,
+    "caption": "A dark grey sedan going down the street.",
+    "target_idxs": [
+      23064,
+      23067,
+      23070
+    ],
+    "track_id": "e77db503-f459-4da6-8a6a-1f0e29f869f9"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c010/img1/000639.jpg",
+    "ref_idx": 23609,
+    "caption": "A red pickup truck drives straight preceded by a dark SUV and followed by white hatchback.",
+    "target_idxs": [
+      23549,
+      23531,
+      23638
+    ],
+    "track_id": "cef63bc8-632f-444b-b425-4fad4a14b24c"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c022/img1/002713.jpg",
+    "ref_idx": 13998,
+    "caption": "A dark gray SUV drives down a hill and passes parked cars.",
+    "target_idxs": [
+      14000,
+      13975,
+      13952
+    ],
+    "track_id": "a0d616f7-c310-4078-a878-43daf596e15d"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c010/img1/002167.jpg",
+    "ref_idx": 24656,
+    "caption": "A red SUV goes down the street followed by a dark SUV.",
+    "target_idxs": [
+      24663,
+      24649,
+      24683
+    ],
+    "track_id": "1a064b19-916e-437d-933d-9481efcc50b1"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c027/img1/001234.jpg",
+    "ref_idx": 24796,
+    "caption": "A dark red SUV runs down the street.",
+    "target_idxs": [
+      24786,
+      24741,
+      24751
+    ],
+    "track_id": "f5a0cda4-5eca-4504-b497-66603775d90b"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c006/img1/000020.jpg",
+    "ref_idx": 1795,
+    "caption": "A dark grey SUV accelerating after a stop and crossing an intersection.",
+    "target_idxs": [
+      1793,
+      1790,
+      5846
+    ],
+    "track_id": "54613da9-c5fe-4908-918a-95bfa5f19c1f"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c016/img1/003270.jpg",
+    "ref_idx": 25682,
+    "caption": "A dark silver pick up truck turns right to follow a turn.",
+    "target_idxs": [
+      25597,
+      25695,
+      25713
+    ],
+    "track_id": "9336d7c1-1e06-4b89-9d9f-b6788782f5a0"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c017/img1/000471.jpg",
+    "ref_idx": 6215,
+    "caption": "A white SUV drives straight in the left lane followed by a dark vehicle.",
+    "target_idxs": [
+      22807,
+      22798,
+      6217
+    ],
+    "track_id": "6ae018dc-49af-4eb8-8d03-e23143f41bf2"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c023/img1/000281.jpg",
+    "ref_idx": 26501,
+    "caption": "A dark grey sedan going down the street.",
+    "target_idxs": [
+      26477,
+      26495,
+      26491
+    ],
+    "track_id": "62b728ba-7f69-4649-80ed-96c20c094a2a"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c034/img1/001983.jpg",
+    "ref_idx": 26536,
+    "caption": "A dirty red SUV runs on the street.",
+    "target_idxs": [
+      26544,
+      26542,
+      26541
+    ],
+    "track_id": "63f5fe33-daaa-4960-9cc4-35140c81acdd"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c024/img1/004268.jpg",
+    "ref_idx": 26658,
+    "caption": "A dark mid-sized vehicle turns left across an intersection.",
+    "target_idxs": [
+      26660,
+      26654,
+      26653
+    ],
+    "track_id": "7167de95-788d-4abc-84f3-cdb7f9f91a7c"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c024/img1/001046.jpg",
+    "ref_idx": 26738,
+    "caption": "A white SUV drives straight in the left lane followed by a dark vehicle.",
+    "target_idxs": [
+      26740,
+      26739,
+      26736
+    ],
+    "track_id": "568ed2ee-7ed6-452b-bd83-361c866f0b43"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c023/img1/003845.jpg",
+    "ref_idx": 27902,
+    "caption": "A dark blue pickup truck keeping straight on the street.",
+    "target_idxs": [
+      27909,
+      27892,
+      27910
+    ],
+    "track_id": "63775080-eb85-4b3a-a940-681168380247"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c017/img1/003587.jpg",
+    "ref_idx": 27980,
+    "caption": "The dark-blue car is going straight.",
+    "target_idxs": [
+      27991,
+      27964,
+      27925
+    ],
+    "track_id": "3a9c7c5a-aaf0-4e9e-8204-1402f877d1b0"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c017/img1/003534.jpg",
+    "ref_idx": 27930,
+    "caption": "Dark gray SUV made right turn unto street.",
+    "target_idxs": [
+      27978,
+      27922,
+      27982
+    ],
+    "track_id": "3a9c7c5a-aaf0-4e9e-8204-1402f877d1b0"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c008/img1/001298.jpg",
+    "ref_idx": 28117,
+    "caption": "A dark red SUV runs down the street.",
+    "target_idxs": [
+      27254,
+      28119,
+      27259
+    ],
+    "track_id": "1b059343-b0dd-4c5c-9d9d-1652096dcff2"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c033/img1/000009.jpg",
+    "ref_idx": 7372,
+    "caption": "A dark gray van continues straight down the road followed by a red vehicle.",
+    "target_idxs": [
+      7367,
+      7381,
+      7371
+    ],
+    "track_id": "2c9b7d07-fdd0-4a07-982c-6a3d151e15fc"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S02/c006/img1/001375.jpg",
+    "ref_idx": 31122,
+    "caption": "A red SUV drives straight through the intersection followed by a dark truck.",
+    "target_idxs": [
+      31137,
+      31148,
+      31142
+    ],
+    "track_id": "a5f54305-7ab3-49e5-a6af-2641311c72f6"
+  },
+  {
+    "ref_img": "../../dataset/cityflow-nl/validation/S05/c029/img1/001934.jpg",
+    "ref_idx": 31505,
+    "caption": "A silver sedan drives down the street followed by a dark van.",
+    "target_idxs": [
+      31452,
+      31475,
+      31509
+    ],
+    "track_id": "5e971af1-63ee-4921-9dae-0a0929f4b090"
+  }
+]
