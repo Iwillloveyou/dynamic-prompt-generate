@@ -45,7 +45,7 @@ from image_text_dynamic_prompt_gennerate import (
 )
 
 device = Config.device
-concept_names, concept_name_embs, concept_extend_embs, concept_desc_embs = load_concept_extensions(
+concept_names, concept_name_embs, concept_extend_embs, concept_desc_embs, concept_extend_mean_embs = load_concept_extensions(
     Config.concept_extend_file, Config.concept_extend_embeddings
 )
 
@@ -72,8 +72,8 @@ def analyze_prior_stats(val_dataset, sample_size=100):
             ref_feat = F.normalize(clip_model.encode_image(ref_tensor), dim=-1)
             text_feat = F.normalize(clip_model.encode_text(text_tokens), dim=-1)
             query_feat = F.normalize(text_feat + ref_feat, dim=-1)
-        # prior = compute_prior_scores(query_feat, concept_extend_embs).cpu().squeeze().numpy()
-        prior = compute_prior_scores_single(query_feat, concept_name_embs).cpu().squeeze().numpy()
+        prior = compute_prior_scores(query_feat, concept_extend_embs).cpu().squeeze().numpy()
+        # prior = compute_prior_scores_single(query_feat, concept_name_embs).cpu().squeeze().numpy()
         # prior = compute_prior_scores_single(query_feat, concept_desc_embs).cpu().squeeze().numpy()
         prior_scores.append(prior)
 
@@ -111,7 +111,7 @@ class PriorOnlyRetriever(nn.Module):
 def evaluate_prior_only(val_dataset, temperature=0.07):
     """评估纯先验检索的 Recall@K 和 mAP"""
     retriever = PriorOnlyRetriever(concept_name_embs, concept_extend_embs, temperature).to(device)
-    recalls, mAP = evaluate_batched(
+    recalls, mAP, ndcg_sum = evaluate_batched(
         clip_model, retriever, val_dataset, device, temperature,
         batch_size=64, k_list=[1,5,10]
     )
@@ -119,6 +119,7 @@ def evaluate_prior_only(val_dataset, temperature=0.07):
     for k in [1,5,10]:
         print(f"Recall@{k}: {recalls[k]:.2f}%")
     print(f"mAP: {mAP:.2f}%")
+    print(f"NDCG@5: {ndcg_sum[5]:.2f}%, NDCG@10: {ndcg_sum[10]:.2f}%")
     return recalls, mAP
 
 # ------------------------------------------------------------
@@ -301,7 +302,7 @@ def main():
     evaluate_clip_zeroshot(val_dataset, device, temperature=Config.temperature)
 
     # # 2. 分析 prior 统计信息
-    analyze_prior_stats(val_dataset, sample_size=200)
+    # analyze_prior_stats(val_dataset, sample_size=200)
     #
     # # 3. 评估纯先验检索
     # prior_recalls, prior_map = evaluate_prior_only(val_dataset, temperature=Config.temperature)

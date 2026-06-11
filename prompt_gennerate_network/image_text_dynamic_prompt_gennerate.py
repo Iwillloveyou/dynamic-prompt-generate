@@ -20,8 +20,8 @@ class Config:
     image_root = '../../dataset/cityflow-nl/'     # 提取的图像根目录（包含 S01, S03 等）
     track_ann_file = os.path.join(data_root, 'train_tracks.json')   # 车辆轨迹标注
     prompt_library_root = '../prompt_library/result/'
-    concept_extend_file = os.path.join(prompt_library_root, 'concept_extend.json')
-    concept_extend_embeddings = os.path.join(prompt_library_root, 'concept_extend.embeddings.npz')
+    concept_extend_file = os.path.join(prompt_library_root, 'concept_extend_expand.json')
+    concept_extend_embeddings = os.path.join(prompt_library_root, 'concept_extend_expand.embeddings.npz')
     # CLIP 模型
     clip_model_name = 'ViT-B/32'
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -118,8 +118,9 @@ def compute_prior_scores(query_feat, concept_extend_embs):
 
 # -------------------- PromptGenerator --------------------
 class PromptGenerator(nn.Module):
-    def __init__(self, concept_name_embs, concept_extend_embs, clip_dim, num_concepts, hidden_dim=256):
+    def __init__(self, concept_name_embs, concept_extend_embs, concept_extend_mean_embs, clip_dim, num_concepts, hidden_dim=256):
         super().__init__()
+        self.gamma_list = []
         # # 确保概念名称向量为 float32 并注册为 buffer
         # self.register_buffer('concept_names', concept_name_embs.float())
         # 扩展描述向量列表（每个元素已是 float32）
@@ -127,6 +128,8 @@ class PromptGenerator(nn.Module):
 
         # 扩展描述向量列表（每个元素已是 float32）
         self.concept_extend_embs = concept_extend_embs
+
+        self.concept_extend_mean_embs = concept_extend_mean_embs
 
         # 可学习 MLP：输入是 先验得分 + 原始查询特征
         self.mlp = nn.Sequential(
@@ -136,6 +139,22 @@ class PromptGenerator(nn.Module):
         )
         self.alpha = nn.Parameter(torch.tensor(0.5))
         self.temperature = nn.Parameter(torch.tensor(0.07))
+        self.res_scale = nn.Parameter(torch.FloatTensor([0.1]))
+
+        self.gate_layer = nn.Sequential(
+            nn.Linear(clip_dim * 2, clip_dim),  # 接收图像和文本拼接特征
+            nn.ReLU(),
+            nn.Linear(clip_dim, 1),        # 输出一个标量门控值
+            nn.Sigmoid()              # 限制在 0 ~ 1 之间
+        )
+        # 如果要走你之前设想的“文本主导增强”，我们可以加一个重映射层
+        self.feature_combiner = nn.Sequential(
+            nn.Linear(clip_dim, clip_dim),
+            nn.LayerNorm(clip_dim)
+        )
+        # 🛠️ 执行恒等初始化：让矩阵变成单位矩阵，偏置清零
+        nn.init.eye_(self.feature_combiner[0].weight)
+        nn.init.zeros_(self.feature_combiner[0].bias)
 
     def forward(self, text_feat, img_feat=None):
         # 将输入的文本和图像特征统一转为 float32
@@ -160,14 +179,34 @@ class PromptGenerator(nn.Module):
         weights = F.softmax(logits / self.temperature, dim=-1)
 
         # 5. 加权组合概念名称向量生成提示
-        dyn_prompt = weights @ self.concept_name_embs            # [B, D]
+        dyn_prompt = weights @ self.concept_extend_mean_embs            # [B, D]
+        dyn_prompt_norm = F.normalize(dyn_prompt, p=2, dim=-1)
+
+        # 假设通过一个线性层学习门控信号
+        gating_feat = torch.cat([img_feat, text_feat], dim=-1)
+        gamma = torch.sigmoid(self.gate_layer(gating_feat)) # 输出在 0~1 之间
+        self.gamma_list.append(gamma.detach().cpu())
 
         # 6. 融合回原始文本特征
         # combined = text_feat + self.alpha * dyn_prompt
         # 将动态提示与图像特征融合
-        combined = img_feat + self.alpha * dyn_prompt
-        combined = F.normalize(combined, dim=-1)
+        # combined = img_feat + self.alpha * dyn_prompt
+        combined = gamma * img_feat + (1 - gamma) * dyn_prompt_norm
+        fusion_res = self.feature_combiner(combined) # 映射平滑
+        combined = F.normalize(combined + self.res_scale * fusion_res, dim=-1)
+        # combined = F.normalize(combined, dim=-1)
         return combined, weights
+
+    # 🛠️ 新增方法：清空上一轮的 gamma 记录
+    def reset_gamma_tracking(self):
+        self.gamma_list = []
+
+    # 🛠️ 新增方法：计算整轮 Epoch 的 Gamma 平均值
+    def get_average_gamma(self):
+        if not self.gamma_list:
+            return 0.0
+        # 将所有 Batch 的 gamma 拼接并求全局平均值
+        return torch.cat(self.gamma_list, dim=0).mean().item()
 
 # -------------------- SemanticPromptGenerator --------------------
 class SemanticPromptGenerator(nn.Module):
@@ -679,6 +718,7 @@ def load_concept_extensions(json_path, npz_path):
     concept_name_embs = []
     concept_desc_embs = []
     concept_extend_embs = []   # list of list of tensors
+    concept_extend_mean_embs = []   # list of list of tensors
     for item in concepts:
         name = item['name']
         name_key = item['name_emb_key']
@@ -718,16 +758,30 @@ def load_concept_extensions(json_path, npz_path):
                     emb = emb.squeeze(1)
             extend_embs.append(emb)
 
+        extend_mean_keys = item['desc_mean_emb_key']
+        extend_mean_embs = torch.from_numpy(npz[extend_mean_keys]).float()
+        # 修复：去除多余的维度，确保 shape 为 (D,)
+        if extend_mean_embs.dim() == 2:
+            if extend_mean_embs.size(0) == 1:
+                extend_mean_embs = extend_mean_embs.squeeze(0)
+            elif extend_mean_embs.size(1) == 1:
+                extend_mean_embs = extend_mean_embs.squeeze(1)
+        # 如果依然是二维但 size(0) 和 size(1) 都不为 1，则报错或取均值等
+        if extend_mean_embs.dim() != 1:
+            raise ValueError(f"Unexpected shape for {desc_key}: {extend_mean_embs.shape}")
+
         concept_names.append(name)
         concept_name_embs.append(name_emb)
         concept_desc_embs.append(desc_emb)
         concept_extend_embs.append(extend_embs)
+        concept_extend_mean_embs.append(extend_mean_embs)
 
     concept_name_embs = torch.stack(concept_name_embs, dim=0).to(config.device)  # [C, D]
     concept_desc_embs = torch.stack(concept_desc_embs, dim=0).to(config.device)  # [C, D]
-    return concept_names, concept_name_embs, concept_extend_embs, concept_desc_embs
+    concept_extend_mean_embs = torch.stack(concept_extend_mean_embs, dim=0).to(config.device)  # [C, D]
+    return concept_names, concept_name_embs, concept_extend_embs, concept_desc_embs, concept_extend_mean_embs
 
-def visualize_concept_weights(generator, val_dataset, concept_names, device, num_samples=10, top_k=10):
+def visualize_concept_weights(generator, is_generator, val_dataset, concept_names, device, num_samples=10, top_k=10):
     """
     随机抽取 num_samples 个验证集查询，打印每个查询的 caption、ref_img 路径，
     以及模型预测的权重最高的 top_k 个概念。
@@ -749,22 +803,25 @@ def visualize_concept_weights(generator, val_dataset, concept_names, device, num
         with torch.no_grad():
             ref_feat = F.normalize(clip_model.encode_image(ref_tensor), dim=-1).float()
             text_feat = F.normalize(clip_model.encode_text(text_tokens), dim=-1).float()
-            _, weights = generator(text_feat, ref_feat)   # weights shape: [1, C]
-
+            if is_generator:
+                _, weights = generator(text_feat, ref_feat)   # weights shape: [1, C]
+            else:
+                _ = generator(text_feat, ref_feat)
         # 获取权重最高的 top_k 个概念的索引
-        weights_np = weights.squeeze(0).cpu().numpy()
-        top_indices = weights_np.argsort()[-top_k:][::-1]
 
         print("\n" + "="*60)
         print(f"Query: {caption}")
         print(f"Reference Image: {ref_img_path}")
-        print(f"Top-{top_k} activated concepts:")
-        for i, idx_c in enumerate(top_indices):
-            concept_name = concept_names[idx_c]
-            weight_val = weights_np[idx_c]
-            print(f"  {i+1}. {concept_name}: {weight_val:.4f}")
+        if is_generator:
+            weights_np = weights.squeeze(0).cpu().numpy()
+            top_indices = weights_np.argsort()[-top_k:][::-1]
+            print(f"Top-{top_k} activated concepts:")
+            for i, idx_c in enumerate(top_indices):
+                concept_name = concept_names[idx_c]
+                weight_val = weights_np[idx_c]
+                print(f"  {i+1}. {concept_name}: {weight_val:.4f}")
 
-def validate_with_model(model_path, config, device, val_track_ids=None, batch_size=64, k_list=[1,5,10]):
+def validate_with_model(model_path, config, device, val_track_ids=None, val_querys_path=None, batch_size=64, k_list=[1,5,10]):
     """
     加载已训练好的 PromptGenerator 模型，并在验证集上进行检索评估。
 
@@ -796,12 +853,12 @@ def validate_with_model(model_path, config, device, val_track_ids=None, batch_si
 
     # 2. 加载概念扩展库
     print("Loading concept extensions...")
-    concept_names, concept_name_embs, concept_extend_embs, concept_desc_embs = load_concept_extensions(
+    concept_names, concept_name_embs, concept_extend_embs, concept_desc_embs, concept_extend_mean_embs = load_concept_extensions(
         config.concept_extend_file, config.concept_extend_embeddings
     )
     # 创建生成器（与训练时结构一致）
     generator = PromptGenerator(
-        concept_name_embs, concept_extend_embs,
+        concept_name_embs, concept_extend_embs, concept_extend_mean_embs,
         clip_model.visual.output_dim, len(concept_names), config.hidden_dim
     ).to(device)
     # 加载权重
@@ -827,6 +884,11 @@ def validate_with_model(model_path, config, device, val_track_ids=None, batch_si
         config.track_ann_file, config.image_root, val_track_ids,
         num_targets=3, sample_print=True, cache_file=os.path.join(config.save_dir, 'clip4cir_validation_cache.pkl')
     )
+
+    if val_querys_path is not None:
+        if os.path.exists(val_querys_path):
+            with open(val_querys_path, 'rb') as f:
+                val_queries = json.load(f)
     print(f"Validation candidates: {len(candidate_images)}, queries: {len(val_queries)}")
 
     # 创建 ValidationDataset（会自动缓存候选特征，避免重复提取）
@@ -836,7 +898,7 @@ def validate_with_model(model_path, config, device, val_track_ids=None, batch_si
     )
 
     # 随机从验证集抽取图像查看解释情况 验证模型时注释，查看解释性分类打开
-    # visualize_concept_weights(generator, val_dataset, concept_names, device, num_samples=3, top_k=10)
+    # visualize_concept_weights(generator, true, val_dataset, concept_names, device, num_samples=3, top_k=10)
 
     # 4. 评估
     print("Starting evaluation...")
@@ -921,7 +983,7 @@ def main():
     # 验证时不使用 DataLoader 的 batch，因为需要逐一查询并检索整个候选集，我们直接在 evaluate 中遍历
 
     # 3. 模型和优化器
-    concept_names, concept_name_embs, concept_extend_embs, concept_desc_embs = load_concept_extensions(
+    concept_names, concept_name_embs, concept_extend_embs, concept_desc_embs, concept_extend_mean_embs = load_concept_extensions(
         config.concept_extend_file, config.concept_extend_embeddings
     )
     # 创建生成器
@@ -931,16 +993,23 @@ def main():
     # generator.temperature.requires_grad = True
     # optimizer = torch.optim.Adam([generator.temperature], lr=0.01)  # 只训练温度
     # 结合扩展语义与可学习 MLP
-    generator = PromptGenerator(concept_name_embs, concept_extend_embs, clip_dim,  len(concept_names), config.hidden_dim).to(config.device)
-    optimizer = torch.optim.Adam(generator.parameters(), lr=config.lr)
+    generator = PromptGenerator(concept_name_embs, concept_extend_embs, concept_extend_mean_embs, clip_dim,  len(concept_names), config.hidden_dim).to(config.device)
+    # optimizer = torch.optim.Adam(generator.parameters(), lr=config.lr)
+    skip_ids = {id(p) for p in list(generator.feature_combiner.parameters()) + list(generator.gate_layer.parameters())}
+    optimizer = torch.optim.AdamW([
+        {'params': [p for p in generator.parameters() if id(p) not in skip_ids], 'lr': config.lr},
+        {'params': generator.feature_combiner.parameters(), 'lr': 1e-4},
+        {'params': generator.gate_layer.parameters(), 'lr': 1e-4}
+    ])
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=50)  # 50个epoch
 
     # 4. 训练循环
     best_map = 0.0
     patience = 5
     early_stop_count = 0
+    model_name= "generator_gates_enhance_image_expand_checkpoint.pth"
     # 断点文件路径
-    ckpt_path = os.path.join(Config.save_dir, "resume_checkpoint.pth")
+    ckpt_path = os.path.join(Config.save_dir, f'resume_{model_name}')
     start_epoch = 1
 
     # ========= 加载断点：存在就恢复所有训练状态 =========
@@ -957,25 +1026,13 @@ def main():
 
     for epoch in range(start_epoch, config.epochs + 1):
         print(f"\nEpoch {epoch}/{config.epochs}")
+        generator.reset_gamma_tracking()
         train_loss = train_epoch(clip_model, generator, train_loader, optimizer, config.device, config.temperature)
+        avg_gamma = generator.get_average_gamma()
+        if avg_gamma > 0.0: # 规避消融了知识库导致没算gamma的情况
+            print(f"📊 [Gamma Monitor] Image Weight (Gamma): {avg_gamma:.4f}")
         print(f"Train Loss: {train_loss:.4f}")
-        torch.save(generator.state_dict(), os.path.join(config.save_dir, 'train_generator_enhance_image.pth'))
-
-
-        # 每 2 个 epoch 验证一次
-        if not test_mode and epoch % 2 == 0:
-            recalls, mAP, ndcg_sum = evaluate_batched(clip_model, generator, val_dataset, config.device, config.temperature)
-            print(f"Validation Results: R@1={recalls[1]:.2f}, R@5={recalls[5]:.2f}, R@10={recalls[10]:.2f}, MRR={mAP:.2f}")
-            print(f"NDCG@5: {ndcg_sum[5]:.2f}%, NDCG@10: {ndcg_sum[10]:.2f}%")
-            # mrr是什么指标，如果要计算map，该怎么修改
-            if mAP > best_map:
-                best_map = mAP
-                early_stop_count = 0
-                torch.save(generator.state_dict(), os.path.join(Config.save_dir, 'best_clip4cir_refine_combiner.pth'))
-                print("New Best model saved!")
-            else:
-                early_stop_count += 1
-                print(f"No improve, early_stop count: {early_stop_count}/{patience}")
+        torch.save(generator.state_dict(), os.path.join(config.save_dir, f'train_{model_name}'))
 
         # ========= 每轮训练完保存完整断点（断电/手动中断都能续） =========
         save_dict = {
@@ -988,6 +1045,21 @@ def main():
         }
         torch.save(save_dict, ckpt_path)
 
+        # 每 2 个 epoch 验证一次
+        if not test_mode and epoch % 2 == 0:
+            recalls, mAP, ndcg_sum = evaluate_batched(clip_model, generator, val_dataset, config.device, config.temperature)
+            print(f"Validation Results: R@1={recalls[1]:.2f}, R@5={recalls[5]:.2f}, R@10={recalls[10]:.2f}, MRR={mAP:.2f}")
+            print(f"NDCG@5: {ndcg_sum[5]:.2f}%, NDCG@10: {ndcg_sum[10]:.2f}%")
+            # mrr是什么指标，如果要计算map，该怎么修改
+            if mAP > best_map:
+                best_map = mAP
+                early_stop_count = 0
+                torch.save(generator.state_dict(), os.path.join(Config.save_dir, f'best_{model_name}'))
+                print("New Best model saved!")
+            else:
+                early_stop_count += 1
+                print(f"No improve, early_stop count: {early_stop_count}/{patience}")
+
         # 早停判断
         if early_stop_count >= patience:
             print(f"Early Stop Trigger! {patience} epochs no mAP improve, exit training.")
@@ -997,9 +1069,10 @@ def main():
         print("Training finished.")
 
 if __name__ == '__main__':
-    main()
+    # main()
     # 假设 config 已经按原代码配置好
-    # config = Config()
-    # device = torch.device(config.device)
-    # model_path = "./checkpoints/train_generator_enhance_text.pth"
-    # results = validate_with_model(model_path, config, device)
+    config = Config()
+    device = torch.device(config.device)
+    model_path = "./checkpoints/best_generator_gates_enhance_image_expand_checkpoint.pth"
+    val_querys_path = "./class-evaluate/special_weather.json"
+    results = validate_with_model(model_path, config, device, val_querys_path=val_querys_path)
