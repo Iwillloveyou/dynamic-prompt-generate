@@ -35,9 +35,13 @@ random.seed(42)
 np.random.seed(42)
 
 # ====================== 全局配置 ======================
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")   # 实际使用时填写
-if OPENAI_API_KEY:
-    openai.api_key = OPENAI_API_KEY
+OPENAI_API_KEY = "" # 替换为你API Key
+OPENAI_BASE_URL = "https://ark.cn-beijing.volces.com/api/v3"  # 以官方文档为准
+MODEL_NAME = "deepseek-v3-2-251201"  # 深度思考模型
+client = openai.OpenAI(
+    api_key=OPENAI_API_KEY,
+    base_url=OPENAI_BASE_URL
+)
 
 # 模型
 EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2"   # 轻量句向量模型
@@ -381,27 +385,35 @@ def generate_descriptions_for_terms(terms: List[str], model: SentenceTransformer
     ]
     result = {}
     for term in terms:
-        if use_llm and openai.api_key:
-            # 调用 LLM 生成 8 条场景描述 (实际使用请谨慎控制 token 消耗)
-            prompt = f"Generate 8 diverse short scenario descriptions (each 10-20 words) for the autonomous driving operational design domain concept '{term}'. Output as a numbered list."
+        if use_llm:
+            # 调用 LLM 生成 8 条场景描述
+            prompt = f"You are a senior autonomous driving scenario engineer responsible for generating high-quality image-text paired training data for autonomous driving datasets. Generate 8 diverse short scenario descriptions (each 10-20 words) for the autonomous driving operational design domain concept '{term}'. Output as a numbered list."
             try:
-                response = openai.ChatCompletion.create(
-                    model="gpt-4",
+                response = client.chat.completions.create(
+                    model=MODEL_NAME,
                     messages=[{"role": "user", "content": prompt}],
-                    temperature=0.7,
-                    max_tokens=400
+                    temperature=0.7
                 )
                 text = response.choices[0].message.content
-                lines = [line.strip() for line in text.split('\n') if line.strip().isdigit() or line.strip()[0].isdigit()]
-                descs = [line.split('.',1)[-1].strip() for line in lines if '.' in line]
+                lines = [line.strip() for line in text.split('\n') if line.strip()]
+                descs = []
+                for line in lines:
+                    if line and line[0].isdigit() and '.' in line:
+                        descs.append(line.split('.', 1)[-1].strip())
+                # 补足到8条
                 if len(descs) < 8:
-                    descs += default_template(term)[:8-len(descs)]
-                result[term] = descs[:8]
+                    descs += default_template(term)[:8 - len(descs)]
+                descs = descs[:8]
+                # 存入字典，不要提前return
+                result[term] = descs
             except Exception as e:
                 print(f"LLM error for {term}: {e}, using template")
                 result[term] = default_template(term)
         else:
             result[term] = default_template(term)
+        print(f"为{term} 生成 {len(result[term])} 条描述")
+    # 全部遍历完成后再返回字典
+    print(f"总词数：{len(terms)}, 成功生成描述词数：{len(result)}")
     return result
 
 def build_experiment2(std_json_path: str, model: SentenceTransformer,
@@ -464,8 +476,8 @@ def llm_generate_terms_and_descriptions(num_terms=100, use_real_llm=False) -> Di
         # 第一步: 生成术语列表
         prompt_terms = f"Generate {num_terms} diverse terms related to autonomous driving Operational Design Domain (ODD). Output as a comma-separated list without numbering."
         try:
-            response = openai.ChatCompletion.create(
-                model="gpt-4",
+            response = client.chat.completions.create(
+                model=MODEL_NAME,
                 messages=[{"role": "user", "content": prompt_terms}],
                 temperature=0.8,
                 max_tokens=500
@@ -480,28 +492,7 @@ def llm_generate_terms_and_descriptions(num_terms=100, use_real_llm=False) -> Di
         # 模拟术语
         terms = [f"ODDConcept_{i}" for i in range(num_terms)]
     # 为每个术语生成描述
-    result = {}
-    for term in terms:
-        if use_real_llm and openai.api_key:
-            prompt_desc = f"Generate 8 short scenario descriptions (each 10-20 words) for the autonomous driving ODD term '{term}'. Output as a numbered list."
-            try:
-                response = openai.ChatCompletion.create(
-                    model="gpt-4",
-                    messages=[{"role": "user", "content": prompt_desc}],
-                    temperature=0.7,
-                    max_tokens=400
-                )
-                text = response.choices[0].message.content
-                lines = [line.strip() for line in text.split('\n') if line.strip() and line.strip()[0].isdigit()]
-                descs = [line.split('.',1)[-1].strip() for line in lines if '.' in line]
-                if len(descs) < 8:
-                    descs += [f"Default scenario {i} for {term}." for i in range(8-len(descs))]
-                result[term] = descs[:8]
-            except Exception as e:
-                print(f"LLM desc generation error for {term}: {e}, using mock")
-                result[term] = [f"Mock description {i} for {term}" for i in range(8)]
-        else:
-            result[term] = [f"Mock description {i} for {term}" for i in range(8)]
+    result = generate_descriptions_for_terms(terms, use_llm=use_real_llm)
     return result
 
 def build_experiment3(model: SentenceTransformer, num_terms=100, use_llm=False) -> Tuple[List[Dict], Dict[str, np.ndarray]]:
@@ -590,10 +581,10 @@ def main():
     exp1_data, exp1_emb = build_experiment1(STANDARD_JSON, model)
     res1 = evaluate_experiment(exp1_data, exp1_emb, std_concepts, std_parent_of, std_desc_of, model, "Experiment1 (Only Keywords)")
     # 实验二 (WordNet, 使用模板生成描述，不调用LLM以节省时间。如需LLM生成，设置use_llm=True)
-    exp2_data, exp2_emb = build_experiment2(STANDARD_JSON, model, max_terms=EXP2_MAX_TERMS, use_llm=False)
+    exp2_data, exp2_emb = build_experiment2(STANDARD_JSON, model, max_terms=EXP2_MAX_TERMS, use_llm=True)
     res2 = evaluate_experiment(exp2_data, exp2_emb, std_concepts, std_parent_of, std_desc_of, model, "Experiment2 (WordNet Expansion)")
     # 实验三 (LLM自由生成, 模拟模式; 如需真实LLM，设置use_llm=True并确保API key)
-    exp3_data, exp3_emb = build_experiment3(model, num_terms=EXP3_NUM_TERMS, use_llm=False)
+    exp3_data, exp3_emb = build_experiment3(model, num_terms=EXP3_NUM_TERMS, use_llm=True)
     res3 = evaluate_experiment(exp3_data, exp3_emb, std_concepts, std_parent_of, std_desc_of, model, "Experiment3 (LLM Free Generation)")
 
     # 汇总表格
@@ -611,3 +602,11 @@ def main():
 
 if __name__ == "__main__":
     main()
+    # expanded_terms =["Environment", "Road"]
+    # model = SentenceTransformer(EMBEDDING_MODEL_NAME)
+    # term_to_descs = generate_descriptions_for_terms(expanded_terms, model, use_llm=True)
+    # for key, desc_list in term_to_descs.items():
+    #     print(f"【{key}】")
+    # for idx, item in enumerate(desc_list):
+    #     print(f"  {idx+1}. {item}")
+    # print()
