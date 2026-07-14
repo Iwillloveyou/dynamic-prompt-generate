@@ -64,7 +64,11 @@ pip install scikit-learn sentence-transformers -i https://pypi.tuna.tsinghua.edu
 基于cityflow-nl中描述高频词的提示库补充
 先验计算发现有大量的nl描述词未出现在提示库中，因此通过聚类提取cityflow-nl中描述高频词，以进行扩充，主程序如下：
 抽取高频词：cityflow_nl_category_extract.py
-与当前openodd自动进行合并：uto_adapter_openodd.json.py
+与当前openodd自动进行合并：auto_adapter_openodd.json.py
+
+其中:
+聚类提取全局和top800高频词，结果如high_freq_words_800.csv。
+然后利用llm进行智能分类处理，与openodd种子概念进行聚合分类，得到concept_expand.json、concept_extend_expand.json。然后基于之前的llm进行提示扩展，生成新的提示库，提示库信息存在concept_extend_expand.embeddings.npz中。
 
 二. 基于cityflow-nl的数据集准备
 对应文件在cityflow_nl_dataset_handler下
@@ -96,6 +100,8 @@ cityflow-nl/
 │   └── train/
 ├── checkpoints/                     # 模型保存目录
 └── prepare_cityflow_nl.sh           # 预处理脚本
+
+另外，train_track_json_check.py 随机选择训练集中示cityflow-nl图片中的目标框进行显示以校验标注是否准确
 
 三.基于以上提示库的图文条件式动态提示网络
 1.根据描述（纯文本）检索图像的条件式动态提示网络
