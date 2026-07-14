@@ -294,10 +294,10 @@ def compute_bert_similarity(ext_data: List[Dict], standard_desc_of: Dict[str, st
 # ====================== 3. 主计算流程 ======================
 def main():
     # 配置文件路径（请根据实际位置修改）
-    STANDARD_JSON = "openodd_add_cityflow_extract.json"
+    STANDARD_JSON = "openodd_desc.json"
     prompt_library_root = '../prompt_library/result/'
-    EXT_JSON = os.path.join(prompt_library_root, 'concept_extend_expand.json')
-    EXT_NPZ = os.path.join(prompt_library_root, 'concept_extend_expand.embeddings.npz')
+    EXT_JSON = os.path.join(prompt_library_root, 'concept_extend.json')
+    EXT_NPZ = os.path.join(prompt_library_root, 'concept_extend.embeddings.npz')
 
     # 加载标准本体
     std_concepts, std_parent_of, std_desc_of = load_standard_ontology(STANDARD_JSON)

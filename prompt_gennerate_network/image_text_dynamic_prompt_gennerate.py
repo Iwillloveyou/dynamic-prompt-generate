@@ -397,20 +397,6 @@ def build_validation_data(track_ann_file, image_root, val_track_ids, num_targets
                 'queries': queries
             }, f)
 
-    # 随机抽样打印验证
-    if sample_print and len(queries) > 0:
-        print("\n=== Random samples from validation queries ===")
-        sample_queries = random.sample(queries, min(num_samples, len(queries)))
-        for i, q in enumerate(sample_queries):
-            print(f"\nSample {i+1}:")
-            print(f"  Track ID: {q['track_id']}")
-            print(f"  Caption: {q['caption']}")
-            print(f"  Reference image: {q['ref_img']}")
-            print(f"  Target image(s):")
-            for idx in q['target_idxs']:
-                print(f"    - {candidate_images[idx]}")
-            print("  ---")
-
     return candidate_images, queries
 
 # -------------------- 数据集类 --------------------
