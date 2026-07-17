@@ -115,12 +115,43 @@ cityflow-nl/
 为了保证使用同一训练和验证分类，将加载好的训练id放在checkpoints/track_split.pkl中，同时验证集候选特征放在candidate_feats_clipzeroshort.pt中
 
 未优化的方法效率比较低，如下：
+Recall@1: 0.23% Recall@5: 0.31% Recall@10: 0.39% mAP: 0.21% ndcg@5:1.81%
 
 改进后的方法如下：
 1.训练集构造时每个track_id每个nl不再只取1张图象，取5张以扩大训练集。同时放弃批内互斥采样，使用普通随机采样，并修改损失函数为多正样本对比损失，以避免同一批内采样到同一track_id多张匹配图片导致的原生对比损失假样本问题。
 多正样本对比损失：multi_positive_contrastive_loss
 2.修改学习率调度为scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
 3.尝试新方法，将动态提示与图像特征融合，而非与文本特征融合
+
+优化后重新训练(50epoch)的效率如下：
+Recall@1: 6.65% Recall@5: 21.04% Recall@10: 30.63% mAP: 7.76% ndcg@5:97.11%
+
+消融实验部分
+主程序image_text_dynamic_ablation.py，通过调整配置实现网络组件组合，重新训练、评估网络效率，具体如下：
+去除领域知识提示库:直接拼接特征，计算与候选特征的表现 =原生clip模型
+去除领域概念激活模块:将概念权重固定为均匀分布，然后做实验
+去除提示生成网络：设置一个固定提示模板（“a photo of a [文本描述] in autonomous driving scene”）来替换动态提示生成特征 / 使用纯文本加成方式生成
+去除语义扩展模块：直接使用原始名称向量生成融合提示
+
+消融实验问题：
+去除领域知识提示库、领域概念激活模块后效率几乎没变化，原因如下：
+1.原融合方式combined = img_feat + self.alpha * dyn_prompt中，
+dyn_prompt 是由 110 个概念向量通过权重（Softmax 输出，和为 1）加权求和得到的。在高维空间中，不同的概念向量之间往往趋于正交。多个正交向量加权求和后，其结果向量的模长会严重缩水（通常远小于 1），此时用不用概念激活器，效果都很低。
+2.参考图像和目标图像来自于同一个监控摄像头，或者同一个视频轨道的相邻帧，模型会走捷径，使用图像查图像，忽略查询文本的作用，导致去除提示生成网络改变不明显
+3.直接相加图像和文本特征向量，本质上是在不同线性空间做线性插值，融合向量的几何空间会发生变化。
+
+进一步优化方案：通过门控+映射层+残差优化后重训
+方案 1：特征均一化与可学习的alpha（见效最快）
+融合时，先将dyn_prompt归一化，使之模长拉高到与图像同等量级，并将 alpha 设为可学习参数，让 loss 逼着它放大提示库的信号。
+方案 2：通过门控
+combined = gamma * img_feat + (1 - gamma) * dyn_prompt_norm
+融合时，进一步将alpha变为门控gamma，使模型自己学习，应该更倾向于图像还是文本提示多一点
+方案 3：通过平滑映射层进行空间校准、非线性平滑与特征表达能力增强
+融合后，使用feature_combiner函数，将融合后的特征重新校准并平滑映射回标准的 CLIP 检索空间，同时赋予模型非线性提取能力（如雨夜和匝道特征叠加，会衍生路面反光积水特征等等）。
+同时，为了避免使用feature_combiner初始时更像噪声的权重破坏已融合的特征clip空间，执行恒等初始化，并且改用残差链接替代纯线性映射，即设置一个动态的可学习参数res_scale，然后使用：combined = F.normalize(combined + self.res_scale * fusion_res, dim=-1)
+
+优化后重新训练(50epoch)的效率如下：
+Recall@1: 7.73% Recall@5: 26.91% Recall@10: 39.37% mAP: 9.42% ndcg@5:163.33%
 
 对比实验部分
 1.原生clip模型
@@ -149,6 +180,8 @@ Recall@1: 0.00% Recall@5: 0.08% Recall@10: 0.08% mAP: 0.03%
 2.为了避免适配原特征512维到640维产生的特征破坏，修改combine网络的参数可传特征维度，并将adapter设为配置
 2.修改学习率调度为scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
 
+优化后重新训练(36epoch)的效率如下：
+Recall@1: 1.16% Recall@5: 4.64% Recall@10: 7.89% mAP: 2.35% ndcg@5:68.30%
 
 3.cocoop
 主程序cocoop_baseline.py
@@ -169,3 +202,7 @@ Recall@1: 0.08% Recall@5: 0.08% Recall@10: 0.08% mAP: 0.06%
 多正样本对比损失：multi_positive_contrastive_loss
 2.修改学习率调度为scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
 3.将 CoCoOpTextEncoder 中的拼接改为替换，保持序列长度 77，并正确添加位置编码。
+
+优化后重新训练(36epoch)的效率如下：
+Recall@1: 4.80% Recall@5: 15.78% Recall@10: 23.74% mAP: 6.29% ndcg@5:74.86%
+
