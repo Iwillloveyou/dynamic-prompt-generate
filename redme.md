@@ -1,5 +1,20 @@
 项目为基于ASAM OPENODD的动态提示学习的图文检索模型项目实现
 
+运行环境推荐
+pytorch 2.8.0 python 3.12(ubuntu22.04)
+cuda 12.8
+memory 100g
+cpu 16 vCPU Intel(R) Xeon(R) Platinum 8352V CPU @ 2.10GHz
+gpu RTX 4090(24GB) * 1
+磁盘 30普通+50gssd
+llm 推荐deepseek chatgpt
+
+数据集
+ASAM OPENODD 1.0.0 下载地址：https://publications.pages.asam.net/standards/ASAM_OpenODD/ASAM_OpenODD/latest/specification/index.html
+
+训练的数据集来自cityflow-nl，需要提前参照AI City Challenge官方网站数据集（2023 Track 2: Tracked-Vehicle Retrieval by Natural Language Descriptions）和其官方GitHub仓库（https://github.com/Microsoft/CityFlow-NL）下载数据集与获取相关的预处理脚本和标注文件
+下载地址：https://drive.google.com/file/d/1_uY17_mBGCIlImJvPcbw4MW-b8tB4ZwR/view
+
 一. OPENODD的提示库构建
 
 对应文件在prompt_library下
